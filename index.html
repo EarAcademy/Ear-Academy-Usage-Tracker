@@ -9,14 +9,19 @@
     <style>
         /* ── Brand tokens ── */
         :root {
-            --lilac:    #8871B1;
-            --turkish:  #ED6EA1;
-            --salmon:   #F6B1A6;
-            --wheat:    #F6E3AC;
-            --pacific:  #77C2D6;
-            --forest:   #289B38;
+            /* Ear Academy brand palette */
+            --sky:      #38aae1;   /* Blue Sky   – charts, bars, active elements */
+            --lapis:    #1d70b8;   /* Blue Lapis – headings, borders              */
+            --green:    #00a19a;   /* Green Door – growth, positive indicators    */
+            --gold2:    #c5b08c;   /* Gold 2     – Daily Pulse, warm accents      */
+            --gold3:    #d6c8b0;   /* Gold 3     – lighter warm accent            */
+            --shale:    #d8d3cb;   /* Shale 3    – card shadows, subtle bg        */
+            /* Neutrals & legacy */
+            --forest:   #289B38;   /* kept for badge-active                       */
+            --salmon:   #F6B1A6;   /* kept for badge-quiet                        */
+            --lilac:    #8871B1;   /* kept for .new-badge                         */
             --cream:    #F5F1ED;
-            --gold:     #A88F5E;
+            --gold:     #A88F5E;   /* rank numbers                                */
             --white:    #FFFFFF;
             --dark:     #2C2C2C;
             --gray:     #666666;
@@ -67,11 +72,11 @@
             pointer-events: none; opacity: 0.12; overflow: hidden;
         }
         .bouncy { position: absolute; border-radius: 50%; }
-        .bouncy-1 { width:80px; height:80px; background:var(--pacific);  top:20%; right:10%; }
-        .bouncy-2 { width:60px; height:60px; background:var(--turkish);  top:45%; right:25%; }
-        .bouncy-3 { width:50px; height:50px; background:var(--lilac);    top:60%; right:5%;  }
-        .bouncy-4 { width:40px; height:40px; background:var(--salmon);   top:30%; right:40%; }
-        .bouncy-5 { width:70px; height:70px; background:var(--forest);   top:10%; right:50%; }
+        .bouncy-1 { width:80px; height:80px; background:var(--sky);    top:20%; right:10%; }
+        .bouncy-2 { width:60px; height:60px; background:var(--lapis);  top:45%; right:25%; }
+        .bouncy-3 { width:50px; height:50px; background:var(--green);  top:60%; right:5%;  }
+        .bouncy-4 { width:40px; height:40px; background:var(--gold2);  top:30%; right:40%; }
+        .bouncy-5 { width:70px; height:70px; background:var(--shale);  top:10%; right:50%; }
 
         /* ════════════════════════ LAYOUT ════════════════════════ */
         .container {
@@ -107,10 +112,10 @@
             border-radius: 2px;
             flex-shrink: 0;
         }
-        .section-title.pacific::before  { background: var(--pacific); }
-        .section-title.turkish::before  { background: var(--turkish); }
-        .section-title.forest::before   { background: var(--forest);  }
-        .section-title.lilac::before    { background: var(--lilac);   }
+        .section-title.pacific::before  { background: var(--sky);   }
+        .section-title.turkish::before  { background: var(--lapis); }
+        .section-title.forest::before   { background: var(--green); }
+        .section-title.lilac::before    { background: var(--sky);   }
 
         .section-desc {
             font-size: 0.88rem;
@@ -131,10 +136,10 @@
             vertical-align: middle;
             margin-left: 0.3rem;
         }
-        .delta.up   { background: #e6f7ec; color: #1a7a36; }
+        .delta.up   { background: #e0f5f4; color: var(--green); }
         .delta.down { background: #fde8e8; color: #b91c1c; }
-        .delta.flat { background: #f0f0f0; color: #555; }
-        .delta.new  { background: #ede8ff; color: var(--lilac); }
+        .delta.flat { background: var(--shale); color: #555; }
+        .delta.new  { background: #e3f2fc; color: var(--lapis); }
 
         /* ════════════════════════ SCHOOL BADGES ════════════════════════ */
         .badge-row {
@@ -151,18 +156,19 @@
             border-radius: 20px;
             white-space: nowrap;
         }
-        .new-badge   { background: #ede8ff; color: var(--lilac); }
-        .cons-badge  { background: #e6f7ec; color: #1a7a36; }
+        .new-badge   { background: #e3f2fc; color: var(--lapis); }
+        .cons-badge  { background: #e0f5f4; color: var(--green); }
         .quiet-badge { background: #fde8e8; color: #b91c1c; }
 
         /* ════════════════════ DAILY PULSE ════════════════════════ */
         .pulse-grid { display: grid; gap: 1.5rem; }
 
         .pulse-card {
-            background: linear-gradient(135deg, var(--turkish) 0%, #c9547f 100%);
-            color: var(--white);
+            background: linear-gradient(135deg, var(--gold2) 0%, var(--gold3) 100%);
+            color: var(--dark);
             border-radius: 16px;
             padding: 1.75rem 2rem;
+            border-left: 4px solid var(--gold2);
         }
         .pulse-date {
             font-family: 'Quicksand', sans-serif;
@@ -192,12 +198,12 @@
             opacity: 0.9;
         }
         .pulse-label .delta {
-            background: rgba(255,255,255,0.25);
-            color: var(--white);
+            background: rgba(255,255,255,0.5);
+            color: var(--dark);
         }
         .pulse-divider {
             width: 1px; height: 60px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.15);
         }
         .pulse-prev {
             font-size: 0.85rem;
@@ -215,8 +221,8 @@
             margin-bottom: 0.4rem;
         }
         .pulse-new-schools .badge-row .school-badge {
-            background: rgba(255,255,255,0.25);
-            color: var(--white);
+            background: rgba(255,255,255,0.55);
+            color: var(--dark);
         }
 
         /* ════════════════════ WEEKLY SNAPSHOT ════════════════════════ */
@@ -244,10 +250,10 @@
             height: 4px;
             border-radius: 14px 14px 0 0;
         }
-        .snap-card.accent-pacific::before { background: var(--pacific); }
-        .snap-card.accent-forest::before  { background: var(--forest);  }
-        .snap-card.accent-lilac::before   { background: var(--lilac);   }
-        .snap-card.accent-salmon::before  { background: var(--salmon);  }
+        .snap-card.accent-pacific::before { background: var(--sky);   }
+        .snap-card.accent-forest::before  { background: var(--green); }
+        .snap-card.accent-lilac::before   { background: var(--lapis); }
+        .snap-card.accent-salmon::before  { background: var(--shale); }
 
         .snap-label {
             font-size: 0.78rem;
@@ -324,11 +330,11 @@
             color: var(--gray);
             font-style: italic;
         }
-        .pattern-notes { background: #fffbf0; }
+        .pattern-notes { background: #f0f6fb; }
         .notes-field {
             width: 100%;
             min-height: 120px;
-            border: 1px solid var(--lgray);
+            border: 1px solid var(--shale);
             border-radius: 10px;
             padding: 0.75rem;
             font-family: 'Lato', sans-serif;
@@ -340,13 +346,13 @@
         }
         .notes-field:focus {
             outline: none;
-            border-color: var(--pacific);
-            box-shadow: 0 0 0 3px rgba(119,194,214,0.15);
+            border-color: var(--sky);
+            box-shadow: 0 0 0 3px rgba(56,170,225,0.15);
         }
 
         /* ════════════════════ WEEKLY TRENDS ════════════════════════ */
         .trend-summary {
-            background: linear-gradient(135deg, var(--pacific), #5ab0c6);
+            background: linear-gradient(135deg, var(--lapis), var(--sky));
             padding: 1.5rem 2rem;
             border-radius: 14px;
             margin-bottom: 1.75rem;
@@ -392,7 +398,7 @@
         .bar {
             height: 100%;
             border-radius: 8px;
-            background: linear-gradient(135deg, var(--pacific), #5ab0c6);
+            background: linear-gradient(135deg, var(--sky), #5ab8e8);
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -401,12 +407,12 @@
             font-weight: 700;
             font-size: 0.85rem;
             transition: width 0.6s ease;
-            box-shadow: 0 2px 8px rgba(119,194,214,0.3);
+            box-shadow: 0 2px 8px rgba(56,170,225,0.3);
         }
         .bar::after { content: attr(data-value); }
         .bar.bar-latest {
-            background: linear-gradient(135deg, var(--turkish), #c9547f);
-            box-shadow: 0 2px 8px rgba(237,110,161,0.3);
+            background: linear-gradient(135deg, var(--lapis), var(--sky));
+            box-shadow: 0 2px 8px rgba(29,112,184,0.3);
         }
 
         /* ════════════════════ TOP 10 ════════════════════════ */
@@ -510,12 +516,12 @@
     <!-- ══════════════════════════════ MAIN ══════════════════════════════ -->
     <div class="container">
 
-        <div style="background: linear-gradient(135deg, #FFE5B4, #FFF8DC); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid #F4A460;">
+        <div style="background: linear-gradient(135deg, #c5b08c, #d6c8b0); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid #c5b08c;">
             <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
                 <span style="font-size: 1.5rem;">💡</span>
-                <h3 style="margin: 0; font-family: 'Quicksand', sans-serif; color: #8B4513; font-size: 1.1rem;">DASHBOARD GUIDE</h3>
+                <h3 style="margin: 0; font-family: 'Quicksand', sans-serif; color: #1d70b8; font-size: 1.1rem;">DASHBOARD GUIDE</h3>
             </div>
-            <p style="margin: 0; color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+            <p style="margin: 0; color: #2C2C2C; font-size: 0.95rem; line-height: 1.6;">
                 This dashboard updates daily/weekly with detailed operational metrics. We're in observation mode (6 months) learning customer patterns and usage behaviors before making strategic decisions or optimizations.
             </p>
         </div>
