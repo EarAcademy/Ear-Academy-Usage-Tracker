@@ -11,7 +11,7 @@ from datetime import datetime
 
 # Configuration
 DATA_FOLDER = Path("daily_snapshots")
-OUTPUT_FILE = Path("ear_academy_dashboard.html")
+OUTPUT_FILE = Path("index.html")
 
 def normalize_school_name(name):
     """Clean up school names"""
@@ -31,26 +31,16 @@ def assign_week(filename):
     match = re.search(r'(\d{1,2})-(\d{2})-(\d{4})', filename)
     if not match:
         return None
-    
+
     day, month, year = match.groups()
     date = datetime(int(year), int(month), int(day))
-    
-    # Week boundaries
-    week1 = datetime(2026, 1, 19)
-    week2 = datetime(2026, 1, 26)
-    week3 = datetime(2026, 2, 2)
-    week4 = datetime(2026, 2, 9)
-    week5 = datetime(2026, 2, 16)
-    
-    if week1 <= date < week2:
-        return 1
-    elif week2 <= date < week3:
-        return 2
-    elif week3 <= date < week4:
-        return 3
-    elif week4 <= date < week5:
-        return 4
-    return None
+
+    week1_start = datetime(2026, 1, 19)
+
+    if date < week1_start:
+        return None
+
+    return (date - week1_start).days // 7 + 1
 
 def main():
     print("🎵 Ear Academy Dashboard Updater")
@@ -281,7 +271,7 @@ def main():
     
     print(f"✅ Dashboard updated!\n")
     print("="*50)
-    print("🎉 Done! Open ear_academy_dashboard.html in your browser")
+    print("🎉 Done! Open index.html in your browser")
     print("="*50)
 
 if __name__ == "__main__":
