@@ -3,36 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ear Academy - Usage Analytics Dashboard</title>
-    
-    <!-- Google Fonts -->
+    <title>Ear Academy — Usage Analytics</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    
+
     <style>
+        /* ── Brand tokens ── */
         :root {
-            /* Ear Academy Brand Colors */
-            --lilac: #8871B1;
-            --turkish-delight: #ED6EA1;
-            --salmon-rose: #F6B1A6;
-            --wheat: #F6E3AC;
-            --pacific: #77C2D6;
-            --forest-green: #289B38;
-            --cream: #F5F1ED;
-            --gold: #A88F5E;
-            
-            /* Neutrals */
-            --white: #FFFFFF;
-            --dark: #2C2C2C;
-            --gray: #666666;
-            --light-gray: #E8E4DF;
+            --lilac:    #8871B1;
+            --turkish:  #ED6EA1;
+            --salmon:   #F6B1A6;
+            --wheat:    #F6E3AC;
+            --pacific:  #77C2D6;
+            --forest:   #289B38;
+            --cream:    #F5F1ED;
+            --gold:     #A88F5E;
+            --white:    #FFFFFF;
+            --dark:     #2C2C2C;
+            --gray:     #666666;
+            --lgray:    #E8E4DF;
+            --radius:   18px;
+            --shadow:   0 4px 24px rgba(0,0,0,0.07);
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+
+        /* ── Reset ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: 'Lato', sans-serif;
             background: var(--cream);
@@ -40,697 +35,446 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-        
-        /* Header */
+
+        /* ════════════════════════ HEADER ════════════════════════ */
         header {
             background: var(--white);
-            padding: 2rem 3rem;
+            padding: 2rem 3rem 1.75rem;
             box-shadow: 0 2px 20px rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
         }
-        
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
         }
-        
-        .logo-svg {
-            margin-bottom: 1rem;
-        }
-        
-        .logo-svg svg {
-            display: block;
-            width: 180px;
-            height: auto;
-        }
-        
+        .logo-svg { margin-bottom: 0.9rem; }
+        .logo-svg svg { display: block; width: 170px; height: auto; }
         h1 {
             font-family: 'Quicksand', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--dark);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
-        
-        .subtitle {
-            font-size: 0.95rem;
-            color: var(--gray);
-            font-style: italic;
-        }
-        
-        /* Bouncy Circles Background */
+        .subtitle { font-size: 0.9rem; color: var(--gray); font-style: italic; }
+
+        /* bouncy circles */
         .bouncies {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 50%;
-            pointer-events: none;
-            opacity: 0.15;
-            overflow: hidden;
+            position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+            pointer-events: none; opacity: 0.12; overflow: hidden;
         }
-        
-        .bouncy {
-            position: absolute;
-            border-radius: 50%;
-        }
-        
-        .bouncy-1 { width: 80px; height: 80px; background: var(--pacific); top: 20%; right: 10%; }
-        .bouncy-2 { width: 60px; height: 60px; background: var(--turkish-delight); top: 45%; right: 25%; }
-        .bouncy-3 { width: 50px; height: 50px; background: var(--lilac); top: 60%; right: 5%; }
-        .bouncy-4 { width: 40px; height: 40px; background: var(--salmon-rose); top: 30%; right: 40%; }
-        .bouncy-5 { width: 70px; height: 70px; background: var(--forest-green); top: 10%; right: 50%; }
-        
-        /* Container */
+        .bouncy { position: absolute; border-radius: 50%; }
+        .bouncy-1 { width:80px; height:80px; background:var(--pacific);  top:20%; right:10%; }
+        .bouncy-2 { width:60px; height:60px; background:var(--turkish);  top:45%; right:25%; }
+        .bouncy-3 { width:50px; height:50px; background:var(--lilac);    top:60%; right:5%;  }
+        .bouncy-4 { width:40px; height:40px; background:var(--salmon);   top:30%; right:40%; }
+        .bouncy-5 { width:70px; height:70px; background:var(--forest);   top:10%; right:50%; }
+
+        /* ════════════════════════ LAYOUT ════════════════════════ */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 3rem;
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
         }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        
-        .stat-card {
+
+        /* ════════════════════════ SECTION SHELL ════════════════════════ */
+        .dashboard-section {
             background: var(--white);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            border-radius: var(--radius);
+            padding: 2rem 2.5rem 2.5rem;
+            box-shadow: var(--shadow);
         }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .stat-card.pacific::before { background: var(--pacific); }
-        .stat-card.turkish::before { background: var(--turkish-delight); }
-        .stat-card.forest::before { background: var(--forest-green); }
-        .stat-card.lilac::before { background: var(--lilac); }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        
-        .stat-value {
+
+        .section-title {
             font-family: 'Quicksand', sans-serif;
-            font-size: 3rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--dark);
-            line-height: 1;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        
-        .stat-subtext {
+        .section-title::before {
+            content: '';
+            width: 4px; height: 28px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .section-title.pacific::before  { background: var(--pacific); }
+        .section-title.turkish::before  { background: var(--turkish); }
+        .section-title.forest::before   { background: var(--forest);  }
+        .section-title.lilac::before    { background: var(--lilac);   }
+
+        .section-desc {
+            font-size: 0.88rem;
+            color: var(--gray);
+            font-style: italic;
+            margin-bottom: 1.75rem;
+            padding-left: calc(4px + 0.75rem);  /* align under title text */
+        }
+
+        /* ════════════════════════ DELTA BADGES ════════════════════════ */
+        .delta {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.55rem;
+            border-radius: 20px;
+            vertical-align: middle;
+            margin-left: 0.3rem;
+        }
+        .delta.up   { background: #e6f7ec; color: #1a7a36; }
+        .delta.down { background: #fde8e8; color: #b91c1c; }
+        .delta.flat { background: #f0f0f0; color: #555; }
+        .delta.new  { background: #ede8ff; color: var(--lilac); }
+
+        /* ════════════════════════ SCHOOL BADGES ════════════════════════ */
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+        }
+        .school-badge {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .new-badge   { background: #ede8ff; color: var(--lilac); }
+        .cons-badge  { background: #e6f7ec; color: #1a7a36; }
+        .quiet-badge { background: #fde8e8; color: #b91c1c; }
+
+        /* ════════════════════ DAILY PULSE ════════════════════════ */
+        .pulse-grid { display: grid; gap: 1.5rem; }
+
+        .pulse-card {
+            background: linear-gradient(135deg, var(--turkish) 0%, #c9547f 100%);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
+        }
+        .pulse-date {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            opacity: 0.85;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pulse-row {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 0.9rem;
+        }
+        .pulse-metric { display: flex; flex-direction: column; gap: 0.2rem; }
+        .pulse-value {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .pulse-label {
             font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        .pulse-label .delta {
+            background: rgba(255,255,255,0.25);
+            color: var(--white);
+        }
+        .pulse-divider {
+            width: 1px; height: 60px;
+            background: rgba(255,255,255,0.3);
+        }
+        .pulse-prev {
+            font-size: 0.85rem;
+            opacity: 0.75;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        .pulse-new-schools { margin-top: 0.5rem; }
+        .pulse-new-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+            margin-bottom: 0.4rem;
+        }
+        .pulse-new-schools .badge-row .school-badge {
+            background: rgba(255,255,255,0.25);
+            color: var(--white);
+        }
+
+        /* ════════════════════ WEEKLY SNAPSHOT ════════════════════════ */
+        .snapshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .snap-card {
+            border-radius: 14px;
+            padding: 1.5rem;
+            background: var(--white);
+            border: 1px solid var(--lgray);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .snap-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            border-radius: 14px 14px 0 0;
+        }
+        .snap-card.accent-pacific::before { background: var(--pacific); }
+        .snap-card.accent-forest::before  { background: var(--forest);  }
+        .snap-card.accent-lilac::before   { background: var(--lilac);   }
+        .snap-card.accent-salmon::before  { background: var(--salmon);  }
+
+        .snap-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            color: var(--gray);
+        }
+        .snap-body { display: flex; flex-direction: column; gap: 0.4rem; }
+        .snap-metric {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .snap-value {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--dark);
+        }
+        .snap-unit {
+            font-size: 0.88rem;
+            color: var(--gray);
+        }
+        .snap-prev {
+            font-size: 0.82rem;
             color: var(--gray);
             font-style: italic;
         }
-        
-        /* Chart Section */
-        .chart-section {
+        .snap-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ════════════════════ PATTERNS THIS WEEK ════════════════════════ */
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 900px) { .patterns-grid { grid-template-columns: 1fr; } }
+
+        .pattern-block {
+            background: var(--cream);
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+        .pattern-block-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.2rem;
+        }
+        .pattern-block-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+        .pattern-count-badge {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.4rem;
+        }
+        .pattern-empty {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+        .pattern-notes { background: #fffbf0; }
+        .notes-field {
+            width: 100%;
+            min-height: 120px;
+            border: 1px solid var(--lgray);
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.875rem;
+            color: var(--dark);
+            resize: vertical;
             background: var(--white);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            margin-bottom: 3rem;
+            line-height: 1.5;
         }
-        
-        .chart-section .chart-container {
-            position: relative;
-            height: 250px;
+        .notes-field:focus {
+            outline: none;
+            border-color: var(--pacific);
+            box-shadow: 0 0 0 3px rgba(119,194,214,0.15);
         }
-        
-        /* Trend Summary Card */
+
+        /* ════════════════════ WEEKLY TRENDS ════════════════════════ */
         .trend-summary {
-            background: linear-gradient(135deg, var(--pacific), #5AB0C6);
-            padding: 2rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--pacific), #5ab0c6);
+            padding: 1.5rem 2rem;
+            border-radius: 14px;
+            margin-bottom: 1.75rem;
             color: var(--white);
-        }
-        
-        .trend-highlight {
             text-align: center;
         }
-        
         .trend-label {
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.82rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            opacity: 0.9;
-            margin-bottom: 0.5rem;
+            opacity: 0.85;
+            margin-bottom: 0.3rem;
         }
-        
         .trend-value {
             font-family: 'Quicksand', sans-serif;
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
-        
-        .trend-change {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        
-        /* Week Bars */
-        .weeks-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .week-bar-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
+        .trend-change { font-size: 1rem; font-weight: 600; }
+
+        .weeks-container { display: flex; flex-direction: column; gap: 1.25rem; }
+        .week-bar-item { display: flex; flex-direction: column; gap: 0.4rem; }
         .week-info {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
         }
-        
         .week-label {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        
-        .week-stats {
-            font-size: 0.85rem;
-            color: var(--gray);
-            font-style: italic;
-        }
-        
-        .bar-container {
-            background: var(--light-gray);
-            border-radius: 10px;
-            height: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .bar {
-            height: 100%;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 1rem;
-            color: var(--white);
-            font-weight: 700;
-            font-size: 0.9rem;
-            transition: width 0.6s ease;
-            background: linear-gradient(135deg, var(--pacific), #5AB0C6);
-            box-shadow: 0 2px 8px rgba(119, 194, 214, 0.3);
-        }
-        
-        .bar::after {
-            content: attr(data-value);
-        }
-        
-        .section-title {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 30px;
-            border-radius: 2px;
-        }
-        
-        .section-title.pacific::before { background: var(--pacific); }
-        .section-title.turkish::before { background: var(--turkish-delight); }
-        .section-title.forest::before { background: var(--forest-green); }
-        
-        /* Two Column Layout */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        /* Pattern Cards Grid */
-        .pattern-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .pattern-card {
-            background: var(--white);
-            padding: 2rem 1.5rem;
-            border-radius: 16px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .pattern-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            border-radius: 16px 16px 0 0;
-        }
-        
-        .pattern-card.gold-pattern::before {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-        }
-        
-        .pattern-card.pacific-pattern::before {
-            background: var(--pacific);
-        }
-        
-        .pattern-card.forest-pattern::before {
-            background: var(--forest-green);
-        }
-        
-        .pattern-card.lilac-pattern::before {
-            background: var(--lilac);
-        }
-        
-        .pattern-card.salmon-pattern::before {
-            background: var(--salmon-rose);
-        }
-        
-        .pattern-card.turkish-pattern::before {
-            background: var(--turkish-delight);
-        }
-        
-        .pattern-card.wheat-pattern::before {
-            background: var(--wheat);
-        }
-        
-        .pattern-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-        
-        .pattern-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .pattern-count {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            line-height: 1;
-            margin-bottom: 0.25rem;
-        }
-        
-        .pattern-name {
             font-family: 'Quicksand', sans-serif;
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--dark);
-            margin-bottom: 0.25rem;
         }
-        
-        .pattern-desc {
-            font-size: 0.8rem;
-            color: var(--gray);
-            font-style: italic;
-        }
-        
-        /* Pattern Badges */
-        .pattern-badge {
-            display: inline-block;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin: 0.25rem;
-            white-space: nowrap;
-            max-width: 100%;
+        .week-stats { font-size: 0.82rem; color: var(--gray); font-style: italic; }
+        .bar-container {
+            background: var(--lgray);
+            border-radius: 8px;
+            height: 36px;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
-        
-        .pattern-badge.core5 {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: var(--dark);
-        }
-        
-        .pattern-badge.biweekly {
-            background: var(--pacific);
+        .bar {
+            height: 100%;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--pacific), #5ab0c6);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.9rem;
             color: var(--white);
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: width 0.6s ease;
+            box-shadow: 0 2px 8px rgba(119,194,214,0.3);
         }
-        
-        .pattern-badge.active {
-            background: var(--forest-green);
-            color: var(--white);
+        .bar::after { content: attr(data-value); }
+        .bar.bar-latest {
+            background: linear-gradient(135deg, var(--turkish), #c9547f);
+            box-shadow: 0 2px 8px rgba(237,110,161,0.3);
         }
-        
-        .pattern-badge.new {
-            background: var(--lilac);
-            color: var(--white);
-        }
-        
-        .pattern-badge.quiet {
-            background: var(--salmon-rose);
-            color: var(--white);
-        }
-        
-        /* Top Schools List */
-        .top-schools-list {
-            list-style: none;
-        }
-        
+
+        /* ════════════════════ TOP 10 ════════════════════════ */
+        .top-schools-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
         .top-school-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
+            padding: 0.9rem 1rem;
             background: var(--cream);
             border-radius: 12px;
             transition: transform 0.2s ease;
             flex-wrap: wrap;
         }
-        
-        .top-school-item:hover {
-            transform: translateX(4px);
-        }
-        
+        .top-school-item:hover { transform: translateX(4px); }
         .rank-number {
             font-family: 'Quicksand', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--gold);
-            min-width: 40px;
+            min-width: 38px;
         }
-        
-        .school-info {
-            flex: 1;
-        }
-        
-        .school-name {
+        .school-info { flex: 1; min-width: 0; }
+        .school-name { font-weight: 700; color: var(--dark); margin-bottom: 0.15rem; }
+        .school-stats { font-size: 0.82rem; color: var(--gray); }
+
+        /* top10 badges */
+        .pattern-badge {
+            display: inline-block;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 0.25rem;
+            white-space: nowrap;
         }
-        
-        .school-stats {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-        
-        /* Table */
-        .data-table {
-            width: 100%;
-            min-width: 700px;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        
-        .data-table thead {
-            background: var(--cream);
-        }
-        
-        .data-table th {
-            padding: 1rem;
-            text-align: left;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 700;
-            color: var(--dark);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            vertical-align: middle;
-        }
-        
-        .data-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--light-gray);
-            vertical-align: middle;
-        }
-        
-        .data-table tbody tr:hover {
-            background: var(--cream);
-        }
-        
-        .week-cell {
-            text-align: center;
-            font-weight: 600;
-            min-width: 70px;
-            width: 70px;
-        }
-        
-        .week-cell.active {
-            color: var(--forest-green);
-        }
-        
-        .week-cell.empty {
-            color: var(--light-gray);
-        }
-        
-        /* Footer */
+        .badge-core   { background: linear-gradient(135deg,#FFD700,#FFA500); color: var(--dark); }
+        .badge-active { background: var(--forest);  color: var(--white); }
+        .badge-quiet  { background: var(--salmon);  color: var(--white); }
+
+        /* ════════════════════ FOOTER ════════════════════════ */
         footer {
             text-align: center;
             padding: 2rem;
             color: var(--gray);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-style: italic;
         }
-        
-        footer strong {
-            color: var(--dark);
-            font-style: normal;
+        footer strong { color: var(--dark); font-style: normal; }
+
+        /* ════════════════════ RESPONSIVE ════════════════════════ */
+        @media (max-width: 900px) {
+            .container { padding: 1.5rem; gap: 2rem; }
+            header { padding: 1.5rem; }
+            .dashboard-section { padding: 1.5rem; }
+            .snapshot-grid { grid-template-columns: 1fr 1fr; }
+            h1 { font-size: 1.35rem; }
         }
-        
-        /* Print Styles */
-        @media print {
-            body {
-                background: white;
-            }
-            
-            .stat-card, .chart-section {
-                break-inside: avoid;
-                box-shadow: none;
-                border: 1px solid var(--light-gray);
-            }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            
-            header {
-                padding: 1.5rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-            
-            .pattern-cards-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .logo-svg svg {
-                width: 140px;
-            }
-            
-            h1 {
-                font-size: 1.4rem;
-            }
-            
-            /* Mobile-specific fixes */
-            .top-school-item {
-                gap: 0.5rem;
-                padding: 0.75rem;
-            }
-            
-            .rank-number {
-                min-width: 30px;
-                font-size: 1.2rem;
-            }
-            
-            .school-name {
-                font-size: 0.9rem;
-            }
-            
-            .school-stats {
-                font-size: 0.75rem;
-            }
-            
-            .pattern-badge {
-                font-size: 0.55rem;
-                padding: 0.2rem 0.35rem;
-                margin: 0.05rem;
-                letter-spacing: -0.3px;
-                word-break: break-word;
-                max-width: 80px;
-                line-height: 1.1;
-            }
-            
-            .chart-section {
-                padding: 1.5rem;
-            }
-            
-            /* Tab navigation mobile */
-            .tabs {
-                gap: 0.5rem;
-                position: relative;
-            }
-            
-            .tab-link {
-                font-size: 0.95rem;
-                padding: 0.75rem 1rem;
-            }
-            
-            /* Make chart much taller and more readable on mobile */
-            .chart-section .chart-container {
-                height: 350px;
-            }
-            
-            /* Trend summary mobile adjustments */
-            .trend-summary {
-                padding: 1.5rem;
-            }
-            
-            .trend-value {
-                font-size: 2rem;
-            }
-            
-            .trend-change {
-                font-size: 0.95rem;
-            }
-            
-            /* Week bars mobile adjustments */
-            .weeks-container {
-                gap: 1.25rem;
-            }
-            
-            .week-info {
-                flex-direction: column;
-                gap: 0.25rem;
-                align-items: flex-start;
-            }
-            
-            .week-label {
-                font-size: 0.95rem;
-            }
-            
-            .week-stats {
-                font-size: 0.75rem;
-            }
-            
-            .bar-container {
-                height: 35px;
-            }
-            
-            .bar {
-                font-size: 0.8rem;
-                padding-right: 0.75rem;
-            }
-            
-            .section-title {
-                font-size: 1.2rem;
-            }
-            
-            /* Make table horizontally scrollable with clear indication */
-            .data-table {
-                font-size: 0.85rem;
-            }
-            
-            .data-table th {
-                padding: 0.75rem 0.5rem;
-                white-space: nowrap;
-            }
-            
-            .data-table td {
-                padding: 0.75rem 0.5rem;
-            }
-            
-            .data-table th:first-child,
-            .data-table td:first-child {
-                padding-left: 1rem;
-                position: sticky;
-                left: 0;
-                background: var(--white);
-                z-index: 1;
-            }
-            
-            .week-cell {
-                min-width: 60px;
-                width: 60px;
-            }
-            
-            /* Add shadow to indicate scrollability */
-            .chart-section > div[style*="overflow-x"] {
-                position: relative;
-            }
-            
-            .chart-section > div[style*="overflow-x"]::after {
-                content: '→';
-                position: absolute;
-                right: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 2rem;
-                color: var(--pacific);
-                opacity: 0.3;
-                pointer-events: none;
-                padding: 0 1rem;
-            }
+        @media (max-width: 600px) {
+            .snapshot-grid { grid-template-columns: 1fr; }
+            .pulse-row { gap: 1.2rem; }
+            .pulse-value { font-size: 2.4rem; }
+            .snap-value { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
     <header>
         <div class="bouncies">
             <div class="bouncy bouncy-1"></div>
@@ -739,7 +483,6 @@
             <div class="bouncy bouncy-4"></div>
             <div class="bouncy bouncy-5"></div>
         </div>
-        
         <div class="header-content">
             <div class="logo-svg">
                 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="180" height="auto">
@@ -760,295 +503,317 @@
                 </svg>
             </div>
             <h1>Usage Analytics Dashboard</h1>
-            <p class="subtitle">Month 1 Performance • January 19 - February 13, 2026</p>
+            <p class="subtitle">Live data · Updated <span id="lastUpdated">20 February 2026</span></p>
         </div>
     </header>
-    
+
+    <!-- ══════════════════════════════ MAIN ══════════════════════════════ -->
     <div class="container">
-        
-        <!-- Key Metrics -->
-        <div class="stats-grid">
-            <div class="stat-card pacific">
-                <div class="stat-label">Schools Activated</div>
-                <div class="stat-value" id="stat-schools">47</div>
-                <div class="stat-subtext">of 53 customers (84.9%)</div>
+
+        <!-- DASHBOARD_START -->
+        <!-- ═══════════════════════════════════ DAILY PULSE ═══════════════════════════════════ -->
+        <section class="dashboard-section" id="section-daily-pulse">
+            <h2 class="section-title turkish">⚡ Daily Pulse</h2>
+            <p class="section-desc">Yesterday's activity vs the day before</p>
+
+            <div class="pulse-grid">
+                <div class="pulse-card">
+                    <div class="pulse-date">Friday, 20 February 2026</div>
+                    <div class="pulse-row">
+                        <div class="pulse-metric">
+                            <div class="pulse-value" id="pulse-logins">85</div>
+                            <div class="pulse-label">Logins <span class="delta down">▼ 14%</span></div>
+                        </div>
+                        <div class="pulse-divider"></div>
+                        <div class="pulse-metric">
+                            <div class="pulse-value" id="pulse-schools">11</div>
+                            <div class="pulse-label">Schools <span class="delta down">▼ 15%</span></div>
+                        </div>
+                    </div>
+                    <div class="pulse-prev">vs Thursday, 19 February: 99 logins · 13 schools</div>
+                    <div class="pulse-new-schools"><div class="pulse-new-label">🆕 New today vs yesterday</div><div class="badge-row"><span class="school-badge new-badge">Acudeo College Kirkney</span><span class="school-badge new-badge">Acudeo Thornview Primary</span><span class="school-badge new-badge">Amberfield College</span><span class="school-badge new-badge">Canaan College</span><span class="school-badge new-badge">Hazyview Private Primary School</span><span class="school-badge new-badge">Princess Park College</span></div></div>
+                </div>
             </div>
-            
-            <div class="stat-card turkish">
-                <div class="stat-label">Total Logins</div>
-                <div class="stat-value" id="stat-logins">524</div>
-                <div class="stat-subtext">across 4 weeks</div>
+        </section>
+
+        <!-- ═══════════════════════════════ WEEKLY SNAPSHOT ══════════════════════════════════ -->
+        <section class="dashboard-section" id="section-weekly-snapshot">
+            <h2 class="section-title pacific">📋 Weekly Snapshot — Week 5</h2>
+            <p class="section-desc">This week vs last week · Consistent users · Schools needing attention</p>
+
+            <div class="snapshot-grid">
+
+                <!-- Card 1: This week vs Last week -->
+                <div class="snap-card accent-pacific">
+                    <div class="snap-label">Week 5 vs Week 4</div>
+                    <div class="snap-body">
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-cw-logins">327</span>
+                            <span class="snap-unit">logins <span class="delta up">▲ 348%</span></span>
+                        </div>
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-cw-schools">30</span>
+                            <span class="snap-unit">schools <span class="delta down">▼ 9%</span></span>
+                        </div>
+                    </div>
+                    <div class="snap-prev">Last week: 73 logins · 33 schools</div>
+                </div>
+
+                <!-- Card 2: Schools Activated -->
+                <div class="snap-card accent-forest">
+                    <div class="snap-label">Schools Activated</div>
+                    <div class="snap-body">
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-activated">46</span>
+                            <span class="snap-unit">of 53 <span class="delta up">▲ +2 this week</span></span>
+                        </div>
+                    </div>
+                    <div class="snap-prev">87% of all customers have logged in</div>
+                </div>
+
+                <!-- Card 3: Consistent Users -->
+                <div class="snap-card accent-lilac">
+                    <div class="snap-label">Consistent This Week</div>
+                    <div class="snap-body">
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-consistent">12</span>
+                            <span class="snap-unit">schools 3+ days <span class="delta up">▲ 100%</span></span>
+                        </div>
+                    </div>
+                    <div class="snap-badges"><span class="school-badge cons-badge">Acudeo College Kirkney</span><span class="school-badge cons-badge">Acudeo Protea Glen</span><span class="school-badge cons-badge">Acudeo Thornview Primary</span><span class="school-badge cons-badge">Amberfield College</span><span class="school-badge cons-badge">Applewood Preparatory</span><span class="school-badge cons-badge">Etham College</span><span class="school-badge cons-badge">Generation Schools Hermanus</span><span class="school-badge cons-badge">Hazyview Private Primary School</span><span class="school-badge cons-badge">Kammaland Primary School</span><span class="school-badge cons-badge">Koa Academy</span><span class="school-badge cons-badge">Queens Private School</span><span class="school-badge cons-badge">Royal Schools Starlight Academy</span></div>
+                </div>
+
+                <!-- Card 4: Quiet 7+ Days -->
+                <div class="snap-card accent-salmon">
+                    <div class="snap-label">Quiet 7+ Days</div>
+                    <div class="snap-body">
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-quiet">16</span>
+                            <span class="snap-unit">schools need attention</span>
+                        </div>
+                    </div>
+                    <div class="snap-badges"><span class="school-badge quiet-badge">Academie Orfeus</span><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Lebone II College</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">St Catherines</span><span class="school-badge quiet-badge">Trinity House</span></div>
+                </div>
+
             </div>
-            
-            <div class="stat-card forest">
-                <div class="stat-label">Active This Month</div>
-                <div class="stat-value" id="stat-active-month">47</div>
-                <div class="stat-subtext" id="stat-month-name">schools logged in Feb</div>
+        </section>
+
+        <!-- ═══════════════════════════════ PATTERNS THIS WEEK ═══════════════════════════════ -->
+        <section class="dashboard-section" id="section-patterns">
+            <h2 class="section-title forest">🔍 Patterns This Week</h2>
+            <p class="section-desc">Movement signals for Week 5 vs Week 4</p>
+
+            <div class="patterns-grid">
+
+                <div class="pattern-block">
+                    <div class="pattern-block-title">📉 Drop-offs</div>
+                    <div class="pattern-block-desc">Active Week 4, quiet this week</div>
+                    <div class="pattern-count-badge">11</div><div class="badge-row"><span class="school-badge quiet-badge">Academie Orfeus</span><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Lebone II College</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">Trinity House</span></div>
+                </div>
+
+                <div class="pattern-block">
+                    <div class="pattern-block-title">🆕 New Activations</div>
+                    <div class="pattern-block-desc">First-ever login this week</div>
+                    <div class="pattern-count-badge">2</div><div class="badge-row"><span class="school-badge new-badge">C5</span><span class="school-badge new-badge">Early Learning Centre</span></div>
+                </div>
+
+                <div class="pattern-block pattern-notes">
+                    <div class="pattern-block-title">📝 Notes</div>
+                    <div class="pattern-block-desc">Contextual insights for this week</div>
+                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. School X mentioned exams, reached out to School Y…"></textarea>
+                </div>
+
             </div>
-            
-            <div class="stat-card lilac">
-                <div class="stat-label">Week 4 Peak</div>
-                <div class="stat-value" id="stat-week4">30</div>
-                <div class="stat-subtext">schools (strongest week!)</div>
-            </div>
-        </div>
-        
-        <!-- Weekly Trend Chart -->
-        <div class="chart-section">
-            <h2 class="section-title pacific">📈 Recent Trends</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem; font-style: italic;">Last 6 weeks performance</p>
-            
-            <!-- Summary Card -->
+        </section>
+
+        <!-- ════════════════════════════════ WEEKLY TRENDS ═══════════════════════════════════ -->
+        <section class="dashboard-section" id="section-trends">
+            <h2 class="section-title pacific">📈 Weekly Trends</h2>
+            <p class="section-desc">Last 5 weeks · schools active per week</p>
+
             <div class="trend-summary">
                 <div class="trend-highlight">
-                    <div class="trend-label">This Week</div>
+                    <div class="trend-label">Latest Week</div>
                     <div class="trend-value" id="thisWeekSchools">30 schools</div>
-                    <div class="trend-change" id="weekGrowth">↗️ +57% vs Week 1</div>
+                    <div class="trend-change" id="weekGrowth">↗ +36% vs Week 1 (19–23 Jan)</div>
                 </div>
             </div>
-            
-            <!-- Simple CSS Bars -->
-            <div class="weeks-container">
+
+            <div class="weeks-container" id="weeks-container">
+
                 <div class="week-bar-item">
                     <div class="week-info">
-                        <span class="week-label">Week 5</span>
-                        <span class="week-stats">30 schools • 327 logins</span>
+                        <span class="week-label">Week 5 (16–20 Feb)</span>
+                        <span class="week-stats">30 schools · 327 logins</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar bar-schools" style="width: 90%" data-value="30"></div>
+                        <div class="bar bar-schools bar-latest" style="width:90%" data-value="30"></div>
                     </div>
                 </div>
                 <div class="week-bar-item">
                     <div class="week-info">
-                        <span class="week-label">Week 4</span>
-                        <span class="week-stats">33 schools • 73 logins</span>
+                        <span class="week-label">Week 4 (9–13 Feb)</span>
+                        <span class="week-stats">33 schools · 73 logins</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar bar-schools" style="width: 100%" data-value="33"></div>
+                        <div class="bar bar-schools" style="width:100%" data-value="33"></div>
                     </div>
                 </div>
                 <div class="week-bar-item">
                     <div class="week-info">
-                        <span class="week-label">Week 3</span>
-                        <span class="week-stats">20 schools • 35 logins</span>
+                        <span class="week-label">Week 3 (2–6 Feb)</span>
+                        <span class="week-stats">24 schools · 66 logins</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar bar-schools" style="width: 60%" data-value="20"></div>
+                        <div class="bar bar-schools" style="width:72%" data-value="24"></div>
                     </div>
                 </div>
                 <div class="week-bar-item">
                     <div class="week-info">
-                        <span class="week-label">Week 2</span>
-                        <span class="week-stats">20 schools • 49 logins</span>
+                        <span class="week-label">Week 2 (26–30 Jan)</span>
+                        <span class="week-stats">24 schools · 59 logins</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar bar-schools" style="width: 60%" data-value="20"></div>
+                        <div class="bar bar-schools" style="width:72%" data-value="24"></div>
                     </div>
                 </div>
                 <div class="week-bar-item">
                     <div class="week-info">
-                        <span class="week-label">Week 1</span>
-                        <span class="week-stats">19 schools • 40 logins</span>
+                        <span class="week-label">Week 1 (19–23 Jan)</span>
+                        <span class="week-stats">22 schools · 48 logins</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar bar-schools" style="width: 57%" data-value="19"></div>
+                        <div class="bar bar-schools" style="width:66%" data-value="22"></div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Usage Patterns -->
-        <div class="chart-section">
-            <h2 class="section-title forest">🎯 Engagement Metrics</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem; font-style: italic;">Key indicators of school engagement and platform health</p>
-            
-            <div class="pattern-cards-grid">
-                <div class="pattern-card gold-pattern">
-                    <div class="pattern-icon">✅</div>
-                    <div class="pattern-count" id="pattern-active-recent">44</div>
-                    <div class="pattern-name">Active Last 30 Days</div>
-                    <div class="pattern-desc">Used recently</div>
-                </div>
-                
-                <div class="pattern-card pacific-pattern">
-                    <div class="pattern-icon">🔥</div>
-                    <div class="pattern-count" id="pattern-regular">18</div>
-                    <div class="pattern-name">Regular Users</div>
-                    <div class="pattern-desc">3+ weeks/month</div>
-                </div>
-                
-                <div class="pattern-card forest-pattern">
-                    <div class="pattern-icon">🆕</div>
-                    <div class="pattern-count" id="pattern-new-month">3</div>
-                    <div class="pattern-name">New This Month</div>
-                    <div class="pattern-desc">Just started</div>
-                </div>
-                
-                <div class="pattern-card lilac-pattern">
-                    <div class="pattern-icon">💤</div>
-                    <div class="pattern-count" id="pattern-inactive">3</div>
-                    <div class="pattern-name">Inactive 30+ Days</div>
-                    <div class="pattern-desc">Need attention</div>
-                </div>
-                
-                <div class="pattern-card turkish-pattern">
-                    <div class="pattern-icon">👥</div>
-                    <div class="pattern-count" id="pattern-multi-teacher">23</div>
-                    <div class="pattern-name">Multi-Teacher</div>
-                    <div class="pattern-desc">2+ teachers engaged</div>
-                </div>
-                
-                <div class="pattern-card wheat-pattern">
-                    <div class="pattern-icon">📊</div>
-                    <div class="pattern-count" id="pattern-total-active">47</div>
-                    <div class="pattern-name">Total Active (Ever)</div>
-                    <div class="pattern-desc">All time</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Top 10 Schools -->
-        <div class="chart-section">
+        </section>
+
+        <!-- ═══════════════════════════════════ TOP 10 ═══════════════════════════════════════ -->
+        <section class="dashboard-section" id="section-top10">
             <h2 class="section-title turkish">🏆 Top 10 Schools</h2>
-            <p style="color: var(--gray); margin-bottom: 1.5rem; font-style: italic;">Ranked by total engagement (consistency + frequency + teachers)</p>
-            
+            <p class="section-desc">Ranked by consistency × teachers × frequency</p>
             <ul class="top-schools-list">
                 <li class="top-school-item">
                     <div class="rank-number">1</div>
                     <div class="school-info">
-                        <div class="school-name">Kammaland Primary</div>
-                        <div class="school-stats">26 logins • 11 teachers • All 4 weeks</div>
+                        <div class="school-name">Koa Academy</div>
+                        <div class="school-stats">191 logins · 149 teachers · W2, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge core5">🏆 Core 5</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">2</div>
                     <div class="school-info">
-                        <div class="school-name">Generation Schools Hermanus</div>
-                        <div class="school-stats">19 logins • 9 teachers • All 4 weeks</div>
+                        <div class="school-name">Brescia House</div>
+                        <div class="school-stats">58 logins · 49 teachers · W4, W5</div>
                     </div>
-                    <span class="pattern-badge core5">🏆 Core 5</span>
+                    <span class="pattern-badge badge-active">✅ Active</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">3</div>
                     <div class="school-info">
-                        <div class="school-name">Soofia International</div>
-                        <div class="school-stats">14 logins • 7 teachers • All 4 weeks</div>
+                        <div class="school-name">Hazyview Private Primary School</div>
+                        <div class="school-stats">26 logins · 16 teachers · W1, W2, W5</div>
                     </div>
-                    <span class="pattern-badge core5">🏆 Core 5</span>
+                    <span class="pattern-badge badge-active">✅ Active</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">4</div>
                     <div class="school-info">
-                        <div class="school-name">Hazyview Private Primary</div>
-                        <div class="school-stats">11 logins • 16 teachers • Weeks 1-2</div>
+                        <div class="school-name">Generation Schools Hermanus</div>
+                        <div class="school-stats">22 logins · 8 teachers · W1, W2, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge active">Active</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">5</div>
                     <div class="school-info">
-                        <div class="school-name">Trinity House</div>
-                        <div class="school-stats">10 logins • 5 teachers • Weeks 2-4</div>
+                        <div class="school-name">Kammaland Primary School</div>
+                        <div class="school-stats">28 logins · 7 teachers · W1, W2, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge active">Active</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">6</div>
                     <div class="school-info">
-                        <div class="school-name">St Martin Preparatory</div>
-                        <div class="school-stats">9 logins • 5 teachers • All 4 weeks</div>
+                        <div class="school-name">Acudeo Thornview Primary</div>
+                        <div class="school-stats">13 logins · 8 teachers · W1, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge core5">🏆 Core 5</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">7</div>
                     <div class="school-info">
-                        <div class="school-name">Acudeo Thornview</div>
-                        <div class="school-stats">7 logins • 7 teachers • Bi-weekly pattern</div>
+                        <div class="school-name">Soofia International School</div>
+                        <div class="school-stats">15 logins · 5 teachers · W1, W2, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge biweekly">🔄 Bi-weekly</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">8</div>
                     <div class="school-info">
-                        <div class="school-name">Koa Academy</div>
-                        <div class="school-stats">7 logins • 6 teachers • Weeks 2-3</div>
+                        <div class="school-name">St Martin Preparatory School</div>
+                        <div class="school-stats">10 logins · 4 teachers · W1, W2, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge active">Active</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">9</div>
                     <div class="school-info">
-                        <div class="school-name">Prescient Primary</div>
-                        <div class="school-stats">6 logins • 3 teachers • Weeks 2-4</div>
+                        <div class="school-name">Princess Park College</div>
+                        <div class="school-stats">10 logins · 5 teachers · W1, W3, W4, W5</div>
                     </div>
-                    <span class="pattern-badge active">Active</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
                 <li class="top-school-item">
                     <div class="rank-number">10</div>
                     <div class="school-info">
-                        <div class="school-name">Applewood Preparatory</div>
-                        <div class="school-stats">6 logins • 4 teachers • Weeks 2-4</div>
+                        <div class="school-name">Royal Schools Alberton</div>
+                        <div class="school-stats">6 logins · 5 teachers · W1, W2, W4, W5</div>
                     </div>
-                    <span class="pattern-badge active">Active</span>
+                    <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
             </ul>
-        </div>
-        
+        </section>
+        <!-- DASHBOARD_END -->
+
     </div>
-    
+
+    <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
     <footer>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="80" height="auto">
-                <defs><style>.cls-1{fill:#9e824c;}</style></defs>
-                <path class="cls-1" d="M382.7,5.84c-49.42,0-85.14,8.32-118,20.9a9.83,9.83,0,0,0-5.91,11.93l17,58.57a9.8,9.8,0,0,0,12.74,6.47C312.65,95,335.81,90.1,364.81,90.1c42.13,0,62.33,18.47,62.33,50.79v5.2c-17.9-6.35-46.17-12.12-75-12.12-57.7,0-100.36,20.75-115.91,61.12-6.19-59.31-42.92-107.2-115-107.2C53.31,87.89,5.33,141,5.33,208.05v.85c0,71.33,51,119.3,123.13,119.3,37.95,0,66.3-12.79,87.47-33.09a16.45,16.45,0,0,0-.89-24.54l-20.63-17.1A16.32,16.32,0,0,0,174,253c-13.06,10.21-25.95,14.87-41.31,14.87-11.37,0-21.34-2.62-29.44-7.83-13.55-8.73-6.81-29.95,9.31-29.95H220.73a16.28,16.28,0,0,0,9.14-2.79c-.06,1.57-.11,3.13-.11,4.74v1.15c0,62.33,45.59,96.38,105,96.38,31.67,0,56.44-9.31,75.92-24.46a9.8,9.8,0,0,1,15.84,7.72,9.81,9.81,0,0,0,9.81,9.81h88.87a9.81,9.81,0,0,0,9.82-9.81V143.2c0-43.86-9.81-76.18-33.47-99.27C476.77,19.12,438.68,5.84,382.7,5.84ZM139,188.94h-33.8c-13,0-21.2-14.67-13.76-25.37,7.11-10.24,17.43-16.24,30.2-16.24,13.41,0,24.15,5.95,31.19,16.32C160.14,174.39,152,188.94,139,188.94Zm289.27,20.63c0,31.16-22.51,51.36-54.25,51.36-22.51,0-38.67-12.69-38.67-34.05v-1.15c0-23.08,18.47-38.67,50.21-38.67a119.12,119.12,0,0,1,35.88,5.56,9.83,9.83,0,0,1,6.83,9.36Z"/>
-                <path class="cls-1" d="M695,89.1c-24.38.68-41.27,11.08-53.44,27.84a6.78,6.78,0,0,1-12.24-4V99.78A6.79,6.79,0,0,0,622.52,93H555.43a6.79,6.79,0,0,0-6.79,6.79V315.89a6.79,6.79,0,0,0,6.79,6.79h67.09a6.79,6.79,0,0,0,6.79-6.79V251.36c0-53.08,23.77-77.28,65.81-77.28a6.79,6.79,0,0,0,6.79-6.79V95.91A6.8,6.8,0,0,0,695,89.1Z"/>
-                <path class="cls-1" d="M129.64,59.77c0,7.8,4.69,10.85,10.86,10.85A14.49,14.49,0,0,0,147.41,69V64.08a12.09,12.09,0,0,1-5.57,1.34c-3.87,0-6.47-1.71-6.47-6.4V36.57h12.19V31.51H135.37V19.92h-5.73V31.51h-5.35v5.06h5.35Z"/>
-                <path class="cls-1" d="M163.4,47.94c0-7.21,4.91-12,11.52-12,6.77,0,10.63,4.46,10.63,11.6V70h5.73V46.08c0-9.14-5.43-15.38-14.72-15.38a14.56,14.56,0,0,0-13.16,7.5V15.68h-5.73V70h5.73Z"/>
-                <path class="cls-1" d="M220.28,70.84c7.29,0,12-2.89,15.84-7.21l-3.57-3.2a15.89,15.89,0,0,1-12.12,5.43c-6.77,0-12.71-4.68-13.53-12.79h30.48c.07-.89.07-1.48.07-2,0-11.31-6.54-20.37-17.91-20.37-10.64,0-18.44,8.92-18.44,20.07C201.1,62.74,209.72,70.84,220.28,70.84Zm-.89-35.31c7.58,0,11.6,5.94,12.26,12.94H206.9C207.72,41,212.77,35.53,219.39,35.53Z"/>
-                <path class="cls-1" d="M274.86,400.37h-5.53a2.43,2.43,0,0,1-1.53-.47,2.66,2.66,0,0,1-.87-1.15l-2.87-7.85H248.12l-2.88,7.85a2.47,2.47,0,0,1-.84,1.11,2.32,2.32,0,0,1-1.53.51h-5.56l15.12-38.48h7.32ZM250,385.84h12.27L257.54,373c-.22-.57-.45-1.24-.71-2s-.51-1.61-.76-2.52c-.24.91-.49,1.75-.73,2.53s-.47,1.47-.7,2Z"/>
-                <path class="cls-1" d="M325.19,391.29a1.33,1.33,0,0,1,1,.46l2.82,3.06a15.52,15.52,0,0,1-5.76,4.44,19.85,19.85,0,0,1-8.21,1.55,19.34,19.34,0,0,1-7.71-1.47,16.93,16.93,0,0,1-5.84-4.07,17.93,17.93,0,0,1-3.71-6.23,23.38,23.38,0,0,1-1.29-7.9,21.3,21.3,0,0,1,1.44-7.95,18.09,18.09,0,0,1,4-6.21,18.36,18.36,0,0,1,6.24-4.06,21.4,21.4,0,0,1,8-1.45,19,19,0,0,1,7.5,1.37,17.57,17.57,0,0,1,5.49,3.63l-2.39,3.33a2.25,2.25,0,0,1-.55.56,1.55,1.55,0,0,1-.92.24,2.12,2.12,0,0,1-1.25-.48,14,14,0,0,0-1.62-1,13.64,13.64,0,0,0-2.49-1,12.75,12.75,0,0,0-3.82-.48,12.9,12.9,0,0,0-5,.95,11.15,11.15,0,0,0-3.91,2.7,12.63,12.63,0,0,0-2.56,4.27,16.47,16.47,0,0,0-.91,5.66,16.88,16.88,0,0,0,.91,5.77,12.88,12.88,0,0,0,2.49,4.26,10.54,10.54,0,0,0,3.7,2.65,11.49,11.49,0,0,0,4.58.92,21.08,21.08,0,0,0,2.65-.16,11.42,11.42,0,0,0,2.18-.51,9.62,9.62,0,0,0,1.89-.89,12.13,12.13,0,0,0,1.77-1.34,2.57,2.57,0,0,1,.56-.39A1.37,1.37,0,0,1,325.19,391.29Z"/>
-                <path class="cls-1" d="M389.48,400.37H384a2.43,2.43,0,0,1-1.53-.47,2.66,2.66,0,0,1-.87-1.15l-2.87-7.85H362.74l-2.88,7.85a2.52,2.52,0,0,1-.83,1.11,2.35,2.35,0,0,1-1.53.51h-5.57l15.12-38.48h7.32Zm-24.91-14.53h12.27L372.16,373c-.21-.57-.45-1.24-.71-2s-.51-1.61-.75-2.52c-.25.91-.5,1.75-.74,2.53s-.47,1.47-.7,2Z"/>
-                <path class="cls-1" d="M448.91,381.13a20.82,20.82,0,0,1-1.41,7.77A17.45,17.45,0,0,1,437.39,399a21.64,21.64,0,0,1-8,1.41H414.74V361.89h14.69a21.44,21.44,0,0,1,8,1.42,18.06,18.06,0,0,1,6.15,4,17.69,17.69,0,0,1,4,6.08A20.82,20.82,0,0,1,448.91,381.13Zm-7.32,0a17.57,17.57,0,0,0-.85-5.68,12,12,0,0,0-2.42-4.26,10.49,10.49,0,0,0-3.82-2.68,13.16,13.16,0,0,0-5.07-.93H422v27.09h7.48a13.16,13.16,0,0,0,5.07-.93,10.47,10.47,0,0,0,3.82-2.67,12,12,0,0,0,2.42-4.26A17.61,17.61,0,0,0,441.59,381.13Z"/>
-                <path class="cls-1" d="M500,361.89v5.69H483v10.67h13.44v5.51H483v10.89H500v5.72H475.76V361.89Z"/>
-                <path class="cls-1" d="M547.63,386.17c.26.61.51,1.23.76,1.85.25-.64.51-1.27.77-1.89s.55-1.21.86-1.78L561.41,363a2.84,2.84,0,0,1,.43-.64,1.38,1.38,0,0,1,.51-.34,2.33,2.33,0,0,1,.63-.14l.82,0h5.4v38.48h-6.3V375.51c0-.46,0-1,0-1.51s.06-1.11.11-1.68l-11.62,21.82a3.17,3.17,0,0,1-1,1.16,2.75,2.75,0,0,1-1.49.41h-1a2.73,2.73,0,0,1-1.49-.41,3.17,3.17,0,0,1-1-1.16l-11.79-21.9c.07.58.12,1.16.15,1.72s0,1.07,0,1.55v24.86h-6.31V361.89h5.41l.82,0a2.42,2.42,0,0,1,.63.14,1.51,1.51,0,0,1,.52.34,2.85,2.85,0,0,1,.45.64l11.49,21.37A17.94,17.94,0,0,1,547.63,386.17Z"/>
-                <path class="cls-1" d="M615.38,385.41v15h-7.16v-15l-14-23.52h6.31a2.27,2.27,0,0,1,1.48.45,3.7,3.7,0,0,1,.91,1.14L610,376.34c.41.76.76,1.48,1.06,2.17s.58,1.35.83,2q.35-1,.78-2a23.29,23.29,0,0,1,1-2.14l7-12.86a3.68,3.68,0,0,1,.88-1.09,2.24,2.24,0,0,1,1.49-.5h6.33Z"/>
-                <path class="cls-1" d="M701.91,70.09v3.16h5.42V87.89h3.79V73.25h5.41V70.09Zm22,.63a2.36,2.36,0,0,0-.54-.51,1.6,1.6,0,0,0-.73-.12h-3.18v17.8h3.31v-11l-.25-2.17,5.54,10a1.29,1.29,0,0,0,1.29.84h.54a1.36,1.36,0,0,0,1.33-.84l5.5-10.11-.27,2.26v11h3.31V70.09h-3.19a1.67,1.67,0,0,0-.72.12,1.52,1.52,0,0,0-.51.51l-5.09,9.11a4.23,4.23,0,0,0-.36.8c-.08.25-.17.52-.27.8a6.27,6.27,0,0,0-.28-.8l-.35-.8Z"/>
+        <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.5rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="72" height="auto">
+                <defs><style>.f1{fill:#9e824c;}</style></defs>
+                <path class="f1" d="M382.7,5.84c-49.42,0-85.14,8.32-118,20.9a9.83,9.83,0,0,0-5.91,11.93l17,58.57a9.8,9.8,0,0,0,12.74,6.47C312.65,95,335.81,90.1,364.81,90.1c42.13,0,62.33,18.47,62.33,50.79v5.2c-17.9-6.35-46.17-12.12-75-12.12-57.7,0-100.36,20.75-115.91,61.12-6.19-59.31-42.92-107.2-115-107.2C53.31,87.89,5.33,141,5.33,208.05v.85c0,71.33,51,119.3,123.13,119.3,37.95,0,66.3-12.79,87.47-33.09a16.45,16.45,0,0,0-.89-24.54l-20.63-17.1A16.32,16.32,0,0,0,174,253c-13.06,10.21-25.95,14.87-41.31,14.87-11.37,0-21.34-2.62-29.44-7.83-13.55-8.73-6.81-29.95,9.31-29.95H220.73a16.28,16.28,0,0,0,9.14-2.79c-.06,1.57-.11,3.13-.11,4.74v1.15c0,62.33,45.59,96.38,105,96.38,31.67,0,56.44-9.31,75.92-24.46a9.8,9.8,0,0,1,15.84,7.72,9.81,9.81,0,0,0,9.81,9.81h88.87a9.81,9.81,0,0,0,9.82-9.81V143.2c0-43.86-9.81-76.18-33.47-99.27C476.77,19.12,438.68,5.84,382.7,5.84Z"/>
+                <path class="f1" d="M695,89.1c-24.38.68-41.27,11.08-53.44,27.84a6.78,6.78,0,0,1-12.24-4V99.78A6.79,6.79,0,0,0,622.52,93H555.43a6.79,6.79,0,0,0-6.79,6.79V315.89a6.79,6.79,0,0,0,6.79,6.79h67.09a6.79,6.79,0,0,0,6.79-6.79V251.36c0-53.08,23.77-77.28,65.81-77.28a6.79,6.79,0,0,0,6.79-6.79V95.91A6.8,6.8,0,0,0,695,89.1Z"/>
             </svg>
         </div>
-        Usage Analytics Dashboard • Updated <span id="lastUpdated">February 13, 2026</span>
+        Ear Academy Usage Analytics · Updated <span id="lastUpdated">20 February 2026</span>
     </footer>
-    
+
     <script>
-        // Sample data - This will be replaced by your actual data processing script
-        const schoolsData = [
-            { name: 'Kammaland Primary', w1: 3, w2: 8, w3: 8, w4: 7, pattern: 'core5' },
-            { name: 'Generation Schools Hermanus', w1: 3, w2: 2, w3: 8, w4: 6, pattern: 'core5' },
-            { name: 'Soofia International', w1: 2, w2: 3, w3: 5, w4: 4, pattern: 'core5' },
-            { name: 'St Martin Preparatory', w1: 3, w2: 1, w3: 3, w4: 2, pattern: 'core5' },
-            { name: 'Herzlia Highlands', w1: 1, w2: 1, w3: 1, w4: 1, pattern: 'core5' },
-            { name: 'Acudeo Thornview', w1: 4, w2: 0, w3: 1, w4: 2, pattern: 'biweekly' },
-            { name: 'CBC Mount Edmund', w1: 1, w2: 0, w3: 2, w4: 1, pattern: 'biweekly' },
-            { name: 'Princess Park College', w1: 1, w2: 0, w3: 1, w4: 1, pattern: 'biweekly' },
-            { name: 'Trinity House', w1: 0, w2: 5, w3: 4, w4: 1, pattern: 'active' },
-            { name: 'Koa Academy', w1: 0, w2: 6, w3: 1, w4: 0, pattern: 'active' },
-            { name: 'Academie Orfeus', w1: 0, w2: 0, w3: 0, w4: 1, pattern: 'new' },
-            { name: 'Bolton Music Services', w1: 0, w2: 0, w3: 0, w4: 1, pattern: 'new' },
-            // Add more schools as needed
-        ];
-        
-        // No Chart.js needed - using CSS-only bars for better compatibility
-        // Works perfectly in OneDrive, SharePoint, and all browsers!
-        
-        // Clean CSS-only dashboard - no JavaScript dependencies!
-        // Works perfectly everywhere: OneDrive, SharePoint, mobile, desktop
-        
-        // Update last updated date
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+        // Persist notes across refreshes (stored locally in browser)
+        const notesKey = 'ear-academy-weekly-notes';
+        function initNotes() {
+            const ta = document.getElementById('weekly-notes');
+            if (!ta) return;
+            const saved = localStorage.getItem(notesKey);
+            if (saved) ta.value = saved;
+            ta.addEventListener('input', () => {
+                localStorage.setItem(notesKey, ta.value);
+            });
+        }
+        initNotes();
+
+        // Footer date
+        const spans = document.querySelectorAll('#lastUpdated');
+        spans.forEach(s => {
+            if (s.textContent === '—') {
+                s.textContent = new Date().toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+            }
         });
     </script>
 </body>
