@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
 Ear Academy Usage Analytics - Dashboard Updater
-Rebuilds the dashboard with daily-resolution data.
+Segments data by Product Type and Billing Status.
+- Paying schools: all primary metrics
+- Demo schools:   UK Pilot tile
+- Classroom:      Product Type in ("Classroom", "Classroom & Instrumental")
+- Instrumental:   Product Type == "Instrumental"
+Old files (no Product Type / Billing Status cols) default to Paying + Classroom & Instrumental.
 """
 
 import pandas as pd
@@ -14,25 +19,17 @@ from datetime import datetime, timedelta
 DATA_FOLDER     = Path("daily_snapshots")
 OUTPUT_FILE     = Path("index.html")
 WEEK1_START     = datetime(2026, 1, 19)
-TOTAL_CUSTOMERS = 53
+TOTAL_CUSTOMERS = 53          # total paying customer count
 
-# ── Canonical name overrides (exact-match after basic cleaning) ───────────────
-# Add entries here only when automated fuzzy matching needs a hard override.
-# Format: 'messy raw string' → 'canonical name'
+# ── Canonical name overrides ──────────────────────────────────────────────────
 EXACT_OVERRIDES = {
-    # HTML-entity variants → clean display name
     'Acudeo Thornview Primary &amp; Secondary School': 'Acudeo Thornview',
     'Acudeo Thornview Primary & Secondary School':     'Acudeo Thornview',
-    # Truncated / entity-encoded St Martin variants → single canonical
     "St Martin&#039;s Preparatory Schoo":              'St Martin Preparatory School',
     "St Martin's Preparatory School":                  'St Martin Preparatory School',
     "St Martin&#039;s Preparatory School":             'St Martin Preparatory School',
 }
 
-# ── Schools that must NEVER be fuzzy-merged (confirmed distinct schools) ──────
-# These are pairs where generic token overlap could create false matches.
-# Any name listed here is treated as its own canonical and blocked from merging
-# with any other name, regardless of similarity score.
 MERGE_BLOCKLIST = {
     'Bay Primary',
     'Plettenberg Bay Christian Primary School',
@@ -41,82 +38,39 @@ MERGE_BLOCKLIST = {
 # ── Fuzzy-matching helpers ────────────────────────────────────────────────────
 
 def _clean_for_matching(s):
-    """
-    Produce a normalised key used purely for fuzzy comparison — NOT for display.
-    Steps:
-      1. Decode common HTML entities (&amp; &#039; etc.)
-      2. Strip accents / unicode noise
-      3. Lowercase
-      4. Remove punctuation and extra whitespace
-      5. Collapse common abbreviations / known typos
-    """
-    # 1. HTML entities + non-breaking / invisible whitespace
     s = s.replace('\xa0', ' ').replace('\u200b', '').replace('\u2019', "'")
     s = s.replace('&amp;', '&').replace('&#039;', "'").replace('&apos;', "'")
     s = s.replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"')
-    # 2. Unicode normalise → ASCII
-    s = unicodedata.normalize('NFKD', s)
-    s = s.encode('ascii', 'ignore').decode('ascii')
-    # 3. Lowercase
-    s = s.lower()
-    # 4. Strip punctuation / extra spaces
-    s = re.sub(r"['\-–—,.]", ' ', s)
+    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii').lower()
+    s = re.sub(r"['\-\u2013\u2014,.]", ' ', s)
     s = re.sub(r'\s+', ' ', s).strip()
-    # 5. Spelling normalisations
-    s = re.sub(r'\bprepatory\b', 'preparatory', s)   # common typo
-    s = re.sub(r'\bst\b',        'saint',        s)   # st → saint
-    s = re.sub(r'\bprimary\b',   'primary',      s)
-    s = re.sub(r'\bschoo\b',     'school',       s)   # truncation
-    s = re.sub(r'\bschool\b',    'school',       s)
+    s = re.sub(r'\bprepatory\b', 'preparatory', s)
+    s = re.sub(r'\bst\b',        'saint',        s)
+    s = re.sub(r'\bschoo\b',     'school',       s)
     return s
 
 
 def _token_overlap(a, b):
-    """
-    Jaccard-style overlap between the two token sets.
-    Using union (Jaccard) rather than 'fraction of shorter' prevents
-    a 2-word name from falsely absorbing a 6-word name just because
-    both happen to share generic tokens like 'primary' or 'school'.
-    """
-    ta = set(_clean_for_matching(a).split())
-    tb = set(_clean_for_matching(b).split())
-    if not ta or not tb:
-        return 0.0
-    # Strip generic stop-words before scoring so "primary school" alone
-    # doesn't drive false matches
     stopwords = {'school', 'primary', 'secondary', 'college', 'academy',
                  'the', 'of', 'and', 'saint', 'high', 'preparatory'}
-    ta_sig = ta - stopwords or ta   # fall back to full set if all are stopwords
-    tb_sig = tb - stopwords or tb
-    intersection = len(ta_sig & tb_sig)
-    union_       = len(ta_sig | tb_sig)
-    return intersection / union_ if union_ else 0.0
+    ta = set(_clean_for_matching(a).split()) - stopwords or set(_clean_for_matching(a).split())
+    tb = set(_clean_for_matching(b).split()) - stopwords or set(_clean_for_matching(b).split())
+    if not ta or not tb:
+        return 0.0
+    inter  = len(ta & tb)
+    union_ = len(ta | tb)
+    return inter / union_ if union_ else 0.0
 
 
 def build_canonical_map(raw_names, threshold=0.80):
-    """
-    Given a list of raw school names (with duplicates reflecting frequency),
-    group names that are very likely the same school and return a dict
-    {raw_name → canonical_name}.
-
-    Algorithm:
-      - Build groups where token-overlap ≥ threshold AND the overlap is
-        symmetric (both directions), which prevents short names like "Bay Primary"
-        accidentally absorbing unrelated longer names.
-      - Canonical = most frequently seen raw name; length breaks ties.
-    """
-    # Count frequencies
     from collections import Counter
     freq   = Counter(raw_names)
     unique = list(freq.keys())
-
-    # Union-Find
     parent = {n: n for n in unique}
 
     def find(x):
         while parent[x] != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
+            parent[x] = parent[parent[x]]; x = parent[x]
         return x
 
     def union(x, y):
@@ -124,51 +78,60 @@ def build_canonical_map(raw_names, threshold=0.80):
 
     for i, a in enumerate(unique):
         for b in unique[i+1:]:
-            # Never merge names that are on the confirmed-distinct blocklist
             if a in MERGE_BLOCKLIST or b in MERGE_BLOCKLIST:
                 continue
-            overlap_ab = _token_overlap(a, b)
-            if overlap_ab >= threshold:
+            if _token_overlap(a, b) >= threshold:
                 union(a, b)
 
-    # Build groups
     groups = {}
     for name in unique:
-        root = find(name)
-        groups.setdefault(root, []).append(name)
+        groups.setdefault(find(name), []).append(name)
 
-    # Pick canonical = most frequent; length breaks ties
     canonical_map = {}
     for members in groups.values():
         canonical = max(members, key=lambda n: (freq[n], len(n)))
         for m in members:
             canonical_map[m] = canonical
-
     return canonical_map
 
 
-# ── Normalise a single raw name ───────────────────────────────────────────────
-
 def normalize_school_name(name, canonical_map=None):
-    """
-    Two-stage cleaning:
-      1. Exact override table (for HTML entities, known abbreviations).
-      2. Fuzzy canonical map built dynamically from all names in the dataset.
-    """
     if pd.isna(name):
         return ""
-    # Strip non-breaking spaces and other invisible characters before anything else
     s = str(name).replace('\xa0', ' ').replace('\u200b', '').replace('\u2019', "'").strip()
-    # Stage 1 – exact overrides
     s = EXACT_OVERRIDES.get(s, s)
-    # Stage 2 – fuzzy canonical (populated during load_all_data)
     if canonical_map and s in canonical_map:
         s = canonical_map[s]
     return s
 
 
+# ── Product type helpers ──────────────────────────────────────────────────────
+
+def classify_product(pt):
+    """Return 'classroom', 'instrumental', or 'both' from a raw Product Type value."""
+    if pd.isna(pt):
+        return 'both'          # old files default → counts in both buckets
+    pt = str(pt).strip().lower()
+    if 'classroom' in pt and 'instrumental' in pt:
+        return 'both'
+    if 'classroom' in pt:
+        return 'classroom'
+    if 'instrumental' in pt:
+        return 'instrumental'
+    return 'both'              # unknown → both
+
+
+def classify_billing(bs):
+    """Return 'Paying', 'Demo', or 'Paying' (default for old files)."""
+    if pd.isna(bs):
+        return 'Paying'
+    s = str(bs).strip()
+    return s if s in ('Paying', 'Demo') else 'Paying'
+
+
+# ── Date / week helpers ───────────────────────────────────────────────────────
+
 def parse_date(filename):
-    """Extract a date from messy filenames like 'Daily Usage Snapshot - 20 - 02 - 2026.xlsx'"""
     m = re.search(r'(\d{1,2})\s*-\s*(\d{1,2})\s*-\s*(\d{4})', filename)
     if not m:
         return None
@@ -187,20 +150,19 @@ def assign_week(date):
 
 def week_label(week_num):
     start = WEEK1_START + timedelta(weeks=week_num - 1)
-    end   = start + timedelta(days=4)          # Mon–Fri
+    end   = start + timedelta(days=4)
     if start.month == end.month:
         return f"Week {week_num} ({start.strftime('%-d')}–{end.strftime('%-d %b')})"
     return f"Week {week_num} ({start.strftime('%-d %b')}–{end.strftime('%-d %b')})"
 
 
-def pct_change_html(new_val, old_val, unit=""):
-    """Return an HTML badge string for a numeric change."""
+def pct_change_html(new_val, old_val):
     if old_val == 0:
         return '<span class="delta new">new</span>'
     diff = new_val - old_val
     pct  = round((diff / old_val) * 100)
     if diff > 0:
-        return f'<span class="delta up">▲ {pct}%</span>'
+        return f'<span class="delta up">▲ +{pct}%</span>'
     if diff < 0:
         return f'<span class="delta down">▼ {abs(pct)}%</span>'
     return '<span class="delta flat">→ same</span>'
@@ -213,7 +175,7 @@ def load_all_data():
     if not excel_files:
         return None
 
-    # ── Pass 1: collect every raw school name seen across all files ───────────
+    # Pass 1 – build canonical name map
     raw_name_pool = []
     for file_path in excel_files:
         file_date = parse_date(file_path.name)
@@ -224,35 +186,30 @@ def load_all_data():
             sheet = next((s for s in xl.sheet_names if 'Raw Data' in s), None)
             if not sheet:
                 continue
-            df         = pd.read_excel(file_path, sheet_name=sheet)
-            school_col = next((c for c in df.columns
-                               if 'school' in str(c).lower() and 'name' in str(c).lower()), None)
-            if school_col:
-                for v in df[school_col].dropna().unique():
-                    cleaned = EXACT_OVERRIDES.get(str(v).strip(), str(v).strip())
-                    raw_name_pool.append(cleaned)
+            df  = pd.read_excel(file_path, sheet_name=sheet)
+            col = next((c for c in df.columns
+                        if 'school' in str(c).lower() and 'name' in str(c).lower()), None)
+            if col:
+                for v in df[col].dropna().unique():
+                    raw_name_pool.append(EXACT_OVERRIDES.get(str(v).strip(), str(v).strip()))
         except Exception:
             pass
 
-    # ── Build fuzzy canonical map from the full name pool ─────────────────────
     canonical_map = build_canonical_map(raw_name_pool, threshold=0.80)
 
-    # ── Audit: print any names that were merged ───────────────────────────────
-    merges = {}
-    for raw, canon in canonical_map.items():
-        if raw != canon:
-            merges.setdefault(canon, []).append(raw)
-
+    merges = {c: vs for c, vs in
+              {canon: [r for r, cc in canonical_map.items() if cc == canon and r != canon]
+               for canon in set(canonical_map.values())}.items() if vs}
     if merges:
-        print("\n  🔀 Name merges applied (fuzzy deduplication):")
+        print("\n  🔀 Name merges applied:")
         for canon, variants in sorted(merges.items()):
             for v in variants:
                 print(f"      '{v}'  →  '{canon}'")
         print()
     else:
-        print("  ✅ No fuzzy merges needed — all school names are consistent.\n")
+        print("  ✅ All school names consistent.\n")
 
-    # ── Pass 2: load data, applying canonical map ─────────────────────────────
+    # Pass 2 – load rows with segmentation columns
     rows = []
     for file_path in excel_files:
         file_date = parse_date(file_path.name)
@@ -274,31 +231,52 @@ def load_all_data():
 
             df = pd.read_excel(file_path, sheet_name=sheet)
 
-            school_col = next((c for c in df.columns
-                               if 'school' in str(c).lower() and 'name' in str(c).lower()), None)
-            email_col  = next((c for c in df.columns
-                               if 'email'  in str(c).lower()), None)
+            school_col  = next((c for c in df.columns
+                                if 'school' in str(c).lower() and 'name' in str(c).lower()), None)
+            email_col   = next((c for c in df.columns
+                                if 'email' in str(c).lower()), None)
+            product_col = next((c for c in df.columns
+                                if 'product' in str(c).lower()), None)
+            billing_col = next((c for c in df.columns
+                                if 'billing' in str(c).lower()), None)
+
             if not school_col or not email_col:
-                print(f"  ⚠️  Missing columns: {file_path.name}")
+                print(f"  ⚠️  Missing core columns: {file_path.name}")
                 continue
 
             df = df.copy()
-            df['School'] = df[school_col].apply(
-                lambda n: normalize_school_name(n, canonical_map))
-            df['Email']  = df[email_col]
-            df['Date']   = file_date
-            df['Week']   = week
+            df['School']  = df[school_col].apply(lambda n: normalize_school_name(n, canonical_map))
+            df['Email']   = df[email_col]
+            df['Date']    = file_date
+            df['Week']    = week
+            df['Product'] = df[product_col].apply(classify_product) if product_col else 'both'
+            df['Billing'] = df[billing_col].apply(classify_billing) if billing_col else 'Paying'
 
-            # Remove internal / test rows
+            # Expand 'both' rows into two rows: one classroom, one instrumental
+            # so downstream groupby works cleanly
+            expanded = []
+            for _, row in df.iterrows():
+                if row['Product'] == 'both':
+                    expanded.append({**row, 'Product': 'classroom'})
+                    expanded.append({**row, 'Product': 'instrumental'})
+                else:
+                    expanded.append(dict(row))
+            df = pd.DataFrame(expanded)
+
+            # Remove internal rows
             mask = ~df['School'].str.contains(
                 'Onboarding|Ear Academy|Knowledge Hub', case=False, na=False)
-            df = df[mask & (df['School'] != '')]
+            df = df[mask & (df['School'] != '') & (df['School'] != 'nan')]
 
-            rows.append(df[['School', 'Email', 'Date', 'Week']])
-            print(f"  ✓ {file_date.strftime('%a %d %b')}  (Week {week})  {len(df):>4} rows  – {file_path.name}")
+            rows.append(df[['School', 'Email', 'Date', 'Week', 'Product', 'Billing']])
+
+            # Count unique login rows (before expansion) for display
+            orig_count = df.groupby(['School', 'Email', 'Date']).ngroups
+            print(f"  ✓ {file_date.strftime('%a %d %b')}  (Week {week})  – {file_path.name}")
 
         except Exception as e:
             print(f"  ⚠️  Error reading {file_path.name}: {e}")
+            import traceback; traceback.print_exc()
 
     if not rows:
         return None
@@ -310,40 +288,66 @@ def load_all_data():
 
 # ── Metric calculations ───────────────────────────────────────────────────────
 
+def paying(df):
+    return df[df['Billing'] == 'Paying']
+
+def demo(df):
+    return df[df['Billing'] == 'Demo']
+
+def classroom(df):
+    return df[df['Product'] == 'classroom']
+
+def instrumental(df):
+    return df[df['Product'] == 'instrumental']
+
+def unique_logins(df):
+    """
+    Count unique login events. Since 'both' rows are expanded to 2 rows,
+    we deduplicate by (School, Email, Date) within each product segment.
+    For total logins we use the original unique (School, Email, Date) count
+    across either product.
+    """
+    return df.drop_duplicates(subset=['School', 'Email', 'Date', 'Product'])
+
+def total_logins(df):
+    """Unique (School, Email, Date) regardless of product expansion."""
+    return df.drop_duplicates(subset=['School', 'Email', 'Date'])
+
+
 def calc_daily_pulse(combined):
-    """Yesterday vs day-before stats."""
-    all_dates = sorted(combined['Date'].dt.date.unique())
+    pay = paying(combined)
+    all_dates = sorted(pay['Date'].dt.date.unique())
     if not all_dates:
         return {}
 
     yesterday  = all_dates[-1]
     day_before = all_dates[-2] if len(all_dates) >= 2 else None
 
-    y_data  = combined[combined['Date'].dt.date == yesterday]
-    y_logins  = len(y_data)
-    y_schools = y_data['School'].nunique()
+    y_df  = pay[pay['Date'].dt.date == yesterday]
+    db_df = pay[pay['Date'].dt.date == day_before] if day_before else pay.iloc[0:0]
 
-    db_logins  = 0
-    db_schools = 0
-    if day_before:
-        db_data    = combined[combined['Date'].dt.date == day_before]
-        db_logins  = len(db_data)
-        db_schools = db_data['School'].nunique()
+    # Logins = unique (School, Email, Date) events
+    y_logins  = total_logins(y_df)['Email'].count()
+    y_schools = y_df['School'].nunique()
+    db_logins  = total_logins(db_df)['Email'].count()
+    db_schools = db_df['School'].nunique() if day_before else 0
 
-    # Schools that logged in yesterday but NOT on day_before (new that day)
-    y_school_set  = set(y_data['School'].unique())
-    db_school_set = set()
-    if day_before:
-        db_school_set = set(
-            combined[combined['Date'].dt.date == day_before]['School'].unique())
+    # Product breakdown (deduplicated per product)
+    y_cls  = unique_logins(classroom(y_df))['Email'].count()
+    y_ins  = unique_logins(instrumental(y_df))['Email'].count()
 
-    new_today = sorted(y_school_set - db_school_set)
+    # New schools vs day before
+    y_schools_set  = set(y_df['School'].unique())
+    db_schools_set = set(db_df['School'].unique()) if day_before else set()
+    new_today      = sorted(y_schools_set - db_schools_set)
 
     return {
         'yesterday':      yesterday,
         'day_before':     day_before,
         'y_logins':       y_logins,
         'y_schools':      y_schools,
+        'y_cls':          y_cls,
+        'y_ins':          y_ins,
         'db_logins':      db_logins,
         'db_schools':     db_schools,
         'new_schools':    new_today,
@@ -351,113 +355,163 @@ def calc_daily_pulse(combined):
 
 
 def calc_weekly_snapshot(combined):
-    max_week  = int(combined['Week'].max())
+    pay       = paying(combined)
+    max_week  = int(pay['Week'].max())
     prev_week = max_week - 1
 
-    cw = combined[combined['Week'] == max_week]
-    pw = combined[combined['Week'] == prev_week] if prev_week >= 1 else combined.iloc[0:0]
+    cw = pay[pay['Week'] == max_week]
+    pw = pay[pay['Week'] == prev_week] if prev_week >= 1 else pay.iloc[0:0]
 
-    # This week / last week
-    cw_logins  = len(cw)
+    # Total logins (no double-count from product expansion)
+    cw_logins  = total_logins(cw)['Email'].count()
     cw_schools = cw['School'].nunique()
-    pw_logins  = len(pw)
+    pw_logins  = total_logins(pw)['Email'].count()
     pw_schools = pw['School'].nunique()
 
-    # Schools activated (ever seen, this week change)
-    ever_schools     = combined['School'].nunique()
-    prev_ever        = combined[combined['Week'] <= prev_week]['School'].nunique() if prev_week >= 1 else 0
+    # Product breakdown this week
+    cw_cls_logins  = unique_logins(classroom(cw))['Email'].count()
+    cw_ins_logins  = unique_logins(instrumental(cw))['Email'].count()
+    cw_cls_schools = classroom(cw)['School'].nunique()
+    cw_ins_schools = instrumental(cw)['School'].nunique()
+
+    # Schools ever activated (paying)
+    ever_schools     = pay['School'].nunique()
+    prev_ever        = pay[pay['Week'] <= prev_week]['School'].nunique() if prev_week >= 1 else 0
     activated_change = ever_schools - prev_ever
 
-    # Consistent users: active on 3+ DAYS this current week
-    cw_day_counts = (cw.groupby('School')['Date'].nunique())
-    consistent_schools = sorted(cw_day_counts[cw_day_counts >= 3].index.tolist())
-    consistent_count   = len(consistent_schools)
+    # Consistent: 3+ distinct days this week
+    cw_day_counts       = cw.groupby('School')['Date'].nunique()
+    consistent_schools  = sorted(cw_day_counts[cw_day_counts >= 3].index.tolist())
+    consistent_count    = len(consistent_schools)
+    pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
+    prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    prev_cw_day_counts  = (pw.groupby('School')['Date'].nunique()) if len(pw) else pd.Series(dtype=int)
-    prev_consistent     = int((prev_cw_day_counts >= 3).sum())
-
-    # Quiet 7+ days: logged in before but not in last 7 days
-    latest_date    = combined['Date'].max()
-    cutoff_7       = latest_date - timedelta(days=7)
-    active_7       = set(combined[combined['Date'] > cutoff_7]['School'].unique())
-    ever           = set(combined['School'].unique())
-    quiet_7_schools = sorted(ever - active_7)
+    # Quiet 7+ days (paying)
+    latest_date   = pay['Date'].max()
+    cutoff_7      = latest_date - timedelta(days=7)
+    active_7      = set(pay[pay['Date'] > cutoff_7]['School'].unique())
+    ever          = set(pay['School'].unique())
+    quiet_7       = sorted(ever - active_7)
 
     return {
-        'max_week':          max_week,
-        'prev_week':         prev_week,
-        'cw_logins':         cw_logins,
-        'cw_schools':        cw_schools,
-        'pw_logins':         pw_logins,
-        'pw_schools':        pw_schools,
-        'ever_schools':      ever_schools,
-        'activated_change':  activated_change,
-        'consistent_schools': consistent_schools,
-        'consistent_count':   consistent_count,
-        'prev_consistent':    prev_consistent,
-        'quiet_7_schools':   quiet_7_schools,
-        'quiet_7_count':     len(quiet_7_schools),
+        'max_week': max_week, 'prev_week': prev_week,
+        'cw_logins': cw_logins, 'cw_schools': cw_schools,
+        'cw_cls_logins': cw_cls_logins, 'cw_ins_logins': cw_ins_logins,
+        'cw_cls_schools': cw_cls_schools, 'cw_ins_schools': cw_ins_schools,
+        'pw_logins': pw_logins, 'pw_schools': pw_schools,
+        'ever_schools': ever_schools, 'activated_change': activated_change,
+        'consistent_schools': consistent_schools, 'consistent_count': consistent_count,
+        'prev_consistent': prev_consistent,
+        'quiet_7_schools': quiet_7, 'quiet_7_count': len(quiet_7),
     }
 
 
 def calc_patterns(combined, snap):
+    pay       = paying(combined)
     max_week  = snap['max_week']
     prev_week = snap['prev_week']
-
-    # Drop-offs: active last week, NOT active this week
-    cw_schools = set(combined[combined['Week'] == max_week]['School'].unique())
-    pw_schools = set(combined[combined['Week'] == prev_week]['School'].unique()) if prev_week >= 1 else set()
-    dropoffs   = sorted(pw_schools - cw_schools)
-
-    # New activations this week: never seen before this week
-    prior      = set(combined[combined['Week'] < max_week]['School'].unique())
-    new_this_week = sorted(cw_schools - prior)
-
+    cw_set    = set(pay[pay['Week'] == max_week]['School'].unique())
+    pw_set    = set(pay[pay['Week'] == prev_week]['School'].unique()) if prev_week >= 1 else set()
+    prior_set = set(pay[pay['Week'] < max_week]['School'].unique())
     return {
-        'dropoffs':      dropoffs,
-        'new_this_week': new_this_week,
+        'dropoffs':      sorted(pw_set - cw_set),
+        'new_this_week': sorted(cw_set - prior_set),
     }
 
 
 def calc_weekly_trends(combined):
-    all_weeks = sorted(combined['Week'].unique())
+    pay       = paying(combined)
+    all_weeks = sorted(pay['Week'].unique())
     last6     = all_weeks[-6:]
+
+    # Identify which weeks have real product segmentation data
+    # (i.e. at least one row with an explicit Product Type column, not defaulted to 'both')
+    weeks_with_seg = set()
+    if 'Product' in combined.columns:
+        # A week has real seg data if it has rows where the product was NOT expanded from 'both'
+        # We track this by checking if a week appears in the Feb-23+ file (Week 6+)
+        # Simpler: a week has real seg if its cls + ins != 2 × total (both-expansion doubles)
+        # Best: check the raw data; since 'both' expands to both products, a week is segmented
+        # when cls ≠ total OR ins ≠ total for the deduplicated view
+        for w in last6:
+            wd  = pay[pay['Week'] == w]
+            tot = total_logins(wd)['Email'].count()
+            cls = unique_logins(classroom(wd))['Email'].count()
+            ins = unique_logins(instrumental(wd))['Email'].count()
+            # If cls == tot AND ins == tot, every login was 'both' → no real segmentation
+            if tot > 0 and not (cls == tot and ins == tot):
+                weeks_with_seg.add(w)
 
     stats = {}
     for w in last6:
-        wd = combined[combined['Week'] == w]
+        wd  = pay[pay['Week'] == w]
+        tot = total_logins(wd)['Email'].count()
+        cls = unique_logins(classroom(wd))['Email'].count()
+        ins = unique_logins(instrumental(wd))['Email'].count()
         stats[w] = {
-            'schools': wd['School'].nunique(),
-            'logins':  len(wd),
-            'label':   week_label(int(w)),
+            'schools':     wd['School'].nunique(),
+            'logins':      tot,
+            'cls':         cls,
+            'ins':         ins,
+            'segmented':   w in weeks_with_seg,
+            'label':       week_label(int(w)),
         }
     return stats, last6
 
 
+def calc_uk_pilot(combined):
+    dm = demo(combined)
+    if dm.empty:
+        return {'schools': 0, 'logins': 0, 'cls': 0, 'ins': 0,
+                'school_list': [], 'has_data': False}
+
+    max_week = int(combined['Week'].max())
+    cw = dm[dm['Week'] == max_week]
+    return {
+        'schools':     cw['School'].nunique(),
+        'logins':      total_logins(cw)['Email'].count(),
+        'cls':         unique_logins(classroom(cw))['Email'].count(),
+        'ins':         unique_logins(instrumental(cw))['Email'].count(),
+        'school_list': sorted(cw['School'].unique()),
+        'has_data':    not cw.empty,
+    }
+
+
 def calc_top10(combined):
-    """Rank schools by (weeks_active × teachers) + total_logins."""
-    grp = combined.groupby('School').agg(
+    pay = paying(combined)
+    max_week = int(pay['Week'].max())
+
+    # Use total_logins (deduplicated) per school
+    base = total_logins(pay)
+    grp  = base.groupby('School').agg(
         total_logins =('Email', 'count'),
         teachers     =('Email', 'nunique'),
         weeks_active =('Week',  'nunique'),
     ).reset_index()
 
+    # Product breakdown per school
+    cls_counts = unique_logins(classroom(pay)).groupby('School')['Email'].count().rename('cls')
+    ins_counts = unique_logins(instrumental(pay)).groupby('School')['Email'].count().rename('ins')
+    grp = grp.join(cls_counts, on='School').join(ins_counts, on='School')
+    grp['cls'] = grp['cls'].fillna(0).astype(int)
+    grp['ins'] = grp['ins'].fillna(0).astype(int)
+
     grp['score'] = grp['weeks_active'] * grp['teachers'] * 2 + grp['total_logins']
     grp = grp.sort_values('score', ascending=False).head(10).reset_index(drop=True)
 
-    max_week = int(combined['Week'].max())
-    result   = []
+    result = []
     for _, row in grp.iterrows():
-        school_weeks = sorted(
-            combined[combined['School'] == row['School']]['Week'].unique())
-        weeks_str = ', '.join(f"W{int(w)}" for w in school_weeks)
+        school_weeks = sorted(pay[pay['School'] == row['School']]['Week'].unique())
+        weeks_str    = ', '.join(f"W{int(w)}" for w in school_weeks)
         result.append({
-            'name':    row['School'],
-            'logins':  int(row['total_logins']),
-            'teachers':int(row['teachers']),
-            'weeks':   weeks_str,
+            'name':         row['School'],
+            'logins':       int(row['total_logins']),
+            'teachers':     int(row['teachers']),
+            'cls':          int(row['cls']),
+            'ins':          int(row['ins']),
+            'weeks':        weeks_str,
             'weeks_active': int(row['weeks_active']),
-            'in_latest': int(max_week) in [int(w) for w in school_weeks],
+            'in_latest':    max_week in [int(w) for w in school_weeks],
         })
     return result
 
@@ -465,6 +519,9 @@ def calc_top10(combined):
 # ── HTML builders ─────────────────────────────────────────────────────────────
 
 def build_daily_pulse_html(dp):
+    if not dp:
+        return '<section class="dashboard-section"><p>No data.</p></section>'
+
     yesterday_str  = dp['yesterday'].strftime('%A, %-d %B %Y')
     day_before_str = dp['day_before'].strftime('%A, %-d %B') if dp['day_before'] else '–'
 
@@ -483,7 +540,7 @@ def build_daily_pulse_html(dp):
         <!-- ═══════════════════════════════════ DAILY PULSE ═══════════════════════════════════ -->
         <section class="dashboard-section" id="section-daily-pulse">
             <h2 class="section-title turkish">⚡ Daily Pulse</h2>
-            <p class="section-desc">Yesterday's activity vs the day before</p>
+            <p class="section-desc">Yesterday · paying customers only</p>
 
             <div class="pulse-grid">
                 <div class="pulse-card">
@@ -492,11 +549,17 @@ def build_daily_pulse_html(dp):
                         <div class="pulse-metric">
                             <div class="pulse-value" id="pulse-logins">{dp['y_logins']}</div>
                             <div class="pulse-label">Logins {login_delta}</div>
+                            <div class="pulse-split">
+                                <span class="split-cls">🏫 {dp['y_cls']} classroom</span>
+                                <span class="split-sep">·</span>
+                                <span class="split-ins">🎵 {dp['y_ins']} instrumental</span>
+                            </div>
                         </div>
                         <div class="pulse-divider"></div>
                         <div class="pulse-metric">
                             <div class="pulse-value" id="pulse-schools">{dp['y_schools']}</div>
                             <div class="pulse-label">Schools {school_delta}</div>
+                            <div class="pulse-split">paying customers</div>
                         </div>
                     </div>
                     <div class="pulse-prev">vs {day_before_str}: {dp['db_logins']} logins · {dp['db_schools']} schools</div>
@@ -507,45 +570,49 @@ def build_daily_pulse_html(dp):
 
 
 def build_weekly_snapshot_html(snap):
-    max_week  = snap['max_week']
-    prev_week = snap['prev_week']
+    mw = snap['max_week']
+    pw = snap['prev_week']
 
     logins_delta  = pct_change_html(snap['cw_logins'],  snap['pw_logins'])
     schools_delta = pct_change_html(snap['cw_schools'], snap['pw_schools'])
+    act_change    = snap['activated_change']
+    act_delta     = (f'<span class="delta up">▲ +{act_change} this week</span>' if act_change > 0
+                     else '<span class="delta flat">→ no change</span>')
+    cons_delta    = pct_change_html(snap['consistent_count'], snap['prev_consistent'])
 
-    act_change = snap['activated_change']
-    act_delta  = (f'<span class="delta up">▲ +{act_change} this week</span>' if act_change > 0
-                  else f'<span class="delta flat">→ no change</span>')
-
-    cons_delta = pct_change_html(snap['consistent_count'], snap['prev_consistent'])
-
-    # Consistent schools list
     cons_badges = ''.join(f'<span class="school-badge cons-badge">{s}</span>'
                           for s in snap['consistent_schools']) or '<em style="color:var(--gray)">None yet</em>'
-
-    # Quiet schools list
     quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                            for s in snap['quiet_7_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
 
     return f'''
         <!-- ═══════════════════════════════ WEEKLY SNAPSHOT ══════════════════════════════════ -->
         <section class="dashboard-section" id="section-weekly-snapshot">
-            <h2 class="section-title pacific">📋 Weekly Snapshot — Week {max_week}</h2>
-            <p class="section-desc">This week vs last week · Consistent users · Schools needing attention</p>
+            <h2 class="section-title pacific">📋 Weekly Snapshot — Week {mw}</h2>
+            <p class="section-desc">Paying customers only · Week {mw} vs Week {pw}</p>
 
             <div class="snapshot-grid">
 
                 <!-- Card 1: This week vs Last week -->
                 <div class="snap-card accent-pacific">
-                    <div class="snap-label">Week {max_week} vs Week {prev_week}</div>
+                    <div class="snap-label">Week {mw} vs Week {pw}</div>
                     <div class="snap-body">
-                        <div class="snap-metric">
-                            <span class="snap-value" id="snap-cw-logins">{snap['cw_logins']}</span>
-                            <span class="snap-unit">logins {logins_delta}</span>
+                        <div class="snap-segment-row">
+                            <span class="seg-icon">🏫</span>
+                            <span class="seg-label">Classroom</span>
+                            <span class="seg-value">{snap['cw_cls_logins']}</span>
+                            <span class="seg-sub">logins · {snap['cw_cls_schools']} schools</span>
                         </div>
-                        <div class="snap-metric">
-                            <span class="snap-value" id="snap-cw-schools">{snap['cw_schools']}</span>
-                            <span class="snap-unit">schools {schools_delta}</span>
+                        <div class="snap-segment-row">
+                            <span class="seg-icon">🎵</span>
+                            <span class="seg-label">Instrumental</span>
+                            <span class="seg-value">{snap['cw_ins_logins']}</span>
+                            <span class="seg-sub">logins · {snap['cw_ins_schools']} schools</span>
+                        </div>
+                        <div class="snap-total-row">
+                            <span class="snap-value" id="snap-cw-logins">{snap['cw_logins']}</span>
+                            <span class="snap-unit">total logins {logins_delta}</span>
+                            <span class="snap-unit">{snap['cw_schools']} schools {schools_delta}</span>
                         </div>
                     </div>
                     <div class="snap-prev">Last week: {snap['pw_logins']} logins · {snap['pw_schools']} schools</div>
@@ -560,7 +627,7 @@ def build_weekly_snapshot_html(snap):
                             <span class="snap-unit">of {TOTAL_CUSTOMERS} {act_delta}</span>
                         </div>
                     </div>
-                    <div class="snap-prev">{round(snap['ever_schools']/TOTAL_CUSTOMERS*100)}% of all customers have logged in</div>
+                    <div class="snap-prev">{round(snap['ever_schools']/TOTAL_CUSTOMERS*100)}% of all paying customers have logged in</div>
                 </div>
 
                 <!-- Card 3: Consistent Users -->
@@ -591,52 +658,82 @@ def build_weekly_snapshot_html(snap):
         </section>'''
 
 
-def build_patterns_html(patterns, snap):
-    max_week  = snap['max_week']
-    prev_week = snap['prev_week']
+def build_uk_pilot_html(uk):
+    if not uk['has_data']:
+        schools_html = '<div class="pilot-empty">No Demo schools have logged in yet.</div>'
+    else:
+        badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
+                         for s in uk['school_list'])
+        schools_html = f'<div class="badge-row">{badges}</div>'
 
-    # Drop-offs
+    return f'''
+        <!-- ═══════════════════════════════ UK PILOT ═══════════════════════════════════════ -->
+        <section class="dashboard-section" id="section-uk-pilot">
+            <h2 class="section-title forest">🇬🇧 UK Pilot</h2>
+            <p class="section-desc">Demo schools · not counted in main metrics</p>
+
+            <div class="pilot-grid">
+                <div class="pilot-stat">
+                    <div class="pilot-value">{uk['schools']}</div>
+                    <div class="pilot-label">Schools active this week</div>
+                </div>
+                <div class="pilot-stat">
+                    <div class="pilot-value">{uk['logins']}</div>
+                    <div class="pilot-label">Logins this week</div>
+                </div>
+                <div class="pilot-stat">
+                    <div class="pilot-value">{uk['cls']}</div>
+                    <div class="pilot-label">🏫 Classroom</div>
+                </div>
+                <div class="pilot-stat">
+                    <div class="pilot-value">{uk['ins']}</div>
+                    <div class="pilot-label">🎵 Instrumental</div>
+                </div>
+            </div>
+            {schools_html}
+        </section>'''
+
+
+def build_patterns_html(patterns, snap):
+    mw = snap['max_week']
+    pw = snap['prev_week']
+
     if patterns['dropoffs']:
         drop_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                               for s in patterns['dropoffs'])
         drop_html = f'<div class="pattern-count-badge">{len(patterns["dropoffs"])}</div><div class="badge-row">{drop_badges}</div>'
     else:
-        drop_html = '<div class="pattern-empty">🎉 No drop-offs — everyone who logged in last week is still active!</div>'
+        drop_html = '<div class="pattern-empty">🎉 No drop-offs this week!</div>'
 
-    # New activations
     if patterns['new_this_week']:
         new_badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
                              for s in patterns['new_this_week'])
         new_html = f'<div class="pattern-count-badge">{len(patterns["new_this_week"])}</div><div class="badge-row">{new_badges}</div>'
     else:
-        new_html = '<div class="pattern-empty">No first-time logins this week yet.</div>'
+        new_html = '<div class="pattern-empty">No first-time logins this week.</div>'
 
     return f'''
         <!-- ═══════════════════════════════ PATTERNS THIS WEEK ═══════════════════════════════ -->
         <section class="dashboard-section" id="section-patterns">
             <h2 class="section-title forest">🔍 Patterns This Week</h2>
-            <p class="section-desc">Movement signals for Week {max_week} vs Week {prev_week}</p>
+            <p class="section-desc">Paying customers only · Week {mw} vs Week {pw}</p>
 
             <div class="patterns-grid">
-
                 <div class="pattern-block">
                     <div class="pattern-block-title">📉 Drop-offs</div>
-                    <div class="pattern-block-desc">Active Week {prev_week}, quiet this week</div>
+                    <div class="pattern-block-desc">Active Week {pw}, quiet this week</div>
                     {drop_html}
                 </div>
-
                 <div class="pattern-block">
                     <div class="pattern-block-title">🆕 New Activations</div>
-                    <div class="pattern-block-desc">First-ever login this week</div>
+                    <div class="pattern-block-desc">First-ever login this week (paying)</div>
                     {new_html}
                 </div>
-
                 <div class="pattern-block pattern-notes">
                     <div class="pattern-block-title">📝 Notes</div>
                     <div class="pattern-block-desc">Contextual insights for this week</div>
-                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. School X mentioned exams, reached out to School Y…"></textarea>
+                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. Week 5 spike: Koa Academy instrumental signups&#10;Reached out to School X re: inactivity…"></textarea>
                 </div>
-
             </div>
         </section>'''
 
@@ -645,75 +742,103 @@ def build_trends_html(weekly_stats, last6):
     if not last6:
         return ''
 
-    max_schools = max(weekly_stats[w]['schools'] for w in last6)
-    latest_week  = max(last6)
-    first_week   = min(last6)
+    latest_week = max(last6)
+    first_week  = min(last6)
     ls = weekly_stats[latest_week]['schools']
     fs = weekly_stats[first_week]['schools']
 
     if fs > 0:
         gpct = round(((ls - fs) / fs) * 100)
-        if gpct > 0:
-            growth_text = f'↗ +{gpct}% vs {weekly_stats[first_week]["label"]}'
-        elif gpct < 0:
-            growth_text = f'↘ {gpct}% vs {weekly_stats[first_week]["label"]}'
-        else:
-            growth_text  = f'→ Steady across 6 weeks'
+        growth_text = (f'↗ +{gpct}% vs {weekly_stats[first_week]["label"]}' if gpct > 0
+                       else f'↘ {gpct}% vs {weekly_stats[first_week]["label"]}' if gpct < 0
+                       else '→ Steady')
     else:
         growth_text = '📊 First data point'
 
+    # Max total logins (for bar scaling)
+    max_logins = max(weekly_stats[w]['logins'] for w in last6) or 1
+
+    # Legend + bars
     bars_html = ''
     for w in reversed(last6):
-        schools    = weekly_stats[w]['schools']
-        logins     = weekly_stats[w]['logins']
-        pct        = int((schools / max_schools) * 100) if max_schools else 0
-        is_latest  = ' bar-latest' if w == latest_week else ''
-        label      = weekly_stats[w]['label']
+        ws        = weekly_stats[w]
+        total     = ws['logins']
+        cls       = ws['cls']
+        ins       = ws['ins']
+        segmented = ws['segmented']
+        is_lat    = ' bar-latest' if w == latest_week else ''
+        label     = ws['label']
+        tot_pct   = max(int((total / max_logins) * 100), 2) if total else 0
+
+        if segmented and total > 0:
+            # Real product data → stacked bar
+            cls_pct = int((cls / total) * tot_pct)
+            ins_pct = tot_pct - cls_pct
+            stats_text = f'{ws["schools"]} schools · {total} logins ({cls} cls / {ins} ins)'
+            bar_inner = (f'<div class="bar-segment bar-cls" style="width:{cls_pct}%"></div>'
+                         f'<div class="bar-segment bar-ins" style="width:{ins_pct}%"></div>'
+                         f'<span class="bar-total-label">{total}</span>')
+        else:
+            # Old data with no product split → single unified bar
+            cls_pct = tot_pct
+            stats_text = f'{ws["schools"]} schools · {total} logins'
+            bar_inner = (f'<div class="bar-segment bar-cls" style="width:{cls_pct}%"></div>'
+                         f'<span class="bar-total-label">{total}</span>')
 
         bars_html += f'''
                 <div class="week-bar-item">
                     <div class="week-info">
                         <span class="week-label">{label}</span>
-                        <span class="week-stats">{schools} schools · {logins} logins</span>
+                        <span class="week-stats">{stats_text}</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar bar-schools{is_latest}" style="width:{pct}%" data-value="{schools}"></div>
+                        <div class="stacked-bar{is_lat}">
+                            {bar_inner}
+                        </div>
                     </div>
                 </div>'''
+
+    legend_html = '''
+            <div class="bar-legend">
+                <span class="legend-item"><span class="legend-swatch swatch-cls"></span> Classroom</span>
+                <span class="legend-item"><span class="legend-swatch swatch-ins"></span> Instrumental</span>
+                <span class="legend-item" style="color:#aaa;font-style:italic;">Single-colour = no product data yet</span>
+            </div>'''
 
     return f'''
         <!-- ════════════════════════════════ WEEKLY TRENDS ═══════════════════════════════════ -->
         <section class="dashboard-section" id="section-trends">
             <h2 class="section-title pacific">📈 Weekly Trends</h2>
-            <p class="section-desc">Last {len(last6)} weeks · schools active per week</p>
+            <p class="section-desc">Last {len(last6)} weeks · paying customers · classroom vs instrumental</p>
 
             <div class="trend-summary">
-                <div class="trend-highlight">
-                    <div class="trend-label">Latest Week</div>
-                    <div class="trend-value" id="thisWeekSchools">{ls} schools</div>
-                    <div class="trend-change" id="weekGrowth">{growth_text}</div>
-                </div>
+                <div class="trend-label">Latest Week</div>
+                <div class="trend-value" id="thisWeekSchools">{ls} schools</div>
+                <div class="trend-change" id="weekGrowth">{growth_text}</div>
             </div>
 
+            {legend_html}
             <div class="weeks-container" id="weeks-container">
 {bars_html}
             </div>
         </section>'''
 
 
-def build_top10_html(top10, combined):
-    max_week = int(combined['Week'].max())
+def build_top10_html(top10):
     items_html = ''
     for i, s in enumerate(top10):
-        badge_class = 'badge-core' if s['weeks_active'] >= 4 else ('badge-active' if s['in_latest'] else 'badge-quiet')
-        badge_text  = ('🏆 Core' if s['weeks_active'] >= 4
-                       else ('✅ Active' if s['in_latest'] else '💤 Quiet'))
+        badge_class = ('badge-core'   if s['weeks_active'] >= 4
+                       else 'badge-active' if s['in_latest']
+                       else 'badge-quiet')
+        badge_text  = ('🏆 Core'   if s['weeks_active'] >= 4
+                       else '✅ Active' if s['in_latest']
+                       else '💤 Quiet')
         items_html += f'''
                 <li class="top-school-item">
                     <div class="rank-number">{i+1}</div>
                     <div class="school-info">
                         <div class="school-name">{s['name']}</div>
-                        <div class="school-stats">{s['logins']} logins · {s['teachers']} teachers · {s['weeks']}</div>
+                        <div class="school-stats">{s['logins']} logins · {s['teachers']} teachers · {s['weeks']} · 🏫 {s['cls']} cls / 🎵 {s['ins']} ins</div>
                     </div>
                     <span class="pattern-badge {badge_class}">{badge_text}</span>
                 </li>'''
@@ -722,7 +847,7 @@ def build_top10_html(top10, combined):
         <!-- ═══════════════════════════════════ TOP 10 ═══════════════════════════════════════ -->
         <section class="dashboard-section" id="section-top10">
             <h2 class="section-title turkish">🏆 Top 10 Schools</h2>
-            <p class="section-desc">Ranked by consistency × teachers × frequency</p>
+            <p class="section-desc">Paying customers · ranked by consistency × teachers × frequency</p>
             <ul class="top-schools-list">{items_html}
             </ul>
         </section>'''
@@ -746,55 +871,51 @@ def main():
         print("❌ No data loaded.")
         return
 
-    print(f"\n✅ {len(combined)} rows loaded from "
-          f"{combined['School'].nunique()} schools "
-          f"across {combined['Week'].nunique()} weeks\n")
+    pay = paying(combined)
+    print(f"\n✅ {total_logins(combined)['Email'].count()} unique login events loaded")
+    print(f"   Paying schools: {pay['School'].nunique()}")
+    print(f"   Demo schools:   {demo(combined)['School'].nunique()}")
+    print(f"   Weeks covered:  {sorted(combined['Week'].unique())}\n")
 
-    # ── Compute all metrics ───────────────────────────────────────────────────
+    # Compute all metrics
     dp       = calc_daily_pulse(combined)
     snap     = calc_weekly_snapshot(combined)
     patterns = calc_patterns(combined, snap)
     w_stats, last6 = calc_weekly_trends(combined)
+    uk       = calc_uk_pilot(combined)
     top10    = calc_top10(combined)
 
-    # ── Build HTML sections ───────────────────────────────────────────────────
-    daily_pulse_html    = build_daily_pulse_html(dp)
-    weekly_snap_html    = build_weekly_snapshot_html(snap)
-    patterns_html       = build_patterns_html(patterns, snap)
-    trends_html         = build_trends_html(w_stats, last6)
-    top10_html          = build_top10_html(top10, combined)
+    # Build HTML sections
+    daily_pulse_html  = build_daily_pulse_html(dp)
+    weekly_snap_html  = build_weekly_snapshot_html(snap)
+    uk_pilot_html     = build_uk_pilot_html(uk)
+    patterns_html     = build_patterns_html(patterns, snap)
+    trends_html       = build_trends_html(w_stats, last6)
+    top10_html        = build_top10_html(top10)
 
     updated_date = combined['Date'].max().strftime('%-d %B %Y')
 
-    # ── Read template and inject ──────────────────────────────────────────────
     if not OUTPUT_FILE.exists():
-        print(f"❌ {OUTPUT_FILE} not found — cannot inject data.")
+        print(f"❌ {OUTPUT_FILE} not found.")
         return
 
     with open(OUTPUT_FILE, 'r') as f:
         html = f.read()
 
-    # Replace the main content block
     new_content = (
-        daily_pulse_html
-        + '\n'
-        + weekly_snap_html
-        + '\n'
-        + patterns_html
-        + '\n'
-        + trends_html
-        + '\n'
+        daily_pulse_html + '\n'
+        + weekly_snap_html + '\n'
+        + uk_pilot_html + '\n'
+        + patterns_html + '\n'
+        + trends_html + '\n'
         + top10_html
     )
 
     html = re.sub(
         r'<!-- DASHBOARD_START -->.*?<!-- DASHBOARD_END -->',
         f'<!-- DASHBOARD_START -->{new_content}\n        <!-- DASHBOARD_END -->',
-        html,
-        flags=re.DOTALL,
+        html, flags=re.DOTALL,
     )
-
-    # Update footer date
     html = re.sub(
         r'Updated <span id="lastUpdated">[^<]*</span>',
         f'Updated <span id="lastUpdated">{updated_date}</span>',
@@ -805,12 +926,16 @@ def main():
         f.write(html)
 
     print("📊 Summary")
-    print(f"   Daily Pulse  : {dp['y_logins']} logins · {dp['y_schools']} schools on {dp['yesterday']}")
-    print(f"   Week {snap['max_week']} snapshot : {snap['cw_logins']} logins · {snap['cw_schools']} schools")
-    print(f"   Consistent   : {snap['consistent_count']} schools (3+ days this week)")
-    print(f"   Quiet 7+ days: {snap['quiet_7_count']} schools")
-    print(f"   Drop-offs    : {len(patterns['dropoffs'])}")
-    print(f"   New this week: {len(patterns['new_this_week'])}")
+    print(f"   Daily Pulse   : {dp.get('y_logins',0)} logins · {dp.get('y_schools',0)} schools "
+          f"({dp.get('y_cls',0)} cls / {dp.get('y_ins',0)} ins)")
+    print(f"   Week {snap['max_week']} snapshot: {snap['cw_logins']} logins · {snap['cw_schools']} schools")
+    print(f"   Classroom     : {snap['cw_cls_logins']} logins / {snap['cw_cls_schools']} schools")
+    print(f"   Instrumental  : {snap['cw_ins_logins']} logins / {snap['cw_ins_schools']} schools")
+    print(f"   UK Pilot      : {uk['schools']} schools · {uk['logins']} logins")
+    print(f"   Consistent    : {snap['consistent_count']} schools (3+ days)")
+    print(f"   Quiet 7+ days : {snap['quiet_7_count']} schools")
+    print(f"   Drop-offs     : {len(patterns['dropoffs'])}")
+    print(f"   New this week : {len(patterns['new_this_week'])}")
     print(f"\n✅ Dashboard written → {OUTPUT_FILE}")
     print("=" * 60)
 
