@@ -239,28 +239,34 @@ def load_all_data():
                                 if 'product' in str(c).lower()), None)
             billing_col = next((c for c in df.columns
                                 if 'billing' in str(c).lower()), None)
+            role_col    = next((c for c in df.columns
+                                if 'role' in str(c).lower()), None)
 
             if not school_col or not email_col:
                 print(f"  ⚠️  Missing core columns: {file_path.name}")
                 continue
 
             df = df.copy()
-            df['School']  = df[school_col].apply(lambda n: normalize_school_name(n, canonical_map))
-            df['Email']   = df[email_col]
-            df['Date']    = file_date
-            df['Week']    = week
-            df['Product'] = df[product_col].apply(classify_product) if product_col else 'both'
-            df['Billing'] = df[billing_col].apply(classify_billing) if billing_col else 'Paying'
+            df['School']   = df[school_col].apply(lambda n: normalize_school_name(n, canonical_map))
+            df['Email']    = df[email_col]
+            df['Date']     = file_date
+            df['Week']     = week
+            df['Product']  = df[product_col].apply(classify_product) if product_col else 'both'
+            df['Billing']  = df[billing_col].apply(classify_billing) if billing_col else 'Paying'
+            df['UserRole'] = df[role_col].astype(str).str.strip() if role_col else ''
 
             # Expand 'both' rows into two rows: one classroom, one instrumental
-            # so downstream groupby works cleanly
+            # so downstream groupby works cleanly.
+            # ProductExplicit=True  → file had a real Product Type column
+            # ProductExplicit=False → file had no column; 'both' is a fallback, not real data
+            has_product_col = product_col is not None
             expanded = []
             for _, row in df.iterrows():
                 if row['Product'] == 'both':
-                    expanded.append({**row, 'Product': 'classroom'})
-                    expanded.append({**row, 'Product': 'instrumental'})
+                    expanded.append({**row, 'Product': 'classroom',    'ProductExplicit': has_product_col})
+                    expanded.append({**row, 'Product': 'instrumental', 'ProductExplicit': has_product_col})
                 else:
-                    expanded.append(dict(row))
+                    expanded.append({**dict(row), 'ProductExplicit': True})
             df = pd.DataFrame(expanded)
 
             # Remove internal rows
@@ -268,7 +274,7 @@ def load_all_data():
                 'Onboarding|Ear Academy|Knowledge Hub', case=False, na=False)
             df = df[mask & (df['School'] != '') & (df['School'] != 'nan')]
 
-            rows.append(df[['School', 'Email', 'Date', 'Week', 'Product', 'Billing']])
+            rows.append(df[['School', 'Email', 'Date', 'Week', 'Product', 'Billing', 'UserRole', 'ProductExplicit']])
 
             # Count unique login rows (before expansion) for display
             orig_count = df.groupby(['School', 'Email', 'Date']).ngroups
@@ -474,26 +480,69 @@ def calc_uk_pilot(combined):
     }
 
 
+_TEACHER_ROLES     = {'Teacher', 'School Administrator'}
+_PARTICIPANT_ROLES = {'Participant'}
+
+
 def calc_top10(combined):
     pay = paying(combined)
     max_week = int(pay['Week'].max())
 
-    # Use total_logins (deduplicated) per school
+    # Use total_logins (deduplicated by School/Email/Date) per school
     base = total_logins(pay)
     grp  = base.groupby('School').agg(
         total_logins =('Email', 'count'),
-        teachers     =('Email', 'nunique'),
+        unique_users =('Email', 'nunique'),
         weeks_active =('Week',  'nunique'),
     ).reset_index()
 
-    # Product breakdown per school
-    cls_counts = unique_logins(classroom(pay)).groupby('School')['Email'].count().rename('cls')
-    ins_counts = unique_logins(instrumental(pay)).groupby('School')['Email'].count().rename('ins')
-    grp = grp.join(cls_counts, on='School').join(ins_counts, on='School')
-    grp['cls'] = grp['cls'].fillna(0).astype(int)
-    grp['ins'] = grp['ins'].fillna(0).astype(int)
+    # Count unique users by role per school using one row per (School, Email)
+    unique_users_df = base.drop_duplicates(subset=['School', 'Email'])
+    teacher_counts = (
+        unique_users_df[unique_users_df['UserRole'].isin(_TEACHER_ROLES)]
+        .groupby('School')['Email'].nunique()
+        .rename('teacher_count')
+    )
+    participant_counts = (
+        unique_users_df[unique_users_df['UserRole'].isin(_PARTICIPANT_ROLES)]
+        .groupby('School')['Email'].nunique()
+        .rename('participant_count')
+    )
+    grp = grp.join(teacher_counts, on='School').join(participant_counts, on='School')
+    grp['teacher_count']    = grp['teacher_count'].fillna(0).astype(int)
+    grp['participant_count'] = grp['participant_count'].fillna(0).astype(int)
 
-    grp['score'] = grp['weeks_active'] * grp['teachers'] * 2 + grp['total_logins']
+    # Product breakdown per school.
+    # Use rows where the file actually had a Product Type column (ProductExplicit=True) to
+    # determine each school's real product type.  Then assign cls/ins from total_logins so
+    # that W1-W5 logins (files with no Product Type col) are classified correctly instead of
+    # being ghost-counted in both classroom AND instrumental via the 'both' fallback expansion.
+    explicit_pay = pay[pay['ProductExplicit'] == True]
+    school_product_type = {}
+    for school, grp_exp in explicit_pay.groupby('School'):
+        prods = set(grp_exp['Product'].unique())
+        if 'classroom' in prods and 'instrumental' in prods:
+            school_product_type[school] = 'both'
+        elif 'classroom' in prods:
+            school_product_type[school] = 'classroom'
+        elif 'instrumental' in prods:
+            school_product_type[school] = 'instrumental'
+
+    def _cls_ins(row):
+        known = school_product_type.get(row['School'])
+        total = row['total_logins']
+        if known == 'instrumental':
+            return 0, total
+        if known == 'classroom':
+            return total, 0
+        # 'both' or unknown (school never appeared in a file with Product Type) → count in both
+        return total, total
+
+    grp[['cls', 'ins']] = grp.apply(lambda r: pd.Series(_cls_ins(r)), axis=1)
+    grp['cls'] = grp['cls'].astype(int)
+    grp['ins'] = grp['ins'].astype(int)
+
+    grp['score'] = grp['weeks_active'] * grp['unique_users'] * 2 + grp['total_logins']
     grp = grp.sort_values('score', ascending=False).head(10).reset_index(drop=True)
 
     result = []
@@ -501,14 +550,15 @@ def calc_top10(combined):
         school_weeks = sorted(pay[pay['School'] == row['School']]['Week'].unique())
         weeks_str    = ', '.join(f"W{int(w)}" for w in school_weeks)
         result.append({
-            'name':         row['School'],
-            'logins':       int(row['total_logins']),
-            'teachers':     int(row['teachers']),
-            'cls':          int(row['cls']),
-            'ins':          int(row['ins']),
-            'weeks':        weeks_str,
-            'weeks_active': int(row['weeks_active']),
-            'in_latest':    max_week in [int(w) for w in school_weeks],
+            'name':              row['School'],
+            'logins':            int(row['total_logins']),
+            'teacher_count':     int(row['teacher_count']),
+            'participant_count': int(row['participant_count']),
+            'cls':               int(row['cls']),
+            'ins':               int(row['ins']),
+            'weeks':             weeks_str,
+            'weeks_active':      int(row['weeks_active']),
+            'in_latest':         max_week in [int(w) for w in school_weeks],
         })
     return result
 
@@ -808,6 +858,16 @@ def build_trends_html(weekly_stats, last6):
         </section>'''
 
 
+def _user_count_str(teacher_count, participant_count):
+    """Return e.g. '5 teachers • 12 students', '5 teachers', or '12 students'."""
+    parts = []
+    if teacher_count:
+        parts.append(f"{teacher_count} {'teacher' if teacher_count == 1 else 'teachers'}")
+    if participant_count:
+        parts.append(f"{participant_count} {'student' if participant_count == 1 else 'students'}")
+    return ' • '.join(parts) if parts else ''
+
+
 def build_top10_html(top10):
     items_html = ''
     for i, s in enumerate(top10):
@@ -817,12 +877,14 @@ def build_top10_html(top10):
         badge_text  = ('🏆 Core'   if s['weeks_active'] >= 4
                        else '✅ Active' if s['in_latest']
                        else '💤 Quiet')
+        user_str = _user_count_str(s['teacher_count'], s['participant_count'])
+        user_part = f' · {user_str}' if user_str else ''
         items_html += f'''
                 <li class="top-school-item">
                     <div class="rank-number">{i+1}</div>
                     <div class="school-info">
                         <div class="school-name">{s['name']}</div>
-                        <div class="school-stats">{s['logins']} logins · {s['teachers']} teachers · {s['weeks']} · 🏫 {s['cls']} cls / 🎵 {s['ins']} ins</div>
+                        <div class="school-stats">{s['logins']} logins{user_part} · {s['weeks']} · 🏫 {s['cls']} cls / 🎵 {s['ins']} ins</div>
                     </div>
                     <span class="pattern-badge {badge_class}">{badge_text}</span>
                 </li>'''
