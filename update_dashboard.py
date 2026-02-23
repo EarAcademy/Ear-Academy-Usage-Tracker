@@ -386,12 +386,12 @@ def calc_weekly_snapshot(combined):
     pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
     prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    # Quiet 7+ days (paying)
+    # Quiet 14+ days (paying)
     latest_date   = pay['Date'].max()
-    cutoff_7      = latest_date - timedelta(days=7)
-    active_7      = set(pay[pay['Date'] > cutoff_7]['School'].unique())
+    cutoff_14     = latest_date - timedelta(days=14)
+    active_14     = set(pay[pay['Date'] > cutoff_14]['School'].unique())
     ever          = set(pay['School'].unique())
-    quiet_7       = sorted(ever - active_7)
+    quiet_14      = sorted(ever - active_14)
 
     return {
         'max_week': max_week, 'prev_week': prev_week,
@@ -402,19 +402,16 @@ def calc_weekly_snapshot(combined):
         'ever_schools': ever_schools, 'activated_change': activated_change,
         'consistent_schools': consistent_schools, 'consistent_count': consistent_count,
         'prev_consistent': prev_consistent,
-        'quiet_7_schools': quiet_7, 'quiet_7_count': len(quiet_7),
+        'quiet_14_schools': quiet_14, 'quiet_14_count': len(quiet_14),
     }
 
 
 def calc_patterns(combined, snap):
     pay       = paying(combined)
     max_week  = snap['max_week']
-    prev_week = snap['prev_week']
-    cw_set    = set(pay[pay['Week'] == max_week]['School'].unique())
-    pw_set    = set(pay[pay['Week'] == prev_week]['School'].unique()) if prev_week >= 1 else set()
     prior_set = set(pay[pay['Week'] < max_week]['School'].unique())
+    cw_set    = set(pay[pay['Week'] == max_week]['School'].unique())
     return {
-        'dropoffs':      sorted(pw_set - cw_set),
         'new_this_week': sorted(cw_set - prior_set),
     }
 
@@ -583,7 +580,7 @@ def build_weekly_snapshot_html(snap):
     cons_badges = ''.join(f'<span class="school-badge cons-badge">{s}</span>'
                           for s in snap['consistent_schools']) or '<em style="color:var(--gray)">None yet</em>'
     quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
-                           for s in snap['quiet_7_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
+                           for s in snap['quiet_14_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
 
     return f'''
         <!-- ═══════════════════════════════ WEEKLY SNAPSHOT ══════════════════════════════════ -->
@@ -642,13 +639,13 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-badges">{cons_badges}</div>
                 </div>
 
-                <!-- Card 4: Quiet 7+ Days -->
+                <!-- Card 4: Quiet 14+ Days -->
                 <div class="snap-card accent-salmon">
-                    <div class="snap-label">Quiet 7+ Days</div>
+                    <div class="snap-label">Quiet 14+ Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet">{snap['quiet_7_count']}</span>
-                            <span class="snap-unit">schools need attention</span>
+                            <span class="snap-value" id="snap-quiet">{snap['quiet_14_count']}</span>
+                            <span class="snap-unit">schools · no activity in 2+ weeks</span>
                         </div>
                     </div>
                     <div class="snap-badges">{quiet_badges}</div>
@@ -696,14 +693,6 @@ def build_uk_pilot_html(uk):
 
 def build_patterns_html(patterns, snap):
     mw = snap['max_week']
-    pw = snap['prev_week']
-
-    if patterns['dropoffs']:
-        drop_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
-                              for s in patterns['dropoffs'])
-        drop_html = f'<div class="pattern-count-badge">{len(patterns["dropoffs"])}</div><div class="badge-row">{drop_badges}</div>'
-    else:
-        drop_html = '<div class="pattern-empty">🎉 No drop-offs this week!</div>'
 
     if patterns['new_this_week']:
         new_badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
@@ -716,14 +705,9 @@ def build_patterns_html(patterns, snap):
         <!-- ═══════════════════════════════ PATTERNS THIS WEEK ═══════════════════════════════ -->
         <section class="dashboard-section" id="section-patterns">
             <h2 class="section-title forest">🔍 Patterns This Week</h2>
-            <p class="section-desc">Paying customers only · Week {mw} vs Week {pw}</p>
+            <p class="section-desc">Paying customers only · Week {mw}</p>
 
-            <div class="patterns-grid">
-                <div class="pattern-block">
-                    <div class="pattern-block-title">📉 Drop-offs</div>
-                    <div class="pattern-block-desc">Active Week {pw}, quiet this week</div>
-                    {drop_html}
-                </div>
+            <div class="patterns-grid patterns-grid-2col">
                 <div class="pattern-block">
                     <div class="pattern-block-title">🆕 New Activations</div>
                     <div class="pattern-block-desc">First-ever login this week (paying)</div>
@@ -732,7 +716,7 @@ def build_patterns_html(patterns, snap):
                 <div class="pattern-block pattern-notes">
                     <div class="pattern-block-title">📝 Notes</div>
                     <div class="pattern-block-desc">Contextual insights for this week</div>
-                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. Week 5 spike: Koa Academy instrumental signups&#10;Reached out to School X re: inactivity…"></textarea>
+                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. Koa Academy instrumental signups spiked&#10;Reached out to School X re: inactivity…"></textarea>
                 </div>
             </div>
         </section>'''
@@ -933,8 +917,7 @@ def main():
     print(f"   Instrumental  : {snap['cw_ins_logins']} logins / {snap['cw_ins_schools']} schools")
     print(f"   UK Pilot      : {uk['schools']} schools · {uk['logins']} logins")
     print(f"   Consistent    : {snap['consistent_count']} schools (3+ days)")
-    print(f"   Quiet 7+ days : {snap['quiet_7_count']} schools")
-    print(f"   Drop-offs     : {len(patterns['dropoffs'])}")
+    print(f"   Quiet 14+ days: {snap['quiet_14_count']} schools")
     print(f"   New this week : {len(patterns['new_this_week'])}")
     print(f"\n✅ Dashboard written → {OUTPUT_FILE}")
     print("=" * 60)

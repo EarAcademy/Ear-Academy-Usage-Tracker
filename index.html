@@ -298,7 +298,11 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 1.5rem;
         }
+        .patterns-grid-2col {
+            grid-template-columns: 1fr 1fr;
+        }
         @media (max-width: 900px) { .patterns-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .patterns-grid-2col { grid-template-columns: 1fr; } }
 
         .pattern-block {
             background: var(--cream);
@@ -781,16 +785,16 @@
                     <div class="snap-badges"><em style="color:var(--gray)">None yet</em></div>
                 </div>
 
-                <!-- Card 4: Quiet 7+ Days -->
+                <!-- Card 4: Quiet 14+ Days -->
                 <div class="snap-card accent-salmon">
-                    <div class="snap-label">Quiet 7+ Days</div>
+                    <div class="snap-label">Quiet 14+ Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet">16</span>
-                            <span class="snap-unit">schools need attention</span>
+                            <span class="snap-value" id="snap-quiet">9</span>
+                            <span class="snap-unit">schools · no activity in 2+ weeks</span>
                         </div>
                     </div>
-                    <div class="snap-badges"><span class="school-badge quiet-badge">Academie Orfeus</span><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Lebone II College</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">St Catherines</span><span class="school-badge quiet-badge">Trinity House</span></div>
+                    <div class="snap-badges"><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">St Catherines</span><span class="school-badge quiet-badge">Trinity House</span></div>
                 </div>
 
             </div>
@@ -825,14 +829,9 @@
         <!-- ═══════════════════════════════ PATTERNS THIS WEEK ═══════════════════════════════ -->
         <section class="dashboard-section" id="section-patterns">
             <h2 class="section-title forest">🔍 Patterns This Week</h2>
-            <p class="section-desc">Paying customers only · Week 6 vs Week 5</p>
+            <p class="section-desc">Paying customers only · Week 6</p>
 
-            <div class="patterns-grid">
-                <div class="pattern-block">
-                    <div class="pattern-block-title">📉 Drop-offs</div>
-                    <div class="pattern-block-desc">Active Week 5, quiet this week</div>
-                    <div class="pattern-count-badge">19</div><div class="badge-row"><span class="school-badge quiet-badge">Acudeo Crystal Park</span><span class="school-badge quiet-badge">Acudeo Thornview</span><span class="school-badge quiet-badge">Applewood Preparatory</span><span class="school-badge quiet-badge">Bay Primary</span><span class="school-badge quiet-badge">Brescia House</span><span class="school-badge quiet-badge">C5</span><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Canaan College</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Eastside Primary School</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Harriston Primary School</span><span class="school-badge quiet-badge">Hazyview Private Primary School</span><span class="school-badge quiet-badge">Herzlia Weitzman Primary School</span><span class="school-badge quiet-badge">Royal Schools Alberton</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">Sky City Primary School</span><span class="school-badge quiet-badge">Soofia International School</span><span class="school-badge quiet-badge">St Martin Preparatory School</span></div>
-                </div>
+            <div class="patterns-grid patterns-grid-2col">
                 <div class="pattern-block">
                     <div class="pattern-block-title">🆕 New Activations</div>
                     <div class="pattern-block-desc">First-ever login this week (paying)</div>
@@ -841,7 +840,7 @@
                 <div class="pattern-block pattern-notes">
                     <div class="pattern-block-title">📝 Notes</div>
                     <div class="pattern-block-desc">Contextual insights for this week</div>
-                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. Week 5 spike: Koa Academy instrumental signups&#10;Reached out to School X re: inactivity…"></textarea>
+                    <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. Koa Academy instrumental signups spiked&#10;Reached out to School X re: inactivity…"></textarea>
                 </div>
             </div>
         </section>
