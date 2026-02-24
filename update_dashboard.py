@@ -535,8 +535,10 @@ def calc_top10(combined):
             return 0, total
         if known == 'classroom':
             return total, 0
-        # 'both' or unknown (school never appeared in a file with Product Type) → count in both
-        return total, total
+        if known == 'both':
+            return total, total
+        # None → no Product Type data at all; return 0s so values are inert
+        return 0, 0
 
     grp[['cls', 'ins']] = grp.apply(lambda r: pd.Series(_cls_ins(r)), axis=1)
     grp['cls'] = grp['cls'].astype(int)
@@ -554,6 +556,7 @@ def calc_top10(combined):
             'logins':            int(row['total_logins']),
             'teacher_count':     int(row['teacher_count']),
             'participant_count': int(row['participant_count']),
+            'known_product':     school_product_type.get(row['School']),  # None if no data
             'cls':               int(row['cls']),
             'ins':               int(row['ins']),
             'weeks':             weeks_str,
@@ -868,6 +871,24 @@ def _user_count_str(teacher_count, participant_count):
     return ' • '.join(parts) if parts else ''
 
 
+def _product_str(known_product, cls, ins):
+    """
+    Build the cls/ins display fragment.
+    Only shown when we have real Product Type data (known_product is not None).
+      instrumental          → '🎵 230 ins'
+      classroom             → '🏫 50 cls'
+      both                  → '🏫 X cls / 🎵 Y ins'
+      None (no data)        → ''   (omitted entirely from the stats line)
+    """
+    if known_product is None:
+        return ''
+    if known_product == 'instrumental':
+        return f'🎵 {ins} ins'
+    if known_product == 'classroom':
+        return f'🏫 {cls} cls'
+    return f'🏫 {cls} cls / 🎵 {ins} ins'   # 'both'
+
+
 def build_top10_html(top10):
     items_html = ''
     for i, s in enumerate(top10):
@@ -877,14 +898,16 @@ def build_top10_html(top10):
         badge_text  = ('🏆 Core'   if s['weeks_active'] >= 4
                        else '✅ Active' if s['in_latest']
                        else '💤 Quiet')
-        user_str = _user_count_str(s['teacher_count'], s['participant_count'])
-        user_part = f' · {user_str}' if user_str else ''
+        user_str    = _user_count_str(s['teacher_count'], s['participant_count'])
+        user_part   = f' · {user_str}' if user_str else ''
+        product_str = _product_str(s['known_product'], s['cls'], s['ins'])
+        product_part = f' · {product_str}' if product_str else ''
         items_html += f'''
                 <li class="top-school-item">
                     <div class="rank-number">{i+1}</div>
                     <div class="school-info">
                         <div class="school-name">{s['name']}</div>
-                        <div class="school-stats">{s['logins']} logins{user_part} · {s['weeks']} · 🏫 {s['cls']} cls / 🎵 {s['ins']} ins</div>
+                        <div class="school-stats">{s['logins']} logins{user_part} · {s['weeks']}{product_part}</div>
                     </div>
                     <span class="pattern-badge {badge_class}">{badge_text}</span>
                 </li>'''
