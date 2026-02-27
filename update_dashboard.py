@@ -422,6 +422,8 @@ def calc_weekly_snapshot(combined):
         'cw_cls_schools': cw_cls_schools, 'cw_ins_schools': cw_ins_schools,
         'pw_logins': pw_logins, 'pw_schools': pw_schools,
         'ever_schools': ever_schools, 'activated_change': activated_change,
+        'lifetime_pct': round(ever_schools / TOTAL_CUSTOMERS * 100),
+        'weekly_active_pct': round(cw_schools / TOTAL_CUSTOMERS * 100),
         'consistent_schools': consistent_schools, 'consistent_count': consistent_count,
         'prev_consistent': prev_consistent,
         'quiet_14_schools': quiet_14, 'quiet_14_count': len(quiet_14),
@@ -642,8 +644,8 @@ def build_weekly_snapshot_html(snap):
     logins_delta  = pct_change_html(snap['cw_logins'],  snap['pw_logins'])
     schools_delta = pct_change_html(snap['cw_schools'], snap['pw_schools'])
     act_change    = snap['activated_change']
-    act_delta     = (f'<span class="delta up">▲ +{act_change} this week</span>' if act_change > 0
-                     else '<span class="delta flat">→ no change</span>')
+    act_delta     = (f'<span class="delta up">↗ +{act_change} new activations</span>' if act_change > 0
+                     else '<span class="delta flat">→ no new activations</span>')
     cons_delta    = pct_change_html(snap['consistent_count'], snap['prev_consistent'])
 
     cons_badges = ''.join(f'<span class="school-badge cons-badge">{s}</span>'
@@ -688,12 +690,18 @@ def build_weekly_snapshot_html(snap):
                 <div class="snap-card accent-forest">
                     <div class="snap-label">Schools Activated</div>
                     <div class="snap-body">
-                        <div class="snap-metric">
-                            <span class="snap-value" id="snap-activated">{snap['ever_schools']}</span>
-                            <span class="snap-unit">of {TOTAL_CUSTOMERS} {act_delta}</span>
+                        <div class="snap-segment-row">
+                            <span class="seg-label">Lifetime</span>
+                            <span class="seg-value" id="snap-activated">{snap['ever_schools']}</span>
+                            <span class="seg-sub">of {TOTAL_CUSTOMERS} ({snap['lifetime_pct']}%)</span>
+                        </div>
+                        <div class="snap-segment-row">
+                            <span class="seg-label">This week</span>
+                            <span class="seg-value">{snap['cw_schools']}</span>
+                            <span class="seg-sub">of {TOTAL_CUSTOMERS} ({snap['weekly_active_pct']}%)</span>
                         </div>
                     </div>
-                    <div class="snap-prev">{round(snap['ever_schools']/TOTAL_CUSTOMERS*100)}% of all paying customers have logged in</div>
+                    <div class="snap-prev">{act_delta}</div>
                 </div>
 
                 <!-- Card 3: Consistent Users -->
