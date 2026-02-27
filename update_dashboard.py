@@ -174,6 +174,18 @@ def pct_change_html(new_val, old_val):
 
 # ── Data loading ──────────────────────────────────────────────────────────────
 
+def find_data_sheet(sheet_names):
+    """Return the best sheet name to use for raw data.
+    Priority: 'Raw Data' (SA files) → 'Sheet1' (UK files) → first sheet.
+    """
+    for s in sheet_names:
+        if 'Raw Data' in s:
+            return s
+    if 'Sheet1' in sheet_names:
+        return 'Sheet1'
+    return sheet_names[0] if sheet_names else None
+
+
 def load_all_data():
     excel_files = sorted(DATA_FOLDER.glob("*.xlsx"))
     if not excel_files:
@@ -187,7 +199,7 @@ def load_all_data():
             continue
         try:
             xl    = pd.ExcelFile(file_path)
-            sheet = next((s for s in xl.sheet_names if 'Raw Data' in s), None)
+            sheet = find_data_sheet(xl.sheet_names)
             if not sheet:
                 continue
             df  = pd.read_excel(file_path, sheet_name=sheet)
@@ -228,9 +240,9 @@ def load_all_data():
 
         try:
             xl    = pd.ExcelFile(file_path)
-            sheet = next((s for s in xl.sheet_names if 'Raw Data' in s), None)
+            sheet = find_data_sheet(xl.sheet_names)
             if not sheet:
-                print(f"  ⚠️  No 'Raw Data' sheet: {file_path.name}")
+                print(f"  ⚠️  No usable sheet found: {file_path.name}")
                 continue
 
             df = pd.read_excel(file_path, sheet_name=sheet)
