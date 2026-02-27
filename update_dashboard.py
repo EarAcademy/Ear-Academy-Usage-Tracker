@@ -122,11 +122,15 @@ def classify_product(pt):
 
 
 def classify_billing(bs):
-    """Return 'Paying', 'Demo', or 'Paying' (default for old files)."""
+    """Return 'Paying', 'Demo', or 'Paying' (default for old files).
+    Both 'Demo' and 'Pilot' billing statuses are treated as non-paying (mapped to 'Demo').
+    """
     if pd.isna(bs):
         return 'Paying'
     s = str(bs).strip()
-    return s if s in ('Paying', 'Demo') else 'Paying'
+    if s in ('Demo', 'Pilot'):
+        return 'Demo'
+    return s if s == 'Paying' else 'Paying'
 
 
 # ── Date / week helpers ───────────────────────────────────────────────────────
@@ -710,7 +714,7 @@ def build_weekly_snapshot_html(snap):
 
 def build_uk_pilot_html(uk):
     if not uk['has_data']:
-        schools_html = '<div class="pilot-empty">No Demo schools have logged in yet.</div>'
+        schools_html = '<div class="pilot-empty">No Demo/Pilot schools have logged in yet.</div>'
     else:
         badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
                          for s in uk['school_list'])
