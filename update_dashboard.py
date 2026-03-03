@@ -408,11 +408,16 @@ def calc_weekly_snapshot(combined):
     pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
     prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    # Quiet 14+ days (paying)
+    # Quiet 7+ days (paying) - no activity in current week
     latest_date   = pay['Date'].max()
+    cutoff_7      = latest_date - timedelta(days=7)
+    active_7      = set(pay[pay['Date'] > cutoff_7]['School'].unique())
+    ever          = set(pay['School'].unique())
+    quiet_7       = sorted(ever - active_7)
+
+    # Quiet 14+ days (paying)
     cutoff_14     = latest_date - timedelta(days=14)
     active_14     = set(pay[pay['Date'] > cutoff_14]['School'].unique())
-    ever          = set(pay['School'].unique())
     quiet_14      = sorted(ever - active_14)
 
     return {
@@ -426,6 +431,7 @@ def calc_weekly_snapshot(combined):
         'weekly_active_pct': round(cw_schools / TOTAL_CUSTOMERS * 100),
         'consistent_schools': consistent_schools, 'consistent_count': consistent_count,
         'prev_consistent': prev_consistent,
+        'quiet_7_schools': quiet_7, 'quiet_7_count': len(quiet_7),
         'quiet_14_schools': quiet_14, 'quiet_14_count': len(quiet_14),
     }
 
@@ -650,6 +656,8 @@ def build_weekly_snapshot_html(snap):
 
     cons_badges = ''.join(f'<span class="school-badge cons-badge">{s}</span>'
                           for s in snap['consistent_schools']) or '<em style="color:var(--gray)">None yet</em>'
+    quiet_7_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
+                             for s in snap['quiet_7_schools']) or '<em style="color:var(--gray)">All schools active this week!</em>'
     quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                            for s in snap['quiet_14_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
 
@@ -716,7 +724,19 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-badges">{cons_badges}</div>
                 </div>
 
-                <!-- Card 4: Quiet 14+ Days -->
+                <!-- Card 4: Quiet 7+ Days -->
+                <div class="snap-card accent-salmon">
+                    <div class="snap-label">Quiet 7+ Days</div>
+                    <div class="snap-body">
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-quiet-7">{snap['quiet_7_count']}</span>
+                            <span class="snap-unit">schools · no activity this week</span>
+                        </div>
+                    </div>
+                    <div class="snap-badges">{quiet_7_badges}</div>
+                </div>
+
+                <!-- Card 5: Quiet 14+ Days -->
                 <div class="snap-card accent-salmon">
                     <div class="snap-label">Quiet 14+ Days</div>
                     <div class="snap-body">
@@ -946,6 +966,51 @@ def build_top10_html(top10):
         </section>'''
 
 
+def calc_lifetime_logins(combined):
+    """Total logins per paying school across all weeks, sorted descending."""
+    pay  = paying(combined)
+    base = total_logins(pay)
+    grp  = (base.groupby('School')['Email']
+                .count()
+                .reset_index()
+                .rename(columns={'Email': 'total_logins'}))
+    grp  = grp.sort_values('total_logins', ascending=False).reset_index(drop=True)
+    return grp.to_dict('records')
+
+
+def build_lifetime_logins_html(lifetime_data):
+    if not lifetime_data:
+        return ''
+
+    max_logins = max(s['total_logins'] for s in lifetime_data) or 1
+
+    bars_html = ''
+    for s in lifetime_data:
+        pct = max(int((s['total_logins'] / max_logins) * 100), 2) if s['total_logins'] else 0
+        bars_html += f'''
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">{s['School']}</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:{pct}%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">{s['total_logins']}</span>
+                    </div>
+                </div>'''
+
+    school_count = len(lifetime_data)
+    return f'''
+        <!-- ════════════════════ ALL SCHOOLS LIFETIME LOGINS ════════════════════════ -->
+        <section class="dashboard-section" id="section-lifetime">
+            <h2 class="section-title pacific">📊 All Schools Lifetime Activity</h2>
+            <p class="section-desc">Total logins across all weeks · helps identify top performers and at-risk schools · {school_count} paying schools shown</p>
+
+            <div class="lifetime-grid">
+{bars_html}
+            </div>
+        </section>'''
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -976,7 +1041,8 @@ def main():
     patterns = calc_patterns(combined, snap)
     w_stats, last6 = calc_weekly_trends(combined)
     uk       = calc_uk_pilot(combined)
-    top10    = calc_top10(combined)
+    top10         = calc_top10(combined)
+    lifetime_data = calc_lifetime_logins(combined)
 
     # Build HTML sections
     daily_pulse_html  = build_daily_pulse_html(dp)
@@ -985,6 +1051,7 @@ def main():
     patterns_html     = build_patterns_html(patterns, snap)
     trends_html       = build_trends_html(w_stats, last6)
     top10_html        = build_top10_html(top10)
+    lifetime_html     = build_lifetime_logins_html(lifetime_data)
 
     updated_date = combined['Date'].max().strftime('%-d %B %Y')
 
@@ -1001,7 +1068,8 @@ def main():
         + uk_pilot_html + '\n'
         + patterns_html + '\n'
         + trends_html + '\n'
-        + top10_html
+        + top10_html + '\n'
+        + lifetime_html
     )
 
     html = re.sub(
@@ -1026,8 +1094,10 @@ def main():
     print(f"   Instrumental  : {snap['cw_ins_logins']} logins / {snap['cw_ins_schools']} schools")
     print(f"   UK Pilot      : {uk['schools']} schools · {uk['logins']} logins")
     print(f"   Consistent    : {snap['consistent_count']} schools (3+ days)")
+    print(f"   Quiet 7+ days : {snap['quiet_7_count']} schools")
     print(f"   Quiet 14+ days: {snap['quiet_14_count']} schools")
     print(f"   New this week : {len(patterns['new_this_week'])}")
+    print(f"   Lifetime graph: {len(lifetime_data)} schools ranked")
     print(f"\n✅ Dashboard written → {OUTPUT_FILE}")
     print("=" * 60)
 

@@ -623,6 +623,57 @@
         }
         .split-sep { opacity: 0.5; }
 
+        /* ════════════════════ LIFETIME LOGINS ════════════════════════ */
+        .lifetime-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        .lifetime-bar-item {
+            display: grid;
+            grid-template-columns: 210px 1fr;
+            align-items: center;
+            gap: 1rem;
+        }
+        .lifetime-school-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark);
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lifetime-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .lifetime-bar-track {
+            flex: 1;
+            background: var(--lgray);
+            border-radius: 6px;
+            height: 26px;
+            overflow: hidden;
+        }
+        .lifetime-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--lapis), var(--sky));
+            border-radius: 6px;
+            transition: width 0.6s ease;
+        }
+        .lifetime-bar-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray);
+            min-width: 32px;
+            text-align: right;
+        }
+        @media (max-width: 600px) {
+            .lifetime-bar-item { grid-template-columns: 120px 1fr; }
+            .lifetime-school-name { font-size: 0.72rem; }
+        }
+
         /* ════════════════════ FOOTER ════════════════════════ */
         footer {
             text-align: center;
@@ -791,7 +842,19 @@
                     <div class="snap-badges"><em style="color:var(--gray)">None yet</em></div>
                 </div>
 
-                <!-- Card 4: Quiet 14+ Days -->
+                <!-- Card 4: Quiet 7+ Days -->
+                <div class="snap-card accent-salmon">
+                    <div class="snap-label">Quiet 7+ Days</div>
+                    <div class="snap-body">
+                        <div class="snap-metric">
+                            <span class="snap-value" id="snap-quiet-7">26</span>
+                            <span class="snap-unit">schools · no activity this week</span>
+                        </div>
+                    </div>
+                    <div class="snap-badges"><span class="school-badge quiet-badge">Acudeo Crystal Park</span><span class="school-badge quiet-badge">Acudeo Protea Glen</span><span class="school-badge quiet-badge">Acudeo Thornview</span><span class="school-badge quiet-badge">Bay Primary</span><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">C5</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Hazyview Private Primary School</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Plettenberg Bay Christian Primary School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Royal Schools Alberton</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">Sky City Primary School</span><span class="school-badge quiet-badge">Trinity House</span></div>
+                </div>
+
+                <!-- Card 5: Quiet 14+ Days -->
                 <div class="snap-card accent-salmon">
                     <div class="snap-label">Quiet 14+ Days</div>
                     <div class="snap-body">
@@ -1025,6 +1088,457 @@
                     <span class="pattern-badge badge-core">🏆 Core</span>
                 </li>
             </ul>
+        </section>
+
+        <!-- ════════════════════ ALL SCHOOLS LIFETIME LOGINS ════════════════════════ -->
+        <section class="dashboard-section" id="section-lifetime">
+            <h2 class="section-title pacific">📊 All Schools Lifetime Activity</h2>
+            <p class="section-desc">Total logins across all weeks · helps identify top performers and at-risk schools · 49 paying schools shown</p>
+
+            <div class="lifetime-grid">
+
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Koa Academy</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:100%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">343</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Brescia House</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:29%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">102</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Kammaland Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:9%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">34</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Acudeo Thornview Primary</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:9%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">32</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Soofia International School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:7%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">26</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Hazyview Private Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:7%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">26</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Princess Park College</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:6%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">22</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Generation Schools Hermanus</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:6%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">22</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Queens Private School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:6%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">21</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Amberfield College</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:5%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">20</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Reddam House Helderfontein</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:5%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">19</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Etham College</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:5%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">19</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Acudeo College Kirkney</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:5%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">18</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Harriston Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:4%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">15</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Applewood Preparatory</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:3%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">13</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Eastside Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:3%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">12</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">St Martin Preparatory School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:3%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">11</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Acudeo Protea Glen</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:3%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">11</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Trinity House</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">10</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Bay Primary</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">9</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Lebone II College</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">9</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Calling Academy</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">7</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Canaan College</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">7</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Royal Schools Starlight Academy</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">7</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Prescient Primary</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">6</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Royal Schools Alberton</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">6</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Plettenberg Bay Christian Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">5</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">CBC Mount Edmund</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">5</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Herzlia Highlands</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">4</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Herzlia Weitzman Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">4</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Bury Music</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">4</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Sky City Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">St Catherines</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Salford Community Leisure</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Academie Orfeus</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Pinelands High School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Acudeo Thornview</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Hermannsburg School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Early Learning Centre</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Danie Ackermann Primary</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Curro Langebaan Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Sunvalley Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Acudeo Crystal Park</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">dr.vanderross</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Holy Cross RC Primary</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">1</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Collingwood College</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">1</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">C5</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">1</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Bradford Music and Arts Service</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">1</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Bolton Music Services</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">1</span>
+                    </div>
+                </div>
+            </div>
         </section>
         <!-- DASHBOARD_END -->
 
