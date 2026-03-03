@@ -408,17 +408,13 @@ def calc_weekly_snapshot(combined):
     pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
     prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    # Quiet 7+ days (paying) - no activity in current week
-    latest_date   = pay['Date'].max()
-    cutoff_7      = latest_date - timedelta(days=7)
-    active_7      = set(pay[pay['Date'] > cutoff_7]['School'].unique())
+    # Quiet 7+ / 14+ days — rolling window from today's date
+    today         = pd.Timestamp(datetime.now().date())
     ever          = set(pay['School'].unique())
-    quiet_7       = sorted(ever - active_7)
+    last_login    = pay.groupby('School')['Date'].max()  # most recent login per school
 
-    # Quiet 14+ days (paying)
-    cutoff_14     = latest_date - timedelta(days=14)
-    active_14     = set(pay[pay['Date'] > cutoff_14]['School'].unique())
-    quiet_14      = sorted(ever - active_14)
+    quiet_7  = sorted(s for s in ever if (today - last_login[s]).days >= 7)
+    quiet_14 = sorted(s for s in ever if (today - last_login[s]).days >= 14)
 
     return {
         'max_week': max_week, 'prev_week': prev_week,
@@ -736,7 +732,7 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-body">
                         <div class="snap-metric">
                             <span class="snap-value" id="snap-quiet-7">{snap['quiet_7_count']}</span>
-                            <span class="snap-unit">schools · no activity this week</span>
+                            <span class="snap-unit">schools · last login 7+ days ago</span>
                         </div>
                     </div>
                     <div class="snap-badges snap-badges-scroll">{quiet_7_badges}</div>
@@ -748,7 +744,7 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-body">
                         <div class="snap-metric">
                             <span class="snap-value" id="snap-quiet">{snap['quiet_14_count']}</span>
-                            <span class="snap-unit">schools · no activity in 2+ weeks</span>
+                            <span class="snap-unit">schools · last login 14+ days ago</span>
                         </div>
                     </div>
                     <div class="snap-badges snap-badges-scroll">{quiet_badges}</div>
