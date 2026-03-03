@@ -413,7 +413,7 @@ def calc_weekly_snapshot(combined):
     ever          = set(pay['School'].unique())
     last_login    = pay.groupby('School')['Date'].max()  # most recent login per school
 
-    quiet_7  = sorted(s for s in ever if (today - last_login[s]).days >= 7)
+    quiet_7  = sorted(s for s in ever if 7 <= (today - last_login[s]).days < 14)
     quiet_14 = sorted(s for s in ever if (today - last_login[s]).days >= 14)
 
     return {
@@ -726,13 +726,13 @@ def build_weekly_snapshot_html(snap):
             <!-- Row 2: quiet cards — always side-by-side with scrollable school lists -->
             <div class="snapshot-grid-quiet">
 
-                <!-- Card 4: Quiet 7+ Days -->
+                <!-- Card 4: Quiet 7-13 Days -->
                 <div class="snap-card accent-salmon">
-                    <div class="snap-label">Quiet 7+ Days</div>
+                    <div class="snap-label">Quiet 7–13 Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
                             <span class="snap-value" id="snap-quiet-7">{snap['quiet_7_count']}</span>
-                            <span class="snap-unit">schools · last login 7+ days ago</span>
+                            <span class="snap-unit">schools · last login 1–2 weeks ago</span>
                         </div>
                     </div>
                     <div class="snap-badges snap-badges-scroll">{quiet_7_badges}</div>
@@ -744,7 +744,7 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-body">
                         <div class="snap-metric">
                             <span class="snap-value" id="snap-quiet">{snap['quiet_14_count']}</span>
-                            <span class="snap-unit">schools · last login 14+ days ago</span>
+                            <span class="snap-unit">schools · last login 2+ weeks ago</span>
                         </div>
                     </div>
                     <div class="snap-badges snap-badges-scroll">{quiet_badges}</div>
