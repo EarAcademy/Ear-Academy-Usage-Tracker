@@ -980,23 +980,38 @@ def calc_lifetime_logins(combined):
     return grp.to_dict('records')
 
 
+CAP_SCHOOL = 'Koa Academy'
+CAP_AT     = 200   # display cap for bar width only — actual count still shown
+
+
 def build_lifetime_logins_html(lifetime_data):
     if not lifetime_data:
         return ''
 
-    max_logins = max(s['total_logins'] for s in lifetime_data) or 1
+    # All bars scale against CAP_AT so the capped school sits at 100 %
+    # and every other school is proportional to that reference.
+    scale_max = CAP_AT
 
     bars_html = ''
     for s in lifetime_data:
-        pct = max(int((s['total_logins'] / max_logins) * 100), 2) if s['total_logins'] else 0
+        actual    = s['total_logins']
+        is_capped = (s['School'] == CAP_SCHOOL and actual > CAP_AT)
+        bar_val   = CAP_AT if is_capped else actual
+        pct       = min(max(int((bar_val / scale_max) * 100), 2), 100) if actual else 0
+
+        label     = f'{actual} ↗' if is_capped else str(actual)
+        cap_attr  = (' title="Bar capped at 200 for readability — actual total shown"'
+                     if is_capped else '')
+        fill_cls  = 'lifetime-bar-fill lifetime-bar-capped' if is_capped else 'lifetime-bar-fill'
+
         bars_html += f'''
                 <div class="lifetime-bar-item">
                     <div class="lifetime-school-name">{s['School']}</div>
                     <div class="lifetime-bar-wrap">
-                        <div class="lifetime-bar-track">
-                            <div class="lifetime-bar-fill" style="width:{pct}%"></div>
+                        <div class="lifetime-bar-track"{cap_attr}>
+                            <div class="{fill_cls}" style="width:{pct}%"></div>
                         </div>
-                        <span class="lifetime-bar-value">{s['total_logins']}</span>
+                        <span class="lifetime-bar-value">{label}</span>
                     </div>
                 </div>'''
 
