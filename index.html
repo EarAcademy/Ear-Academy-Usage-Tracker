@@ -226,10 +226,44 @@
         }
 
         /* ════════════════════ WEEKLY SNAPSHOT ════════════════════════ */
-        .snapshot-grid {
+
+        /* Row 1 — 3 metric cards */
+        .snapshot-grid-top {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Row 2 — 2 quiet cards always side-by-side */
+        .snapshot-grid-quiet {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        /* Scrollable badge list — caps height so cards stay compact */
+        .snap-badges-scroll {
+            max-height: 150px;
+            overflow-y: auto;
+            padding-right: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--shale) transparent;
+        }
+        .snap-badges-scroll::-webkit-scrollbar { width: 4px; }
+        .snap-badges-scroll::-webkit-scrollbar-track { background: transparent; }
+        .snap-badges-scroll::-webkit-scrollbar-thumb {
+            background: var(--shale);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .snapshot-grid-top   { grid-template-columns: 1fr 1fr; }
+            .snapshot-grid-quiet { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 600px) {
+            .snapshot-grid-top   { grid-template-columns: 1fr; }
+            .snapshot-grid-quiet { grid-template-columns: 1fr; }
         }
 
         .snap-card {
@@ -689,11 +723,9 @@
             .container { padding: 1.5rem; gap: 2rem; }
             header { padding: 1.5rem; }
             .dashboard-section { padding: 1.5rem; }
-            .snapshot-grid { grid-template-columns: 1fr 1fr; }
             h1 { font-size: 1.35rem; }
         }
         @media (max-width: 600px) {
-            .snapshot-grid { grid-template-columns: 1fr; }
             .pulse-row { gap: 1.2rem; }
             .pulse-value { font-size: 2.4rem; }
             .snap-value { font-size: 2.2rem; }
@@ -785,7 +817,8 @@
             <h2 class="section-title pacific">📋 Weekly Snapshot — Week 7</h2>
             <p class="section-desc">Paying customers only · Week 7 vs Week 6</p>
 
-            <div class="snapshot-grid">
+            <!-- Row 1: core metrics -->
+            <div class="snapshot-grid-top">
 
                 <!-- Card 1: This week vs Last week -->
                 <div class="snap-card accent-pacific">
@@ -842,6 +875,11 @@
                     <div class="snap-badges"><em style="color:var(--gray)">None yet</em></div>
                 </div>
 
+            </div>
+
+            <!-- Row 2: quiet cards — always side-by-side with scrollable school lists -->
+            <div class="snapshot-grid-quiet">
+
                 <!-- Card 4: Quiet 7+ Days -->
                 <div class="snap-card accent-salmon">
                     <div class="snap-label">Quiet 7+ Days</div>
@@ -851,7 +889,7 @@
                             <span class="snap-unit">schools · no activity this week</span>
                         </div>
                     </div>
-                    <div class="snap-badges"><span class="school-badge quiet-badge">Acudeo Crystal Park</span><span class="school-badge quiet-badge">Acudeo Protea Glen</span><span class="school-badge quiet-badge">Acudeo Thornview</span><span class="school-badge quiet-badge">Bay Primary</span><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">C5</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Hazyview Private Primary School</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Plettenberg Bay Christian Primary School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Royal Schools Alberton</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">Sky City Primary School</span><span class="school-badge quiet-badge">Trinity House</span></div>
+                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Acudeo Crystal Park</span><span class="school-badge quiet-badge">Acudeo Protea Glen</span><span class="school-badge quiet-badge">Acudeo Thornview</span><span class="school-badge quiet-badge">Bay Primary</span><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">C5</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Hazyview Private Primary School</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Plettenberg Bay Christian Primary School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Royal Schools Alberton</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">Sky City Primary School</span><span class="school-badge quiet-badge">Trinity House</span></div>
                 </div>
 
                 <!-- Card 5: Quiet 14+ Days -->
@@ -863,7 +901,7 @@
                             <span class="snap-unit">schools · no activity in 2+ weeks</span>
                         </div>
                     </div>
-                    <div class="snap-badges"><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">Trinity House</span></div>
+                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Bolton Music Services</span><span class="school-badge quiet-badge">Bradford Music and Arts Service</span><span class="school-badge quiet-badge">Bury Music</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Collingwood College</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Salford Community Leisure</span><span class="school-badge quiet-badge">Trinity House</span></div>
                 </div>
 
             </div>

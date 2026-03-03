@@ -667,7 +667,8 @@ def build_weekly_snapshot_html(snap):
             <h2 class="section-title pacific">📋 Weekly Snapshot — Week {mw}</h2>
             <p class="section-desc">Paying customers only · Week {mw} vs Week {pw}</p>
 
-            <div class="snapshot-grid">
+            <!-- Row 1: core metrics -->
+            <div class="snapshot-grid-top">
 
                 <!-- Card 1: This week vs Last week -->
                 <div class="snap-card accent-pacific">
@@ -724,6 +725,11 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-badges">{cons_badges}</div>
                 </div>
 
+            </div>
+
+            <!-- Row 2: quiet cards — always side-by-side with scrollable school lists -->
+            <div class="snapshot-grid-quiet">
+
                 <!-- Card 4: Quiet 7+ Days -->
                 <div class="snap-card accent-salmon">
                     <div class="snap-label">Quiet 7+ Days</div>
@@ -733,7 +739,7 @@ def build_weekly_snapshot_html(snap):
                             <span class="snap-unit">schools · no activity this week</span>
                         </div>
                     </div>
-                    <div class="snap-badges">{quiet_7_badges}</div>
+                    <div class="snap-badges snap-badges-scroll">{quiet_7_badges}</div>
                 </div>
 
                 <!-- Card 5: Quiet 14+ Days -->
@@ -745,7 +751,7 @@ def build_weekly_snapshot_html(snap):
                             <span class="snap-unit">schools · no activity in 2+ weeks</span>
                         </div>
                     </div>
-                    <div class="snap-badges">{quiet_badges}</div>
+                    <div class="snap-badges snap-badges-scroll">{quiet_badges}</div>
                 </div>
 
             </div>
