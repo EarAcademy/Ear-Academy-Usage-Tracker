@@ -19,7 +19,35 @@ from datetime import datetime, timedelta
 DATA_FOLDER     = Path("daily_snapshots")
 OUTPUT_FILE     = Path("index.html")
 WEEK1_START     = datetime(2026, 1, 19)
-TOTAL_CUSTOMERS = 53          # total paying customer count
+TOTAL_CUSTOMERS = 53          # updated dynamically in main()
+
+EXCLUDED_SCHOOLS = [
+    'Academie Orpheus',
+    'Academie Orfeus',
+    'C5',
+    'Bolton Music Services',
+    'Bradford Music and Arts Service',
+    'Bury Music',
+    'Collingwood College',
+    'Salford Community Leisure'
+]
+
+
+def should_exclude_school(school_name, billing_status=None):
+    """Return True if school should be excluded from dashboard."""
+    if billing_status in ['Pilot', 'Demo']:
+        return True
+    school_lower = school_name.lower()
+    for excluded in EXCLUDED_SCHOOLS:
+        excl_lower = excluded.lower()
+        if len(excl_lower) <= 3:
+            # Short names: exact match only to avoid false partial matches
+            if school_lower == excl_lower:
+                return True
+        else:
+            if excl_lower in school_lower:
+                return True
+    return False
 
 # ── Canonical name overrides ──────────────────────────────────────────────────
 EXACT_OVERRIDES = {
@@ -311,7 +339,8 @@ def load_all_data():
 # ── Metric calculations ───────────────────────────────────────────────────────
 
 def paying(df):
-    return df[df['Billing'] == 'Paying']
+    pay = df[df['Billing'] == 'Paying']
+    return pay[~pay['School'].apply(should_exclude_school)]
 
 def demo(df):
     return df[df['Billing'] == 'Demo']
@@ -1046,10 +1075,11 @@ def main():
         print("❌ No data loaded.")
         return
 
+    global TOTAL_CUSTOMERS
     pay = paying(combined)
+    TOTAL_CUSTOMERS = pay['School'].nunique()
     print(f"\n✅ {total_logins(combined)['Email'].count()} unique login events loaded")
     print(f"   Paying schools: {pay['School'].nunique()}")
-    print(f"   Demo schools:   {demo(combined)['School'].nunique()}")
     print(f"   Weeks covered:  {sorted(combined['Week'].unique())}\n")
 
     # Compute all metrics
@@ -1057,14 +1087,12 @@ def main():
     snap     = calc_weekly_snapshot(combined)
     patterns = calc_patterns(combined, snap)
     w_stats, last6 = calc_weekly_trends(combined)
-    uk       = calc_uk_pilot(combined)
     top10         = calc_top10(combined)
     lifetime_data = calc_lifetime_logins(combined)
 
     # Build HTML sections
     daily_pulse_html  = build_daily_pulse_html(dp)
     weekly_snap_html  = build_weekly_snapshot_html(snap)
-    uk_pilot_html     = build_uk_pilot_html(uk)
     patterns_html     = build_patterns_html(patterns, snap)
     trends_html       = build_trends_html(w_stats, last6)
     top10_html        = build_top10_html(top10)
@@ -1082,7 +1110,6 @@ def main():
     new_content = (
         daily_pulse_html + '\n'
         + weekly_snap_html + '\n'
-        + uk_pilot_html + '\n'
         + patterns_html + '\n'
         + trends_html + '\n'
         + top10_html + '\n'
@@ -1109,7 +1136,6 @@ def main():
     print(f"   Week {snap['max_week']} snapshot: {snap['cw_logins']} logins · {snap['cw_schools']} schools")
     print(f"   Classroom     : {snap['cw_cls_logins']} logins / {snap['cw_cls_schools']} schools")
     print(f"   Instrumental  : {snap['cw_ins_logins']} logins / {snap['cw_ins_schools']} schools")
-    print(f"   UK Pilot      : {uk['schools']} schools · {uk['logins']} logins")
     print(f"   Consistent    : {snap['consistent_count']} schools (3+ days)")
     print(f"   Quiet 7+ days : {snap['quiet_7_count']} schools")
     print(f"   Quiet 14+ days: {snap['quiet_14_count']} schools")
