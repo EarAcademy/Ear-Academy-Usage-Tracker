@@ -14,10 +14,15 @@
     "Activated (Won)": 45
   },
   "weekly": {
-    "new_leads": "—",
+    "new_leads": "78",
     "emails_sent": "148",
     "advances": "—",
     "new_customers": "1"
+  },
+  "monthly": {
+    "jan": { "new_leads": "11", "new_deals": "0" },
+    "feb": { "new_leads": "144", "new_deals": "4" },
+    "mar": { "new_leads": "162", "new_deals": "35" }
   },
   "email": {
     "sent": "73,416",

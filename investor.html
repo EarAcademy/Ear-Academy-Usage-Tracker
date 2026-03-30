@@ -322,38 +322,74 @@
 
 <div class="container">
 
-  <!-- ── 1. This Week's Sales Activity ── -->
+  <!-- ── 1. Last 7 Days Sales Activity ── -->
   <section class="section">
     <div class="section-title">
       <span class="dot" style="background:var(--sky)"></span>
-      This Week's Sales Activity
-      <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)" id="weekLabel">w/e 30 Mar 2026</span>
+      Last 7 Days' Sales Activity
+      <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)" id="weekLabel">24–30 Mar 2026</span>
     </div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-number" style="color:var(--sky)" id="weekly-new-leads">—</div>
         <div class="stat-label">New Leads Added</div>
-        <div class="stat-sub">Entered CRM this week</div>
+        <div class="stat-sub">Entered CRM, last 7 days</div>
       </div>
       <div class="stat-card">
         <div class="stat-number" style="color:var(--lapis)" id="weekly-emails">—</div>
         <div class="stat-label">Emails Sent</div>
-        <div class="stat-sub">Outreach campaigns this week</div>
+        <div class="stat-sub">Outreach campaigns, last 7 days</div>
       </div>
       <div class="stat-card">
         <div class="stat-number" style="color:var(--gold)" id="weekly-advances">—</div>
         <div class="stat-label">Pipeline Advances</div>
-        <div class="stat-sub">Leads moved forward this week</div>
+        <div class="stat-sub">Leads moved forward, last 7 days</div>
       </div>
       <div class="stat-card">
         <div class="stat-number" style="color:var(--green)" id="weekly-customers">—</div>
         <div class="stat-label">New Customer Signed</div>
-        <div class="stat-sub">Contract confirmed this week</div>
+        <div class="stat-sub">Contract confirmed, last 7 days</div>
       </div>
     </div>
     <div style="margin-top:1rem; padding:0.75rem 1rem; background:var(--cream); border-radius:10px; font-size:0.78rem; color:var(--gray); border:1px solid var(--lgray);" id="weeklyNote">
-      Weekly figures update automatically when the team runs the dashboard refresh.
+      Figures update automatically when the team runs the dashboard refresh.
     </div>
+  </section>
+
+  <!-- ── 1b. Monthly Sales Activity ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--lapis)"></span>
+      Monthly Sales Activity
+      <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)">Jan – Mar 2026</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--lgray);">
+            <th style="text-align:left;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Metric</th>
+            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Jan 2026</th>
+            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Feb 2026</th>
+            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--sky);font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Mar 2026 ↑</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--lgray);">
+            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">New Leads Added</td>
+            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);" id="monthly-leads-jan">11</td>
+            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;" id="monthly-leads-feb">144</td>
+            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;" id="monthly-leads-mar">162</td>
+          </tr>
+          <tr>
+            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">New Deals Added</td>
+            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);" id="monthly-deals-jan">0</td>
+            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;" id="monthly-deals-feb">4</td>
+            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;" id="monthly-deals-mar">35</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--gray);">Leads = new contacts added to CRM &nbsp;·&nbsp; Deals = new opportunities opened in Sales Qualification pipeline</div>
   </section>
 
   <!-- ── 2. Customer Growth ── -->
@@ -594,6 +630,20 @@
         document.getElementById('weekly-customers').textContent = data.weekly.new_customers ?? '—';
         const weeklyNote = document.getElementById('weeklyNote');
         if (weeklyNote) weeklyNote.style.display = 'none';
+      }
+      if (data.monthly) {
+        if (data.monthly.jan) {
+          document.getElementById('monthly-leads-jan').textContent = data.monthly.jan.new_leads ?? '—';
+          document.getElementById('monthly-deals-jan').textContent = data.monthly.jan.new_deals ?? '—';
+        }
+        if (data.monthly.feb) {
+          document.getElementById('monthly-leads-feb').textContent = data.monthly.feb.new_leads ?? '—';
+          document.getElementById('monthly-deals-feb').textContent = data.monthly.feb.new_deals ?? '—';
+        }
+        if (data.monthly.mar) {
+          document.getElementById('monthly-leads-mar').textContent = data.monthly.mar.new_leads ?? '—';
+          document.getElementById('monthly-deals-mar').textContent = data.monthly.mar.new_deals ?? '—';
+        }
       }
       if (data.last_updated) {
         document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.last_updated;
