@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Ear Academy — Investor Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sky:    #38aae1;
+      --lapis:  #1d70b8;
+      --green:  #00a19a;
+      --gold:   #c5b08c;
+      --cream:  #F5F1ED;
+      --white:  #FFFFFF;
+      --dark:   #2C2C2C;
+      --gray:   #666666;
+      --lgray:  #E8E4DF;
+      --radius: 16px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--white);
+      padding: 2rem 3rem 1.75rem;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo-lockup svg { display: block; width: 150px; height: auto; margin-bottom: 0.75rem; }
+    h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .header-sub { font-size: 0.85rem; color: var(--gray); margin-top: 0.15rem; }
+    .last-updated {
+      font-size: 0.8rem;
+      color: var(--gray);
+      background: var(--lgray);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* ── Decorative circles ── */
+    .bouncies {
+      position: absolute; top: 0; right: 0; bottom: 0; width: 40%;
+      pointer-events: none; opacity: 0.1; overflow: hidden;
+    }
+    .b { position: absolute; border-radius: 50%; }
+    .b1 { width:80px; height:80px; background:var(--sky);   top:15%; right:8%;  }
+    .b2 { width:55px; height:55px; background:var(--lapis); top:50%; right:22%; }
+    .b3 { width:45px; height:45px; background:var(--green); top:65%; right:5%;  }
+    .b4 { width:35px; height:35px; background:var(--gold);  top:30%; right:38%; }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ── Section shell ── */
+    .section {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      box-shadow: var(--shadow);
+    }
+    .section-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--lapis);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--lgray);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+    .stat-card {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+      text-align: center;
+      border: 1.5px solid var(--lgray);
+      transition: transform 0.15s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-number {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--gray);
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--green);
+      font-weight: 700;
+      margin-top: 0.3rem;
+    }
+
+    /* ── Growth bar chart ── */
+    .growth-chart { display: flex; align-items: flex-end; gap: 0.6rem; height: 120px; }
+    .bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
+    .bar {
+      width: 100%;
+      border-radius: 6px 6px 0 0;
+      min-height: 4px;
+      transition: height 0.6s ease;
+      position: relative;
+    }
+    .bar-val {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .bar-label {
+      font-size: 0.72rem;
+      color: var(--gray);
+      margin-top: 5px;
+      white-space: nowrap;
+    }
+    .cumulative-note {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    /* ── Pipeline funnel ── */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .pipeline-stage {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      position: relative;
+    }
+    .pipeline-stage:not(:last-child)::after {
+      content: '›';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      color: var(--lgray);
+      font-weight: 300;
+    }
+    .stage-count {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+    .stage-name {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-top: 0.3rem;
+      line-height: 1.3;
+    }
+    .stage-bar {
+      height: 5px;
+      border-radius: 3px;
+      margin: 0.75rem auto 0;
+      width: 60%;
+    }
+    .pipeline-note {
+      font-size: 0.78rem;
+      color: var(--gray);
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background: var(--cream);
+      border-radius: 8px;
+      border: 1px dashed var(--lgray);
+    }
+    .pipeline-note a {
+      color: var(--lapis);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* ── Email activity ── */
+    .email-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+    .email-card {
+      border-radius: 12px;
+      padding: 1.4rem;
+      border: 1.5px solid var(--lgray);
+    }
+    .email-card-label {
+      font-size: 0.8rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .email-card-val {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .email-card-note { font-size: 0.78rem; color: var(--gray); margin-top: 0.3rem; }
+
+    /* ── School list ── */
+    .schools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.6rem;
+    }
+    .school-pill {
+      background: var(--cream);
+      border: 1.5px solid var(--lgray);
+      border-radius: 30px;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .school-pill .dot-new {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* ── TAM progress ── */
+    .tam-wrap { display: flex; flex-direction: column; gap: 1.25rem; }
+    .tam-row { display: flex; align-items: center; gap: 1rem; }
+    .tam-label { font-size: 0.85rem; color: var(--gray); width: 180px; flex-shrink: 0; }
+    .tam-bar-wrap { flex: 1; background: var(--lgray); border-radius: 6px; height: 12px; overflow: hidden; }
+    .tam-bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
+    .tam-val { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; width: 80px; text-align: right; flex-shrink: 0; }
+
+    /* ── Confidential footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+
+    @media (max-width: 700px) {
+      header { padding: 1.5rem; }
+      .container { padding: 1.5rem 1rem; }
+      .section { padding: 1.5rem; }
+      .pipeline-grid { grid-template-columns: repeat(2, 1fr); }
+      .pipeline-stage:nth-child(2)::after, .pipeline-stage:nth-child(4)::after { display: none; }
+      .tam-label { width: 120px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-lockup">
+      <!-- Ear Academy wordmark SVG -->
+      <svg viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="30" font-family="Quicksand, sans-serif" font-size="28" font-weight="700" fill="#1d70b8">The Ear Academy</text>
+      </svg>
+      <h1>Investor Dashboard</h1>
+      <p class="header-sub">Sales & Growth Overview · South Africa</p>
+    </div>
+    <span class="last-updated" id="lastUpdated">Last updated: 26 Mar 2026</span>
+  </div>
+  <div class="bouncies">
+    <div class="b b1"></div><div class="b b2"></div>
+    <div class="b b3"></div><div class="b b4"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ── 1. This Week's Sales Activity ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--sky)"></span>
+      This Week's Sales Activity
+      <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)" id="weekLabel">w/e 30 Mar 2026</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--sky)" id="weekly-new-leads">—</div>
+        <div class="stat-label">New Leads Added</div>
+        <div class="stat-sub">Entered CRM this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--lapis)" id="weekly-emails">—</div>
+        <div class="stat-label">Emails Sent</div>
+        <div class="stat-sub">Outreach campaigns this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--gold)" id="weekly-advances">—</div>
+        <div class="stat-label">Pipeline Advances</div>
+        <div class="stat-sub">Leads moved forward this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--green)" id="weekly-customers">—</div>
+        <div class="stat-label">New Customer Signed</div>
+        <div class="stat-sub">Contract confirmed this week</div>
+      </div>
+    </div>
+    <div style="margin-top:1rem; padding:0.75rem 1rem; background:var(--cream); border-radius:10px; font-size:0.78rem; color:var(--gray); border:1px solid var(--lgray);" id="weeklyNote">
+      Weekly figures update automatically when the team runs the dashboard refresh.
+    </div>
+  </section>
+
+  <!-- ── 2. Customer Growth ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--green)"></span>
+      Customer Growth
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card" style="border-left:4px solid var(--green);">
+        <div class="stat-number" style="color:var(--green)" id="growth-week">1</div>
+        <div class="stat-label">New Customer<br>This Week</div>
+        <div class="stat-sub">Signed up 24–30 Mar 2026</div>
+      </div>
+      <div class="stat-card" style="border-left:4px solid var(--lapis);">
+        <div class="stat-number" style="color:var(--lapis)" id="growth-month">8</div>
+        <div class="stat-label">New Customers<br>This Month</div>
+        <div class="stat-sub">Signed up in Mar 2026</div>
+      </div>
+      <div class="stat-card" style="border-left:4px solid var(--sky);">
+        <div class="stat-number" style="color:var(--sky)">50</div>
+        <div class="stat-label">Total Paying<br>Customers</div>
+        <div class="stat-sub">As of 30 Mar 2026</div>
+      </div>
+      <div class="stat-card" style="border-left:4px solid var(--gold);">
+        <div class="stat-number" style="color:var(--gold)">34</div>
+        <div class="stat-label">Peak Month<br>(Feb 2026)</div>
+        <div class="stat-sub">Best single-month onboarding</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. Sales Pipeline ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--lapis)"></span>
+      Sales Pipeline
+    </div>
+    <div class="pipeline-grid" id="pipelineGrid">
+      <div class="pipeline-stage">
+        <div class="stage-count" style="color:var(--sky)" id="stage-newlead">292</div>
+        <div class="stage-name">New Lead</div>
+        <div class="stage-bar" style="background:var(--sky);"></div>
+      </div>
+      <div class="pipeline-stage">
+        <div class="stage-count" style="color:var(--lapis)" id="stage-demo">82</div>
+        <div class="stage-name">Demo / Pilot</div>
+        <div class="stage-bar" style="background:var(--lapis);"></div>
+      </div>
+      <div class="pipeline-stage">
+        <div class="stage-count" style="color:var(--gold)" id="stage-negotiation">30</div>
+        <div class="stage-name">Negotiation</div>
+        <div class="stage-bar" style="background:var(--gold);"></div>
+      </div>
+      <div class="pipeline-stage">
+        <div class="stage-count" style="color:var(--green)" id="stage-agreed">50</div>
+        <div class="stage-name">Agreed</div>
+        <div class="stage-bar" style="background:var(--green);"></div>
+      </div>
+    </div>
+    <div class="pipeline-note" id="pipelineNote">
+      Pipeline data loads from ActiveCampaign. If you are seeing dashes, the data file has not yet been generated — ask the team to run the dashboard update.
+    </div>
+  </section>
+
+  <!-- ── 4. Email Outreach Activity ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--gold)"></span>
+      Email Outreach Activity
+    </div>
+    <div class="email-grid" id="emailGrid">
+      <div class="email-card" style="background:#f0f8fd;">
+        <div class="email-card-label">Emails Sent (All Time)</div>
+        <div class="email-card-val" style="color:var(--sky)" id="emailsSent">—</div>
+        <div class="email-card-note">Across 91 AC campaigns to school contacts</div>
+      </div>
+      <div class="email-card" style="background:#f0faf9;">
+        <div class="email-card-label">Emails Opened</div>
+        <div class="email-card-val" style="color:var(--green)" id="emailsReplied">—</div>
+        <div class="email-card-note">Opens tracked by ActiveCampaign</div>
+      </div>
+      <div class="email-card" style="background:#fdf8f0;">
+        <div class="email-card-label">Open Rate</div>
+        <div class="email-card-val" style="color:var(--gold)" id="responseRate">—</div>
+        <div class="email-card-note">44.6% this month (Mar 2026)</div>
+      </div>
+      <div class="email-card" style="background:#f5f1ff;">
+        <div class="email-card-label">New Contacts (This Month)</div>
+        <div class="email-card-val" style="color:#8871B1" id="newContacts">—</div>
+        <div class="email-card-note">Schools newly entered into CRM</div>
+      </div>
+    </div>
+    <div class="pipeline-note" id="emailNote" style="margin-top:1rem;">
+      Loading email metrics from ActiveCampaign…
+    </div>
+  </section>
+
+  <!-- ── 5. Market Position ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--green)"></span>
+      Market Position — South Africa
+    </div>
+    <div class="tam-wrap">
+      <div class="tam-row">
+        <div class="tam-label">Paying Customers</div>
+        <div class="tam-bar-wrap"><div class="tam-bar-fill" style="background:var(--green); width:10.1%"></div></div>
+        <div class="tam-val" style="color:var(--green)">50 / 494</div>
+      </div>
+      <div class="tam-row">
+        <div class="tam-label">Target (20% of TAM)</div>
+        <div class="tam-bar-wrap"><div class="tam-bar-fill" style="background:var(--sky); width:20%"></div></div>
+        <div class="tam-val" style="color:var(--sky)">494 / 2,469</div>
+      </div>
+      <div class="tam-row">
+        <div class="tam-label">Total Addressable Market</div>
+        <div class="tam-bar-wrap"><div class="tam-bar-fill" style="background:var(--lgray); width:100%"></div></div>
+        <div class="tam-val" style="color:var(--gray)">2,469</div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+      <div style="background:var(--cream); border-radius:10px; padding:1rem 1.5rem; flex:1; min-width:180px; border:1.5px solid var(--lgray);">
+        <div style="font-size:0.78rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">Progress to Target</div>
+        <div style="font-family:Quicksand,sans-serif;font-size:1.6rem;font-weight:700;color:var(--lapis)">10.1%</div>
+        <div style="font-size:0.78rem;color:var(--gray)">of viability target reached</div>
+      </div>
+      <div style="background:var(--cream); border-radius:10px; padding:1rem 1.5rem; flex:1; min-width:180px; border:1.5px solid var(--lgray);">
+        <div style="font-size:0.78rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">Run Rate (if Feb repeats)</div>
+        <div style="font-family:Quicksand,sans-serif;font-size:1.6rem;font-weight:700;color:var(--green)">~13 months</div>
+        <div style="font-size:0.78rem;color:var(--gray)">to reach 494 schools at Feb pace</div>
+      </div>
+      <div style="background:var(--cream); border-radius:10px; padding:1rem 1.5rem; flex:1; min-width:180px; border:1.5px solid var(--lgray);">
+        <div style="font-size:0.78rem;color:var(--gray);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">Schools Still to Reach</div>
+        <div style="font-family:Quicksand,sans-serif;font-size:1.6rem;font-weight:700;color:var(--gold)">444</div>
+        <div style="font-size:0.78rem;color:var(--gray)">needed to reach viability target</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. All Paying Schools ── -->
+  <section class="section">
+    <div class="section-title">
+      <span class="dot" style="background:var(--sky)"></span>
+      All Paying Customer Schools
+      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">50 schools</span>
+    </div>
+    <div class="schools-grid">
+      <div class="school-pill">Academie Orfeus</div>
+      <div class="school-pill">Acudeo College Kirkney</div>
+      <div class="school-pill">Acudeo College Protea Glen</div>
+      <div class="school-pill">Acudeo Crystal Park</div>
+      <div class="school-pill">Acudeo Thornview</div>
+      <div class="school-pill">Amberfield College</div>
+      <div class="school-pill">Applewood Preparatory School</div>
+      <div class="school-pill">Bay Primary</div>
+      <div class="school-pill">Brescia House</div>
+      <div class="school-pill">Calling Academy</div>
+      <div class="school-pill">Canaan College</div>
+      <div class="school-pill">CBC Mount Edmund</div>
+      <div class="school-pill">Cheré Botha School</div>
+      <div class="school-pill"><span class="dot-new"></span> Curro Langebaan Primary School</div>
+      <div class="school-pill"><span class="dot-new"></span> Danie Ackermann Primary</div>
+      <div class="school-pill">Dr. Van Der Ross</div>
+      <div class="school-pill">Early Learning Centre</div>
+      <div class="school-pill">Eastside Primary School</div>
+      <div class="school-pill">Etham College</div>
+      <div class="school-pill">Generation Schools Hermanus</div>
+      <div class="school-pill">Harriston School (Primary)</div>
+      <div class="school-pill">Hazyview Private Primary School</div>
+      <div class="school-pill">Hermannsburg School (Primary)</div>
+      <div class="school-pill">Herzlia High School</div>
+      <div class="school-pill">Herzlia Primary</div>
+      <div class="school-pill">Herzlia Weitzman Primary</div>
+      <div class="school-pill">Holy Cross R.C. Primary</div>
+      <div class="school-pill">Kammaland Primary School</div>
+      <div class="school-pill">King David Victory Park Primary</div>
+      <div class="school-pill"><span class="dot-new"></span> Koa Academy</div>
+      <div class="school-pill">Lebone II College (Primary)</div>
+      <div class="school-pill"><span class="dot-new"></span> Pinelands High School</div>
+      <div class="school-pill">Plettenberg Bay Christian Primary</div>
+      <div class="school-pill">Prescient Primary</div>
+      <div class="school-pill">Queens Private School</div>
+      <div class="school-pill">Raff Home School</div>
+      <div class="school-pill">Reddam House Helderfontein</div>
+      <div class="school-pill">Royal Schools Alberton</div>
+      <div class="school-pill">Royal Schools Princess Park</div>
+      <div class="school-pill">Royal Schools Sky City</div>
+      <div class="school-pill"><span class="dot-new"></span> Royal Schools Starlight Academy</div>
+      <div class="school-pill">Soofia International School</div>
+      <div class="school-pill">St Catherine's Dominican Convent</div>
+      <div class="school-pill">St Martin's Preparatory School</div>
+      <div class="school-pill"><span class="dot-new"></span> Sun Valley Primary School</div>
+      <div class="school-pill">The Lighthouse Learning Hub</div>
+      <div class="school-pill"><span class="dot-new"></span> TrinityHouse Glenvista</div>
+      <div class="school-pill">Vergenoegd Primary School</div>
+      <div class="school-pill">Welwitschia Primary School</div>
+      <div class="school-pill"><span class="dot-new"></span> Windemere Primary</div>
+    </div>
+    <div style="font-size:0.75rem; color:var(--gray); margin-top:1rem;">
+      <span class="dot-new" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:middle;"></span>
+      Green dot = joined since Feb 2026. Source: ActiveCampaign Customer Account Management pipeline, 30 Mar 2026.
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <strong>Confidential — The Ear Academy Investor Dashboard</strong><br>
+  This document contains forward-looking projections and proprietary business information.<br>
+  Not for distribution. © 2026 The Ear Academy (Pty) Ltd · <a href="https://the-ear.com" style="color:var(--lapis)">the-ear.com</a>
+</footer>
+
+<script>
+  // Load pipeline data from pipeline_data.json if available
+  fetch('pipeline_data.json')
+    .then(r => r.json())
+    .then(data => {
+      if (data.stages) {
+        document.getElementById('stage-newlead').textContent     = data.stages['New Lead']     ?? '0';
+        document.getElementById('stage-demo').textContent        = data.stages['Demo/Pilot']   ?? '0';
+        document.getElementById('stage-negotiation').textContent = data.stages['Negotiation']  ?? '0';
+        document.getElementById('stage-agreed').textContent      = data.stages['Agreed']       ?? '0';
+        document.getElementById('pipelineNote').style.display = 'none';
+      }
+      if (data.email) {
+        document.getElementById('emailsSent').textContent    = data.email.sent      ?? '—';
+        document.getElementById('emailsReplied').textContent = data.email.replied   ?? '—';
+        document.getElementById('responseRate').textContent  = data.email.rate      ?? '—';
+        document.getElementById('newContacts').textContent   = data.email.new_contacts ?? '—';
+        const emailNote = document.getElementById('emailNote');
+        if (emailNote) emailNote.style.display = 'none';
+      }
+      if (data.weekly) {
+        document.getElementById('weekly-new-leads').textContent = data.weekly.new_leads   ?? '—';
+        document.getElementById('weekly-emails').textContent    = data.weekly.emails_sent ?? '—';
+        document.getElementById('weekly-advances').textContent  = data.weekly.advances    ?? '—';
+        document.getElementById('weekly-customers').textContent = data.weekly.new_customers ?? '—';
+        const weeklyNote = document.getElementById('weeklyNote');
+        if (weeklyNote) weeklyNote.style.display = 'none';
+      }
+      if (data.last_updated) {
+        document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.last_updated;
+      }
+    })
+    .catch(() => {
+      // pipeline_data.json not yet generated — dashes remain
+    });
+</script>
+
+</body>
+</html>
