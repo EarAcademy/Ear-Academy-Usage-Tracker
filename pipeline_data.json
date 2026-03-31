@@ -1,8 +1,8 @@
 {
   "stages": {
-    "New Lead": 292,
-    "Demo/Pilot": 82,
-    "Negotiation": 30,
+    "New Lead": 206,
+    "Demo/Pilot": 9,
+    "Negotiation": 22,
     "Agreed": 50
   },
   "all_stages": {
@@ -16,13 +16,22 @@
   "weekly": {
     "new_leads": "78",
     "emails_sent": "148",
-    "advances": "—",
+    "advances": "\u2014",
     "new_customers": "1"
   },
   "monthly": {
-    "jan": { "new_leads": "11", "new_deals": "0" },
-    "feb": { "new_leads": "144", "new_deals": "4" },
-    "mar": { "new_leads": "162", "new_deals": "35" }
+    "jan": {
+      "new_leads": "11",
+      "new_deals": "0"
+    },
+    "feb": {
+      "new_leads": "144",
+      "new_deals": "4"
+    },
+    "mar": {
+      "new_leads": "162",
+      "new_deals": "35"
+    }
   },
   "email": {
     "sent": "73,416",
@@ -30,7 +39,7 @@
     "rate": "7.4%",
     "new_contacts": "162"
   },
-  "last_updated": "30 Mar 2026 at 14:30",
+  "last_updated": "31 Mar 2026 at 09:00",
   "total_deals": 1063,
   "total_contacts": 8001,
   "notes": {

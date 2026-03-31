@@ -735,7 +735,13 @@
             .pulse-value { font-size: 2.4rem; }
             .snap-value { font-size: 2.2rem; }
         }
-    </style>
+
+        .dash-nav { background:#fff; border-bottom:1px solid #E8E4DF; padding:0 3rem; }
+        .dash-nav-inner { max-width:1200px; margin:0 auto; display:flex; }
+        .dash-nav a { display:inline-block; padding:0.75rem 1.4rem; font-size:0.85rem; font-weight:700; color:#666; text-decoration:none; border-bottom:3px solid transparent; }
+        .dash-nav a:hover { color:#1d70b8; }
+        .dash-nav a.active { color:#1d70b8; border-bottom-color:#1d70b8; }
+        </style>
 </head>
 <body>
 
@@ -771,6 +777,13 @@
             <p class="subtitle">Live data · Updated <span id="lastUpdated">26 March 2026</span></p>
         </div>
     </header>
+    <nav class="dash-nav">
+      <div class="dash-nav-inner">
+        <a href="index.html" class="active">📊 Usage Analytics</a>
+        <a href="investor.html">💼 Sales Activity</a>
+      </div>
+    </nav>
+
 
     <!-- ══════════════════════════════ MAIN ══════════════════════════════ -->
     <div class="container">
@@ -856,13 +869,13 @@
                     <div class="snap-body">
                         <div class="snap-segment-row">
                             <span class="seg-label">Lifetime</span>
-                            <span class="seg-value" id="snap-activated">50</span>
-                            <span class="seg-sub">of 53 (94%)</span>
+                            <span class="seg-value" id="snap-activated">43</span>
+                            <span class="seg-sub">of 43 (100%)</span>
                         </div>
                         <div class="snap-segment-row">
                             <span class="seg-label">This week</span>
                             <span class="seg-value">20</span>
-                            <span class="seg-sub">of 53 (38%)</span>
+                            <span class="seg-sub">of 43 (47%)</span>
                         </div>
                     </div>
                     <div class="snap-prev"><span class="delta flat">→ no new activations</span></div>
@@ -890,11 +903,11 @@
                     <div class="snap-label">Quiet 7–13 Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet-7">6</span>
+                            <span class="snap-value" id="snap-quiet-7">10</span>
                             <span class="snap-unit">schools · last login 1–2 weeks ago</span>
                         </div>
                     </div>
-                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Applewood Preparatory</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Herzlia High School</span><span class="school-badge quiet-badge">Kammaland Primary School</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Welwitschia - C5</span></div>
+                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Applewood Preparatory</span><span class="school-badge quiet-badge">Bay Primary</span><span class="school-badge quiet-badge">Brescia House</span><span class="school-badge quiet-badge">Etham College</span><span class="school-badge quiet-badge">Harriston Primary School</span><span class="school-badge quiet-badge">Hazyview Private Primary School</span><span class="school-badge quiet-badge">Herzlia High School</span><span class="school-badge quiet-badge">Kammaland Primary School</span><span class="school-badge quiet-badge">Soofia International School</span><span class="school-badge quiet-badge">Trinity House</span></div>
                 </div>
 
                 <!-- Card 5: Quiet 14+ Days -->
@@ -902,11 +915,11 @@
                     <div class="snap-label">Quiet 14+ Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet">17</span>
+                            <span class="snap-value" id="snap-quiet">20</span>
                             <span class="snap-unit">schools · last login 2+ weeks ago</span>
                         </div>
                     </div>
-                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Curro Langebaan Primary School</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Eastside Primary School</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Herzlia Weitzman Primary School</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Lebone II College</span><span class="school-badge quiet-badge">Plettenberg Bay Christian Primary School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Reddam House Helderfontein</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">St Catherines</span><span class="school-badge quiet-badge">Sunvalley Primary School</span><span class="school-badge quiet-badge">dr.vanderross</span></div>
+                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Curro Langebaan Primary School</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Eastside Primary School</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Herzlia Weitzman Primary School</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span><span class="school-badge quiet-badge">Lebone II College</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Plettenberg Bay Christian Primary School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Reddam House Helderfontein</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">St Catherines</span><span class="school-badge quiet-badge">Sunvalley Primary School</span><span class="school-badge quiet-badge">Welwitschia - C5</span><span class="school-badge quiet-badge">dr.vanderross</span></div>
                 </div>
 
             </div>
@@ -939,7 +952,7 @@
             <div class="trend-summary">
                 <div class="trend-label">Latest Week</div>
                 <div class="trend-value" id="thisWeekSchools">20 schools</div>
-                <div class="trend-change" id="weekGrowth">↘ -31% vs Week 5 (16–20 Feb)</div>
+                <div class="trend-change" id="weekGrowth">↘ -29% vs Week 5 (16–20 Feb)</div>
             </div>
 
             
@@ -997,22 +1010,22 @@
                 <div class="week-bar-item">
                     <div class="week-info">
                         <span class="week-label">Week 6 (23–27 Feb)</span>
-                        <span class="week-stats">21 schools · 248 logins (99 cls / 224 ins)</span>
+                        <span class="week-stats">20 schools · 246 logins (99 cls / 222 ins)</span>
                     </div>
                     <div class="bar-container">
                         <div class="stacked-bar">
-                            <div class="bar-segment bar-cls" style="width:18%"></div><div class="bar-segment bar-ins" style="width:29%"></div><span class="bar-total-label">248</span>
+                            <div class="bar-segment bar-cls" style="width:18%"></div><div class="bar-segment bar-ins" style="width:29%"></div><span class="bar-total-label">246</span>
                         </div>
                     </div>
                 </div>
                 <div class="week-bar-item">
                     <div class="week-info">
                         <span class="week-label">Week 5 (16–20 Feb)</span>
-                        <span class="week-stats">29 schools · 301 logins</span>
+                        <span class="week-stats">28 schools · 300 logins</span>
                     </div>
                     <div class="bar-container">
                         <div class="stacked-bar">
-                            <div class="bar-segment bar-cls" style="width:58%"></div><span class="bar-total-label">301</span>
+                            <div class="bar-segment bar-cls" style="width:57%"></div><span class="bar-total-label">300</span>
                         </div>
                     </div>
                 </div>
@@ -1223,7 +1236,7 @@
                     </div>
                 </div>
                 <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">Harriston Primary School</div>
+                    <div class="lifetime-school-name">Reddam House Helderfontein</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
                             <div class="lifetime-bar-fill" style="width:12%"></div>
@@ -1232,7 +1245,7 @@
                     </div>
                 </div>
                 <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">Reddam House Helderfontein</div>
+                    <div class="lifetime-school-name">Harriston Primary School</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
                             <div class="lifetime-bar-fill" style="width:12%"></div>
@@ -1322,15 +1335,6 @@
                     </div>
                 </div>
                 <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">Canaan College</div>
-                    <div class="lifetime-bar-wrap">
-                        <div class="lifetime-bar-track">
-                            <div class="lifetime-bar-fill" style="width:5%"></div>
-                        </div>
-                        <span class="lifetime-bar-value">11</span>
-                    </div>
-                </div>
-                <div class="lifetime-bar-item">
                     <div class="lifetime-school-name">Lebone II College</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
@@ -1341,6 +1345,15 @@
                 </div>
                 <div class="lifetime-bar-item">
                     <div class="lifetime-school-name">Calling Academy</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:5%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">11</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Canaan College</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
                             <div class="lifetime-bar-fill" style="width:5%"></div>
@@ -1385,15 +1398,6 @@
                     </div>
                 </div>
                 <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">Herzlia Weitzman Primary School</div>
-                    <div class="lifetime-bar-wrap">
-                        <div class="lifetime-bar-track">
-                            <div class="lifetime-bar-fill" style="width:2%"></div>
-                        </div>
-                        <span class="lifetime-bar-value">5</span>
-                    </div>
-                </div>
-                <div class="lifetime-bar-item">
                     <div class="lifetime-school-name">Pinelands High School</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
@@ -1412,7 +1416,16 @@
                     </div>
                 </div>
                 <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">Curro Langebaan Primary School</div>
+                    <div class="lifetime-school-name">Herzlia Weitzman Primary School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">5</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">St Catherines</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
                             <div class="lifetime-bar-fill" style="width:2%"></div>
@@ -1429,9 +1442,8 @@
                         <span class="lifetime-bar-value">4</span>
                     </div>
                 </div>
-
                 <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">St Catherines</div>
+                    <div class="lifetime-school-name">Curro Langebaan Primary School</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
                             <div class="lifetime-bar-fill" style="width:2%"></div>
@@ -1446,6 +1458,15 @@
                             <div class="lifetime-bar-fill" style="width:2%"></div>
                         </div>
                         <span class="lifetime-bar-value">3</span>
+                    </div>
+                </div>
+                <div class="lifetime-bar-item">
+                    <div class="lifetime-school-name">Hermannsburg School</div>
+                    <div class="lifetime-bar-wrap">
+                        <div class="lifetime-bar-track">
+                            <div class="lifetime-bar-fill" style="width:2%"></div>
+                        </div>
+                        <span class="lifetime-bar-value">2</span>
                     </div>
                 </div>
                 <div class="lifetime-bar-item">
@@ -1477,15 +1498,6 @@
                 </div>
                 <div class="lifetime-bar-item">
                     <div class="lifetime-school-name">Welwitschia - C5</div>
-                    <div class="lifetime-bar-wrap">
-                        <div class="lifetime-bar-track">
-                            <div class="lifetime-bar-fill" style="width:2%"></div>
-                        </div>
-                        <span class="lifetime-bar-value">2</span>
-                    </div>
-                </div>
-                <div class="lifetime-bar-item">
-                    <div class="lifetime-school-name">Hermannsburg School</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track">
                             <div class="lifetime-bar-fill" style="width:2%"></div>
