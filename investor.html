@@ -467,7 +467,7 @@
         <div class="stat-sub">Signed up in Mar 2026</div>
       </div>
       <div class="stat-card" style="border-left:4px solid var(--sky);">
-        <div class="stat-number" style="color:var(--sky)">50</div>
+        <div class="stat-number" style="color:var(--sky)" id="total-paying">47</div>
         <div class="stat-label">Total Paying<br>Customers</div>
         <div class="stat-sub">As of 30 Mar 2026</div>
       </div>
@@ -487,22 +487,22 @@
     </div>
     <div class="pipeline-grid" id="pipelineGrid">
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--sky)" id="stage-newlead">292</div>
+        <div class="stage-count" style="color:var(--sky)" id="stage-newlead">206</div>
         <div class="stage-name">New Lead</div>
         <div class="stage-bar" style="background:var(--sky);"></div>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--lapis)" id="stage-demo">82</div>
+        <div class="stage-count" style="color:var(--lapis)" id="stage-demo">9</div>
         <div class="stage-name">Demo / Pilot</div>
         <div class="stage-bar" style="background:var(--lapis);"></div>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--gold)" id="stage-negotiation">30</div>
+        <div class="stage-count" style="color:var(--gold)" id="stage-negotiation">22</div>
         <div class="stage-name">Negotiation</div>
         <div class="stage-bar" style="background:var(--gold);"></div>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--green)" id="stage-agreed">50</div>
+        <div class="stage-count" style="color:var(--green)" id="stage-agreed">47</div>
         <div class="stage-name">Agreed</div>
         <div class="stage-bar" style="background:var(--green);"></div>
       </div>
@@ -555,7 +555,7 @@
       <div class="tam-row">
         <div class="tam-label">Paying Customers</div>
         <div class="tam-bar-wrap"><div class="tam-bar-fill" style="background:var(--green); width:10.1%"></div></div>
-        <div class="tam-val" style="color:var(--green)">50 / 494</div>
+        <div class="tam-val" style="color:var(--green)" id="tam-paying">47 / 494</div>
       </div>
       <div class="tam-row">
         <div class="tam-label">Target (20% of TAM)</div>
@@ -592,10 +592,9 @@
     <div class="section-title">
       <span class="dot" style="background:var(--sky)"></span>
       All Paying Customer Schools
-      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">50 schools</span>
+      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">47 schools</span>
     </div>
     <div class="schools-grid">
-      <div class="school-pill">Academie Orfeus</div>
       <div class="school-pill">Acudeo College Kirkney</div>
       <div class="school-pill">Acudeo College Protea Glen</div>
       <div class="school-pill">Acudeo Crystal Park</div>
@@ -623,7 +622,6 @@
       <div class="school-pill">Herzlia Weitzman Primary</div>
       <div class="school-pill">Holy Cross R.C. Primary</div>
       <div class="school-pill">Kammaland Primary School</div>
-      <div class="school-pill">King David Victory Park Primary</div>
       <div class="school-pill"><span class="dot-new"></span> Koa Academy</div>
       <div class="school-pill">Lebone II College (Primary)</div>
       <div class="school-pill"><span class="dot-new"></span> Pinelands High School</div>
@@ -640,7 +638,6 @@
       <div class="school-pill">St Catherine's Dominican Convent</div>
       <div class="school-pill">St Martin's Preparatory School</div>
       <div class="school-pill"><span class="dot-new"></span> Sun Valley Primary School</div>
-      <div class="school-pill">The Lighthouse Learning Hub</div>
       <div class="school-pill"><span class="dot-new"></span> TrinityHouse Glenvista</div>
       <div class="school-pill">Vergenoegd Primary School</div>
       <div class="school-pill">Welwitschia Primary School</div>
@@ -670,6 +667,9 @@
         document.getElementById('stage-demo').textContent        = data.stages['Demo/Pilot']   ?? '0';
         document.getElementById('stage-negotiation').textContent = data.stages['Negotiation']  ?? '0';
         document.getElementById('stage-agreed').textContent      = data.stages['Agreed']       ?? '0';
+        const agreed = data.stages['Agreed'] ?? 0;
+        document.getElementById('total-paying').textContent = agreed;
+        document.getElementById('tam-paying').textContent   = agreed + ' / 494';
         document.getElementById('pipelineNote').style.display = 'none';
       }
       if (data.email) {
