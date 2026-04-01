@@ -181,9 +181,13 @@
     /* ── Pipeline funnel ── */
     .pipeline-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 0;
     }
+    .stage-split { display:flex; justify-content:center; align-items:flex-end; gap:1.25rem; }
+    .stage-split-item { text-align:center; }
+    .stage-split-divider { font-size:1.2rem; color:var(--lgray); padding-bottom:0.5rem; }
+    .stage-group-label { font-size:0.7rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.05em; margin-top:0.5rem; }
     .pipeline-stage {
       text-align: center;
       padding: 1.5rem 1rem;
@@ -331,8 +335,8 @@
       .dash-nav { padding: 0 1rem; }
       .container { padding: 1.5rem 1rem; }
       .section { padding: 1.5rem; }
-      .pipeline-grid { grid-template-columns: repeat(2, 1fr); }
-      .pipeline-stage:nth-child(2)::after, .pipeline-stage:nth-child(4)::after { display: none; }
+      .pipeline-grid { grid-template-columns: repeat(1, 1fr); }
+      .pipeline-stage::after { display: none; }
       .tam-label { width: 120px; font-size: 0.75rem; }
     }
   </style>
@@ -449,36 +453,6 @@
     <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--gray);">Leads = new contacts added to CRM &nbsp;·&nbsp; Deals = new opportunities opened in Sales Qualification pipeline</div>
   </section>
 
-  <!-- ── 2. Customer Growth ── -->
-  <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--green)"></span>
-      Customer Growth
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card" style="border-left:4px solid var(--green);">
-        <div class="stat-number" style="color:var(--green)" id="growth-week">1</div>
-        <div class="stat-label">New Customer<br>This Week</div>
-        <div class="stat-sub">Signed up 24–30 Mar 2026</div>
-      </div>
-      <div class="stat-card" style="border-left:4px solid var(--lapis);">
-        <div class="stat-number" style="color:var(--lapis)" id="growth-month">8</div>
-        <div class="stat-label">New Customers<br>This Month</div>
-        <div class="stat-sub">Signed up in Mar 2026</div>
-      </div>
-      <div class="stat-card" style="border-left:4px solid var(--sky);">
-        <div class="stat-number" style="color:var(--sky)" id="total-paying">47</div>
-        <div class="stat-label">Total Paying<br>Customers</div>
-        <div class="stat-sub">As of 30 Mar 2026</div>
-      </div>
-      <div class="stat-card" style="border-left:4px solid var(--gold);">
-        <div class="stat-number" style="color:var(--gold)">34</div>
-        <div class="stat-label">Peak Month<br>(Feb 2026)</div>
-        <div class="stat-sub">Best single-month onboarding</div>
-      </div>
-    </div>
-  </section>
-
   <!-- ── 3. Sales Pipeline ── -->
   <section class="section">
     <div class="section-title">
@@ -487,23 +461,28 @@
     </div>
     <div class="pipeline-grid" id="pipelineGrid">
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--sky)" id="stage-newlead">206</div>
-        <div class="stage-name">New Lead</div>
+        <div class="stage-count" style="color:var(--sky)">205</div>
+        <div class="stage-name">Sales Qualification</div>
         <div class="stage-bar" style="background:var(--sky);"></div>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--lapis)" id="stage-demo">9</div>
-        <div class="stage-name">Demo / Pilot</div>
-        <div class="stage-bar" style="background:var(--lapis);"></div>
+        <div class="stage-split">
+          <div class="stage-split-item">
+            <div class="stage-count" style="color:var(--lapis);font-size:1.7rem">9</div>
+            <div class="stage-name" style="margin-top:0.2rem">Demo</div>
+          </div>
+          <div class="stage-split-divider">+</div>
+          <div class="stage-split-item">
+            <div class="stage-count" style="color:var(--gold);font-size:1.7rem">23</div>
+            <div class="stage-name" style="margin-top:0.2rem">Negotiation</div>
+          </div>
+        </div>
+        <div class="stage-group-label">Sales Conversion</div>
+        <div class="stage-bar" style="background:linear-gradient(to right,var(--lapis),var(--gold));"></div>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--gold)" id="stage-negotiation">22</div>
-        <div class="stage-name">Negotiation</div>
-        <div class="stage-bar" style="background:var(--gold);"></div>
-      </div>
-      <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--green)" id="stage-agreed">47</div>
-        <div class="stage-name">Agreed</div>
+        <div class="stage-count" style="color:var(--green)">50</div>
+        <div class="stage-name">Customer Acc Management</div>
         <div class="stage-bar" style="background:var(--green);"></div>
       </div>
     </div>
@@ -555,7 +534,7 @@
       <div class="tam-row">
         <div class="tam-label">Paying Customers</div>
         <div class="tam-bar-wrap"><div class="tam-bar-fill" style="background:var(--green); width:10.1%"></div></div>
-        <div class="tam-val" style="color:var(--green)" id="tam-paying">47 / 494</div>
+        <div class="tam-val" style="color:var(--green)">50 / 494</div>
       </div>
       <div class="tam-row">
         <div class="tam-label">Target (20% of TAM)</div>
@@ -592,9 +571,10 @@
     <div class="section-title">
       <span class="dot" style="background:var(--sky)"></span>
       All Paying Customer Schools
-      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">47 schools</span>
+      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">50 schools</span>
     </div>
     <div class="schools-grid">
+      <div class="school-pill">Academie Orfeus</div>
       <div class="school-pill">Acudeo College Kirkney</div>
       <div class="school-pill">Acudeo College Protea Glen</div>
       <div class="school-pill">Acudeo Crystal Park</div>
@@ -622,6 +602,7 @@
       <div class="school-pill">Herzlia Weitzman Primary</div>
       <div class="school-pill">Holy Cross R.C. Primary</div>
       <div class="school-pill">Kammaland Primary School</div>
+      <div class="school-pill">King David Victory Park Primary</div>
       <div class="school-pill"><span class="dot-new"></span> Koa Academy</div>
       <div class="school-pill">Lebone II College (Primary)</div>
       <div class="school-pill"><span class="dot-new"></span> Pinelands High School</div>
@@ -638,6 +619,7 @@
       <div class="school-pill">St Catherine's Dominican Convent</div>
       <div class="school-pill">St Martin's Preparatory School</div>
       <div class="school-pill"><span class="dot-new"></span> Sun Valley Primary School</div>
+      <div class="school-pill">The Lighthouse Learning Hub</div>
       <div class="school-pill"><span class="dot-new"></span> TrinityHouse Glenvista</div>
       <div class="school-pill">Vergenoegd Primary School</div>
       <div class="school-pill">Welwitschia Primary School</div>
@@ -662,16 +644,7 @@
   fetch('pipeline_data.json')
     .then(r => r.json())
     .then(data => {
-      if (data.stages) {
-        document.getElementById('stage-newlead').textContent     = data.stages['New Lead']     ?? '0';
-        document.getElementById('stage-demo').textContent        = data.stages['Demo/Pilot']   ?? '0';
-        document.getElementById('stage-negotiation').textContent = data.stages['Negotiation']  ?? '0';
-        document.getElementById('stage-agreed').textContent      = data.stages['Agreed']       ?? '0';
-        const agreed = data.stages['Agreed'] ?? 0;
-        document.getElementById('total-paying').textContent = agreed;
-        document.getElementById('tam-paying').textContent   = agreed + ' / 494';
-        document.getElementById('pipelineNote').style.display = 'none';
-      }
+      // Pipeline stage values are manually hardcoded — AC data paused temporarily
       if (data.email) {
         document.getElementById('emailsSent').textContent    = data.email.sent      ?? '—';
         document.getElementById('emailsReplied').textContent = data.email.replied   ?? '—';
