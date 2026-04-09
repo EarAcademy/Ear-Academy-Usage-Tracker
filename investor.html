@@ -1,618 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Ear Academy — Sales Activity Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --sky:    #38aae1;
-      --lapis:  #1d70b8;
-      --green:  #00a19a;
-      --gold:   #A88F5E;
-      --gold2:  #c5b08c;
-      --gold3:  #d6c8b0;
-      --shale:  #d8d3cb;
-      --forest: #289B38;
-      --salmon: #F6B1A6;
-      --lilac:  #8871B1;
-      --cream:  #F5F1ED;
-      --white:  #FFFFFF;
-      --dark:   #2C2C2C;
-      --gray:   #666666;
-      --lgray:  #E8E4DF;
-      --radius: 18px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.07);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Lato', sans-serif;
-      background: var(--cream);
-      color: var(--dark);
-      line-height: 1.6;
-    }
-
-    /* ── Header ── */
-    header {
-      background: var(--white);
-      padding: 2rem 3rem 1.75rem;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-      position: relative;
-      overflow: hidden;
-    }
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .logo-lockup svg { display: block; width: 150px; height: auto; margin-bottom: 0.75rem; }
-    h1 {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--dark);
-    }
-    .header-sub { font-size: 0.85rem; color: var(--gray); margin-top: 0.15rem; }
-    .last-updated {
-      font-size: 0.8rem;
-      color: var(--gray);
-      background: var(--lgray);
-      padding: 0.4rem 0.9rem;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-
-    /* ── Decorative circles ── */
-    .bouncies {
-      position: absolute; top: 0; right: 0; bottom: 0; width: 40%;
-      pointer-events: none; opacity: 0.1; overflow: hidden;
-    }
-    .b { position: absolute; border-radius: 50%; }
-    .b1 { width:80px; height:80px; background:var(--sky);   top:15%; right:8%;  }
-    .b2 { width:55px; height:55px; background:var(--lapis); top:50%; right:22%; }
-    .b3 { width:45px; height:45px; background:var(--green); top:65%; right:5%;  }
-    .b4 { width:35px; height:35px; background:var(--gold);  top:30%; right:38%; }
-
-    /* ── Layout ── */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2.5rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    /* ── Section shell ── */
-    .section {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 2rem 2.5rem;
-      box-shadow: var(--shadow);
-    }
-    .section-title {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--lapis);
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--lgray);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .section-title .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    /* ── Stat cards ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.25rem;
-    }
-    .stat-card {
-      background: var(--cream);
-      border-radius: 12px;
-      padding: 1.4rem 1.5rem;
-      text-align: center;
-      border: 1.5px solid var(--lgray);
-      transition: transform 0.15s;
-    }
-    .stat-card:hover { transform: translateY(-2px); }
-    .stat-number {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2.4rem;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-    .stat-label {
-      font-size: 0.82rem;
-      color: var(--gray);
-      font-weight: 400;
-      line-height: 1.3;
-    }
-    .stat-sub {
-      font-size: 0.75rem;
-      color: var(--green);
-      font-weight: 700;
-      margin-top: 0.3rem;
-    }
-
-    /* ── Growth bar chart ── */
-    .growth-chart { display: flex; align-items: flex-end; gap: 0.6rem; height: 120px; }
-    .bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
-    .bar {
-      width: 100%;
-      border-radius: 6px 6px 0 0;
-      min-height: 4px;
-      transition: height 0.6s ease;
-      position: relative;
-    }
-    .bar-val {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 4px;
-    }
-    .bar-label {
-      font-size: 0.72rem;
-      color: var(--gray);
-      margin-top: 5px;
-      white-space: nowrap;
-    }
-    .cumulative-note {
-      font-size: 0.78rem;
-      color: var(--gray);
-      margin-top: 1rem;
-      font-style: italic;
-    }
-
-    /* ── Pipeline funnel ── */
-    .pipeline-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-    }
-    .stage-split { display:flex; justify-content:center; align-items:flex-end; gap:1.25rem; }
-    .stage-split-item { text-align:center; }
-    .stage-split-divider { font-size:1.2rem; color:var(--lgray); padding-bottom:0.5rem; }
-    .stage-group-label { font-size:0.7rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.05em; margin-top:0.5rem; }
-    .pipeline-stage {
-      text-align: center;
-      padding: 1.5rem 1rem;
-      position: relative;
-    }
-    .pipeline-stage:not(:last-child)::after {
-      content: '›';
-      position: absolute;
-      right: -6px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      color: var(--lgray);
-      font-weight: 300;
-    }
-    .stage-count {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-    }
-    .stage-name {
-      font-size: 0.8rem;
-      color: var(--gray);
-      margin-top: 0.3rem;
-      line-height: 1.3;
-    }
-    .stage-bar {
-      height: 5px;
-      border-radius: 3px;
-      margin: 0.75rem auto 0;
-      width: 60%;
-    }
-    .pipeline-note {
-      font-size: 0.78rem;
-      color: var(--gray);
-      text-align: center;
-      margin-top: 1rem;
-      padding: 0.6rem 1rem;
-      background: var(--cream);
-      border-radius: 8px;
-      border: 1px dashed var(--lgray);
-    }
-    .pipeline-note a {
-      color: var(--lapis);
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    /* ── Email activity ── */
-    .email-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.25rem;
-    }
-    .email-card {
-      border-radius: 12px;
-      padding: 1.4rem;
-      border: 1.5px solid var(--lgray);
-    }
-    .email-card-label {
-      font-size: 0.8rem;
-      color: var(--gray);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-    .email-card-val {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-    }
-    .email-card-note { font-size: 0.78rem; color: var(--gray); margin-top: 0.3rem; }
-
-    /* ── School list ── */
-    .schools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 0.6rem;
-    }
-    .school-pill {
-      background: var(--cream);
-      border: 1.5px solid var(--lgray);
-      border-radius: 30px;
-      padding: 0.45rem 1rem;
-      font-size: 0.82rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .school-pill .dot-new {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-    }
-
-    /* ── TAM progress ── */
-    .tam-wrap { display: flex; flex-direction: column; gap: 1.25rem; }
-    .tam-row { display: flex; align-items: center; gap: 1rem; }
-    .tam-label { font-size: 0.85rem; color: var(--gray); width: 180px; flex-shrink: 0; }
-    .tam-bar-wrap { flex: 1; background: var(--lgray); border-radius: 6px; height: 12px; overflow: hidden; }
-    .tam-bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
-    .tam-val { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; width: 80px; text-align: right; flex-shrink: 0; }
-
-    /* ── Confidential footer ── */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.78rem;
-      color: var(--gray);
-    }
-
-    /* ── Nav tabs ── */
-    .dash-nav {
-      background: var(--white);
-      border-bottom: 1px solid var(--lgray);
-      padding: 0 3rem;
-    }
-    .dash-nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      gap: 0;
-    }
-    .dash-nav a {
-      display: inline-block;
-      padding: 0.75rem 1.4rem;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--gray);
-      text-decoration: none;
-      border-bottom: 3px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
-    }
-    .dash-nav a:hover { color: var(--lapis); }
-    .dash-nav a.active {
-      color: var(--lapis);
-      border-bottom-color: var(--lapis);
-    }
-
-    @media (max-width: 700px) {
-      header { padding: 1.5rem; }
-      .dash-nav { padding: 0 1rem; }
-      .container { padding: 1.5rem 1rem; }
-      .section { padding: 1.5rem; }
-      .pipeline-grid { grid-template-columns: repeat(1, 1fr); }
-      .pipeline-stage::after { display: none; }
-      .tam-label { width: 120px; font-size: 0.75rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the eAr Academy - Sales Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--lapis:#1d70b8;--sky:#38aae1;--green:#00a19a;--gold:#c5b08c;--shale:#d8d3cb;--white:#fafaf8;--ink:#1a1a1a;--muted:#6b6b6b;--surface:#f4f2ef;--border:#e4e0da;--warn:#d94f3b;--warn-bg:#fdf1ef;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);font-size:14px;line-height:1.5;}
+header{background:var(--ink);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--white);letter-spacing:-0.3px;}
+.logo span{color:var(--sky);}
+.badge{background:var(--green);color:white;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.8px;}
+.updated{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.5px;text-transform:uppercase;}
+main{max-width:1280px;margin:0 auto;padding:40px 40px 80px;}
+.page-title{font-family:'DM Serif Display',serif;font-size:13px;font-style:italic;color:var(--muted);margin-bottom:32px;display:flex;align-items:center;gap:12px;}
+.page-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:40px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.hero-card{background:var(--white);padding:28px 28px 24px;position:relative;}
+.hero-card:first-child{border-radius:11px 0 0 11px;}.hero-card:last-child{border-radius:0 11px 11px 0;}
+.hero-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;}
+.hero-value{font-family:'DM Serif Display',serif;font-size:42px;line-height:1;color:var(--ink);margin-bottom:8px;}
+.hero-value.hl{color:var(--lapis);}.hero-value.gr{color:var(--green);}
+.hero-sub{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.delta{font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;}
+.delta.up{background:#e8f6f5;color:var(--green);}.delta.down{background:var(--warn-bg);color:var(--warn);}.delta.flat{background:#f0f0f0;color:var(--muted);}
+.hero-accent{position:absolute;top:0;left:0;width:3px;height:100%;}
+.section{margin-bottom:40px;}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.section-title{font-family:'DM Serif Display',serif;font-size:20px;}
+.section-note{font-size:11px;color:var(--muted);font-style:italic;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px;}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:20px;}
+.funnel{display:flex;gap:2px;margin-bottom:28px;}
+.funnel-stage{flex:1;background:var(--surface);border-radius:6px;padding:16px 14px;position:relative;}
+.funnel-stage::after{content:'rarr';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--shale);font-size:14px;z-index:2;}
+.funnel-stage:last-child::after{display:none;}
+.funnel-stage.active{background:#edf5fb;}.funnel-stage.won{background:#e8f6f5;}
+.funnel-stage-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:6px;}
+.funnel-stage-count{font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);line-height:1;margin-bottom:2px;}
+.funnel-stage-val{font-size:11px;color:var(--muted);}
+.funnel-stage-sub{margin-top:8px;font-size:10px;color:var(--lapis);font-weight:600;}
+.stats-row{display:flex;}
+.stat-box{flex:1;padding:20px;border-right:1px solid var(--border);}
+.stat-box:last-child{border-right:none;}
+.stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);font-weight:600;margin-bottom:8px;}
+.stat-val{font-family:'DM Serif Display',serif;font-size:26px;color:var(--ink);line-height:1;margin-bottom:4px;}
+.stat-sub{font-size:11px;color:var(--muted);}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:2px;position:relative;}
+.bar-val{font-size:10px;font-weight:600;position:absolute;top:-18px;left:50%;transform:translateX(-50%);white-space:nowrap;}
+.bar-label{font-size:9px;color:var(--muted);position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;}
+.flag-table{width:100%;border-collapse:collapse;}
+.flag-table th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);text-align:left;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--border);}
+.flag-table td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.flag-table tr:last-child td{border-bottom:none;}.flag-table tr:hover td{background:var(--surface);}
+.pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.pill-red{background:var(--warn-bg);color:var(--warn);}.pill-amber{background:#fff8e6;color:#b07d00;}.pill-green{background:#e8f6f5;color:var(--green);}.pill-blue{background:#edf5fb;color:var(--lapis);}
+.campaign-row{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);gap:16px;}
+.campaign-row:last-child{border-bottom:none;}
+.campaign-name{flex:1;font-size:13px;font-weight:500;}
+.campaign-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.campaign-stat{text-align:right;min-width:60px;}
+.campaign-stat .val{font-size:13px;font-weight:600;}.campaign-stat .lbl{font-size:10px;color:var(--muted);}
+.open-rate-bar{width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.open-rate-fill{height:100%;border-radius:2px;background:var(--sky);}
+.arr-tier{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.arr-tier:last-child{border-bottom:none;}
+.arr-tier-label{flex:1;font-size:12px;}.arr-tier-count{font-size:11px;color:var(--muted);min-width:60px;text-align:right;}.arr-tier-val{font-size:12px;font-weight:600;min-width:80px;text-align:right;}
+.arr-bar{width:100px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.arr-bar-fill{height:100%;border-radius:2px;}
+footer{border-top:1px solid var(--border);padding:20px 40px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted);max-width:1280px;margin:0 auto;}
+@media(max-width:900px){main{padding:24px 20px 60px;}.hero-grid{grid-template-columns:1fr 1fr;}.two-col{grid-template-columns:1fr;}.funnel{flex-direction:column;}.funnel-stage::after{display:none;}}
+</style>
 </head>
 <body>
-
 <header>
-  <div class="header-inner">
-    <div class="logo-lockup">
-      <!-- Ear Academy wordmark SVG (extracted from usage report) -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="170" style="display:block;margin-bottom:0.9rem;">
-        <style>.cls-1{fill:#9e824c;}</style>
-        <path class="cls-1" d="M382.7,5.84c-49.42,0-85.14,8.32-118,20.9a9.83,9.83,0,0,0-5.91,11.93l17,58.57a9.8,9.8,0,0,0,12.74,6.47C312.65,95,335.81,90.1,364.81,90.1c42.13,0,62.33,18.47,62.33,50.79v5.2c-17.9-6.35-46.17-12.12-75-12.12-57.7,0-100.36,20.75-115.91,61.12-6.19-59.31-42.92-107.2-115-107.2C53.31,87.89,5.33,141,5.33,208.05v.85c0,71.33,51,119.3,123.13,119.3,37.95,0,66.3-12.79,87.47-33.09a16.45,16.45,0,0,0-.89-24.54l-20.63-17.1A16.32,16.32,0,0,0,174,253c-13.06,10.21-25.95,14.87-41.31,14.87-11.37,0-21.34-2.62-29.44-7.83-13.55-8.73-6.81-29.95,9.31-29.95H220.73a16.28,16.28,0,0,0,9.14-2.79c-.06,1.57-.11,3.13-.11,4.74v1.15c0,62.33,45.59,96.38,105,96.38,31.67,0,56.44-9.31,75.92-24.46a9.8,9.8,0,0,1,15.84,7.72,9.81,9.81,0,0,0,9.81,9.81h88.87a9.81,9.81,0,0,0,9.82-9.81V143.2c0-43.86-9.81-76.18-33.47-99.27C476.77,19.12,438.68,5.84,382.7,5.84ZM139,188.94h-33.8c-13,0-21.2-14.67-13.76-25.37,7.11-10.24,17.43-16.24,30.2-16.24,13.41,0,24.15,5.95,31.19,16.32C160.14,174.39,152,188.94,139,188.94Zm289.27,20.63c0,31.16-22.51,51.36-54.25,51.36-22.51,0-38.67-12.69-38.67-34.05v-1.15c0-23.08,18.47-38.67,50.21-38.67a119.12,119.12,0,0,1,35.88,5.56,9.83,9.83,0,0,1,6.83,9.36Z"/>
-        <path class="cls-1" d="M695,89.1c-24.38.68-41.27,11.08-53.44,27.84a6.78,6.78,0,0,1-12.24-4V99.78A6.79,6.79,0,0,0,622.52,93H555.43a6.79,6.79,0,0,0-6.79,6.79V315.89a6.79,6.79,0,0,0,6.79,6.79h67.09a6.79,6.79,0,0,0,6.79-6.79V251.36c0-53.08,23.77-77.28,65.81-77.28a6.79,6.79,0,0,0,6.79-6.79V95.91A6.8,6.8,0,0,0,695,89.1Z"/>
-        <path class="cls-1" d="M129.64,59.77c0,7.8,4.69,10.85,10.86,10.85A14.49,14.49,0,0,0,147.41,69V64.08a12.09,12.09,0,0,1-5.57,1.34c-3.87,0-6.47-1.71-6.47-6.4V36.57h12.19V31.51H135.37V19.92h-5.73V31.51h-5.35v5.06h5.35Z"/>
-        <path class="cls-1" d="M163.4,47.94c0-7.21,4.91-12,11.52-12,6.77,0,10.63,4.46,10.63,11.6V70h5.73V46.08c0-9.14-5.43-15.38-14.72-15.38a14.56,14.56,0,0,0-13.16,7.5V15.68h-5.73V70h5.73Z"/>
-        <path class="cls-1" d="M220.28,70.84c7.29,0,12-2.89,15.84-7.21l-3.57-3.2a15.89,15.89,0,0,1-12.12,5.43c-6.77,0-12.71-4.68-13.53-12.79h30.48c.07-.89.07-1.48.07-2,0-11.31-6.54-20.37-17.91-20.37-10.64,0-18.44,8.92-18.44,20.07C201.1,62.74,209.72,70.84,220.28,70.84Zm-.89-35.31c7.58,0,11.6,5.94,12.26,12.94H206.9C207.72,41,212.77,35.53,219.39,35.53Z"/>
-        <path class="cls-1" d="M274.86,400.37h-5.53a2.43,2.43,0,0,1-1.53-.47,2.66,2.66,0,0,1-.87-1.15l-2.87-7.85H248.12l-2.88,7.85a2.47,2.47,0,0,1-.84,1.11,2.32,2.32,0,0,1-1.53.51h-5.56l15.12-38.48h7.32ZM250,385.84h12.27L257.54,373c-.22-.57-.45-1.24-.71-2s-.51-1.61-.76-2.52c-.24.91-.49,1.75-.73,2.53s-.47,1.47-.7,2Z"/>
-        <path class="cls-1" d="M325.19,391.29a1.33,1.33,0,0,1,1,.46l2.82,3.06a15.52,15.52,0,0,1-5.76,4.44,19.85,19.85,0,0,1-8.21,1.55,19.34,19.34,0,0,1-7.71-1.47,16.93,16.93,0,0,1-5.84-4.07,17.93,17.93,0,0,1-3.71-6.23,23.38,23.38,0,0,1-1.29-7.9,21.3,21.3,0,0,1,1.44-7.95,18.09,18.09,0,0,1,4-6.21,18.36,18.36,0,0,1,6.24-4.06,21.4,21.4,0,0,1,8-1.45,19,19,0,0,1,7.5,1.37,17.57,17.57,0,0,1,5.49,3.63l-2.39,3.33a2.25,2.25,0,0,1-.55.56,1.55,1.55,0,0,1-.92.24,2.12,2.12,0,0,1-1.25-.48,14,14,0,0,0-1.62-1,13.64,13.64,0,0,0-2.49-1,12.75,12.75,0,0,0-3.82-.48,12.9,12.9,0,0,0-5,.95,11.15,11.15,0,0,0-3.91,2.7,12.63,12.63,0,0,0-2.56,4.27,16.47,16.47,0,0,0-.91,5.66,16.88,16.88,0,0,0,.91,5.77,12.88,12.88,0,0,0,2.49,4.26,10.54,10.54,0,0,0,3.7,2.65,11.49,11.49,0,0,0,4.58.92,21.08,21.08,0,0,0,2.65-.16,11.42,11.42,0,0,0,2.18-.51,9.62,9.62,0,0,0,1.89-.89,12.13,12.13,0,0,0,1.77-1.34,2.57,2.57,0,0,1,.56-.39A1.37,1.37,0,0,1,325.19,391.29Z"/>
-        <path class="cls-1" d="M389.48,400.37H384a2.43,2.43,0,0,1-1.53-.47,2.66,2.66,0,0,1-.87-1.15l-2.87-7.85H362.74l-2.88,7.85a2.52,2.52,0,0,1-.83,1.11,2.35,2.35,0,0,1-1.53.51h-5.57l15.12-38.48h7.32Zm-24.91-14.53h12.27L372.16,373c-.21-.57-.45-1.24-.71-2s-.51-1.61-.75-2.52c-.25.91-.5,1.75-.74,2.53s-.47,1.47-.7,2Z"/>
-        <path class="cls-1" d="M448.91,381.13a20.82,20.82,0,0,1-1.41,7.77A17.45,17.45,0,0,1,437.39,399a21.64,21.64,0,0,1-8,1.41H414.74V361.89h14.69a21.44,21.44,0,0,1,8,1.42,18.06,18.06,0,0,1,6.15,4,17.69,17.69,0,0,1,4,6.08A20.82,20.82,0,0,1,448.91,381.13Zm-7.32,0a17.57,17.57,0,0,0-.85-5.68,12,12,0,0,0-2.42-4.26,10.49,10.49,0,0,0-3.82-2.68,13.16,13.16,0,0,0-5.07-.93H422v27.09h7.48a13.16,13.16,0,0,0,5.07-.93,10.47,10.47,0,0,0,3.82-2.67,12,12,0,0,0,2.42-4.26A17.61,17.61,0,0,0,441.59,381.13Z"/>
-        <path class="cls-1" d="M500,361.89v5.69H483v10.67h13.44v5.51H483v10.89H500v5.72H475.76V361.89Z"/>
-        <path class="cls-1" d="M547.63,386.17c.26.61.51,1.23.76,1.85.25-.64.51-1.27.77-1.89s.55-1.21.86-1.78L561.41,363a2.84,2.84,0,0,1,.43-.64,1.38,1.38,0,0,1,.51-.34,2.33,2.33,0,0,1,.63-.14l.82,0h5.4v38.48h-6.3V375.51c0-.46,0-1,0-1.51s.06-1.11.11-1.68l-11.62,21.82a3.17,3.17,0,0,1-1,1.16,2.75,2.75,0,0,1-1.49.41h-1a2.73,2.73,0,0,1-1.49-.41,3.17,3.17,0,0,1-1-1.16l-11.79-21.9c.07.58.12,1.16.15,1.72s0,1.07,0,1.55v24.86h-6.31V361.89h5.41l.82,0a2.42,2.42,0,0,1,.63.14,1.51,1.51,0,0,1,.52.34,2.85,2.85,0,0,1,.45.64l11.49,21.37A17.94,17.94,0,0,1,547.63,386.17Z"/>
-        <path class="cls-1" d="M615.38,385.41v15h-7.16v-15l-14-23.52h6.31a2.27,2.27,0,0,1,1.48.45,3.7,3.7,0,0,1,.91,1.14L610,376.34c.41.76.76,1.48,1.06,2.17s.58,1.35.83,2q.35-1,.78-2a23.29,23.29,0,0,1,1-2.14l7-12.86a3.68,3.68,0,0,1,.88-1.09,2.24,2.24,0,0,1,1.49-.5h6.33Z"/>
-        <path class="cls-1" d="M701.91,70.09v3.16h5.42V87.89h3.79V73.25h5.41V70.09Zm22,.63a2.36,2.36,0,0,0-.54-.51,1.6,1.6,0,0,0-.73-.12h-3.18v17.8h3.31v-11l-.25-2.17,5.54,10a1.29,1.29,0,0,0,1.29.84h.54a1.36,1.36,0,0,0,1.33-.84l5.5-10.11-.27,2.26v11h3.31V70.09h-3.19a1.67,1.67,0,0,0-.72.12,1.52,1.52,0,0,0-.51.51l-5.09,9.11a4.23,4.23,0,0,0-.36.8c-.08.25-.17.52-.27.8a6.27,6.27,0,0,0-.28-.8l-.35-.8Z"/>
-      </svg>
-      <h1>Sales Activity Dashboard</h1>
-      <p class="header-sub">Sales & Growth Overview · South Africa</p>
-    </div>
-    <span class="last-updated" id="lastUpdated">Last updated: 30 Mar 2026</span>
-  </div>
-  <div class="bouncies">
-    <div class="b b1"></div><div class="b b2"></div>
-    <div class="b b3"></div><div class="b b4"></div>
+  <div class="logo">the e<span>A</span>r&#x2122; Academy</div>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <span class="updated">SA Sales Dashboard &middot; 09 April 2026</span>
+    <span class="badge">Live</span>
   </div>
 </header>
-
-<nav class="dash-nav">
-  <div class="dash-nav-inner">
-    <a href="index.html">📊 Usage Analytics</a>
-    <a href="investor.html" class="active">💼 Sales Activity</a>
-  </div>
-</nav>
-
-<div class="container">
-
-  <!-- ── 1b. Monthly Sales Activity ── -->
-  <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--lapis)"></span>
-      Monthly Sales Activity
-      <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)">Jan – Mar 2026</span>
-    </div>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
-        <thead>
-          <tr style="border-bottom:2px solid var(--lgray);">
-            <th style="text-align:left;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Metric</th>
-            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Jan 2026</th>
-            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Feb 2026</th>
-            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--sky);font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Mar 2026 ↑</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid var(--lgray);">
-            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">New Leads Added</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);" id="monthly-leads-jan">11</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;" id="monthly-leads-feb">144</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;" id="monthly-leads-mar">162</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--lgray);">
-            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">New Deals Added</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);" id="monthly-deals-jan">0</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;" id="monthly-deals-feb">4</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;" id="monthly-deals-mar">35</td>
-          </tr>
-          <tr>
-            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">Product Demos</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);">3</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;">13</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;">18</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--gray);">Leads = new contacts added to CRM &nbsp;·&nbsp; Deals = new opportunities opened in Sales Qualification pipeline &nbsp;·&nbsp; <em>Ear Academy exhibited at 4 conferences in March — CT, JHB, KZN and PE</em></div>
-  </section>
-
-  <!-- ── 3. Sales Pipeline ── -->
-  <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--lapis)"></span>
-      Sales Pipeline
-    </div>
-    <div class="pipeline-grid" id="pipelineGrid">
-      <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--sky)">205</div>
-        <div class="stage-name">Sales Qualification</div>
-        <div class="stage-bar" style="background:var(--sky);"></div>
-      </div>
-      <div class="pipeline-stage">
-        <div class="stage-split">
-          <div class="stage-split-item">
-            <div class="stage-count" style="color:var(--lapis);font-size:1.7rem">9</div>
-            <div class="stage-name" style="margin-top:0.2rem">Demo</div>
-          </div>
-          <div class="stage-split-divider">+</div>
-          <div class="stage-split-item">
-            <div class="stage-count" style="color:var(--gold);font-size:1.7rem">23</div>
-            <div class="stage-name" style="margin-top:0.2rem">Negotiation</div>
-          </div>
-        </div>
-        <div class="stage-group-label">Sales Conversion</div>
-        <div class="stage-bar" style="background:linear-gradient(to right,var(--lapis),var(--gold));"></div>
-      </div>
-      <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--green)">50</div>
-        <div class="stage-name">Customer Acc Management</div>
-        <div class="stage-bar" style="background:var(--green);"></div>
-      </div>
-    </div>
-    <div class="pipeline-note" id="pipelineNote">
-      Pipeline data loads from ActiveCampaign. If you are seeing dashes, the data file has not yet been generated — ask the team to run the dashboard update.
-    </div>
-  </section>
-
-  <!-- ── 4. Email Outreach Activity ── -->
-  <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--gold)"></span>
-      Email Outreach Activity
-    </div>
-    <div class="email-grid" id="emailGrid">
-      <div class="email-card" style="background:#f0f8fd;">
-        <div class="email-card-label">Emails Sent (All Time)</div>
-        <div class="email-card-val" style="color:var(--sky)" id="emailsSent">—</div>
-        <div class="email-card-note">Across 91 AC campaigns to school contacts</div>
-      </div>
-      <div class="email-card" style="background:#f0faf9;">
-        <div class="email-card-label">Emails Opened</div>
-        <div class="email-card-val" style="color:var(--green)" id="emailsReplied">—</div>
-        <div class="email-card-note">Opens tracked by ActiveCampaign</div>
-      </div>
-      <div class="email-card" style="background:#fdf8f0;">
-        <div class="email-card-label">Open Rate</div>
-        <div class="email-card-val" style="color:var(--gold)" id="responseRate">—</div>
-        <div class="email-card-note">44.6% this month (Mar 2026)</div>
-      </div>
-      <div class="email-card" style="background:#f5f1ff;">
-        <div class="email-card-label">New Contacts (This Month)</div>
-        <div class="email-card-val" style="color:#8871B1" id="newContacts">—</div>
-        <div class="email-card-note">Schools newly entered into CRM</div>
-      </div>
-    </div>
-    <div class="pipeline-note" id="emailNote" style="margin-top:1rem;">
-      Loading email metrics from ActiveCampaign…
-    </div>
-  </section>
-
-  <!-- ── 6. All Paying Schools ── -->
-  <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--sky)"></span>
-      All Paying Customer Schools
-      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">50 schools</span>
-    </div>
-    <div class="schools-grid">
-      <div class="school-pill">Academie Orfeus</div>
-      <div class="school-pill">Acudeo College Kirkney</div>
-      <div class="school-pill">Acudeo College Protea Glen</div>
-      <div class="school-pill">Acudeo Crystal Park</div>
-      <div class="school-pill">Acudeo Thornview</div>
-      <div class="school-pill">Amberfield College</div>
-      <div class="school-pill">Applewood Preparatory School</div>
-      <div class="school-pill">Bay Primary</div>
-      <div class="school-pill">Brescia House</div>
-      <div class="school-pill">Calling Academy</div>
-      <div class="school-pill">Canaan College</div>
-      <div class="school-pill">CBC Mount Edmund</div>
-      <div class="school-pill">Cheré Botha School</div>
-      <div class="school-pill"><span class="dot-new"></span> Curro Langebaan Primary School</div>
-      <div class="school-pill"><span class="dot-new"></span> Danie Ackermann Primary</div>
-      <div class="school-pill">Dr. Van Der Ross</div>
-      <div class="school-pill">Early Learning Centre</div>
-      <div class="school-pill">Eastside Primary School</div>
-      <div class="school-pill">Etham College</div>
-      <div class="school-pill">Generation Schools Hermanus</div>
-      <div class="school-pill">Harriston School (Primary)</div>
-      <div class="school-pill">Hazyview Private Primary School</div>
-      <div class="school-pill">Hermannsburg School (Primary)</div>
-      <div class="school-pill">Herzlia High School</div>
-      <div class="school-pill">Herzlia Primary</div>
-      <div class="school-pill">Herzlia Weitzman Primary</div>
-      <div class="school-pill">Holy Cross R.C. Primary</div>
-      <div class="school-pill">Kammaland Primary School</div>
-      <div class="school-pill">King David Victory Park Primary</div>
-      <div class="school-pill"><span class="dot-new"></span> Koa Academy</div>
-      <div class="school-pill">Lebone II College (Primary)</div>
-      <div class="school-pill"><span class="dot-new"></span> Pinelands High School</div>
-      <div class="school-pill">Plettenberg Bay Christian Primary</div>
-      <div class="school-pill">Prescient Primary</div>
-      <div class="school-pill">Queens Private School</div>
-      <div class="school-pill">Raff Home School</div>
-      <div class="school-pill">Reddam House Helderfontein</div>
-      <div class="school-pill">Royal Schools Alberton</div>
-      <div class="school-pill">Royal Schools Princess Park</div>
-      <div class="school-pill">Royal Schools Sky City</div>
-      <div class="school-pill"><span class="dot-new"></span> Royal Schools Starlight Academy</div>
-      <div class="school-pill">Soofia International School</div>
-      <div class="school-pill">St Catherine's Dominican Convent</div>
-      <div class="school-pill">St Martin's Preparatory School</div>
-      <div class="school-pill"><span class="dot-new"></span> Sun Valley Primary School</div>
-      <div class="school-pill">The Lighthouse Learning Hub</div>
-      <div class="school-pill"><span class="dot-new"></span> TrinityHouse Glenvista</div>
-      <div class="school-pill">Vergenoegd Primary School</div>
-      <div class="school-pill">Welwitschia Primary School</div>
-      <div class="school-pill"><span class="dot-new"></span> Windemere Primary</div>
-    </div>
-    <div style="font-size:0.75rem; color:var(--gray); margin-top:1rem;">
-      <span class="dot-new" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:middle;"></span>
-      Green dot = joined since Feb 2026. Source: ActiveCampaign Customer Account Management pipeline, 30 Mar 2026.
-    </div>
-  </section>
-
+<main>
+<div class="page-title">South Africa &mdash; ZAR Pipeline &amp; Sales Activity</div>
+<div class="hero-grid">
+  <div class="hero-card"><div class="hero-accent" style="background:var(--green)"></div><div class="hero-label">Active Customers</div><div class="hero-value gr">51</div><div class="hero-sub">49 activated &middot; 2 onboarding</div></div>
+  <div class="hero-card"><div class="hero-accent" style="background:var(--lapis)"></div><div class="hero-label">Annual Recurring Revenue</div><div class="hero-value hl">R483k</div><div class="hero-sub">ZAR &middot; SA schools only</div></div>
+  <div class="hero-card"><div class="hero-accent" style="background:var(--sky)"></div><div class="hero-label">Open Pipeline Value</div><div class="hero-value">R2.9M</div><div class="hero-sub">5.9&times; coverage vs ARR</div></div>
+  <div class="hero-card"><div class="hero-accent" style="background:var(--gold)"></div><div class="hero-label">New Leads This Month</div><div class="hero-value">92</div><div class="hero-sub"><span class="delta up">+81</span><span>vs last month (11)</span></div></div>
 </div>
-
-<footer>
-  <strong>Confidential — The Ear Academy Investor Dashboard</strong><br>
-  This document contains forward-looking projections and proprietary business information.<br>
-  Not for distribution. © 2026 The Ear Academy (Pty) Ltd · <a href="https://the-ear.com" style="color:var(--lapis)">the-ear.com</a>
-</footer>
-
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Sales Pipeline</h2><span class="section-note">ZAR only &middot; Open deals &middot; Live from ActiveCampaign</span></div>
+  <div class="funnel">
+    <div class="funnel-stage"><div class="funnel-stage-label">New Lead</div><div class="funnel-stage-count">289</div><div class="funnel-stage-val">R2.5M potential</div><div class="funnel-stage-sub">Sales Qualification</div></div>
+    <div class="funnel-stage active"><div class="funnel-stage-label">Demo / Pilot</div><div class="funnel-stage-count">9</div><div class="funnel-stage-val">R108k potential</div><div class="funnel-stage-sub">Conversion Step 1</div></div>
+    <div class="funnel-stage active"><div class="funnel-stage-label">Negotiation</div><div class="funnel-stage-count">25</div><div class="funnel-stage-val">R284k potential</div><div class="funnel-stage-sub">Conversion Step 2</div></div>
+    <div class="funnel-stage won"><div class="funnel-stage-label">Won &middot; Active</div><div class="funnel-stage-count">51</div><div class="funnel-stage-val">R483k ARR</div><div class="funnel-stage-sub">Customer Account Mgmt</div></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;"><div class="stats-row">
+    <div class="stat-box"><div class="stat-label">Qual &rarr; Conversion</div><div class="stat-val">11%</div><div class="stat-sub">34 in conversion / 289 in qual</div></div>
+    <div class="stat-box"><div class="stat-label">Demo &rarr; Negotiation</div><div class="stat-val">74%</div><div class="stat-sub">25 of 34 progressed</div></div>
+    <div class="stat-box"><div class="stat-label">Win Rate (Closed)</div><div class="stat-val">43%</div><div class="stat-sub">51 won vs 68 lost</div></div>
+    <div class="stat-box"><div class="stat-label">Pipeline Coverage</div><div class="stat-val">5.9&times;</div><div class="stat-sub">R2.9M open vs R483k ARR</div></div>
+  </div></div>
+</div>
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Sales Activity</h2><span class="section-note">New ZAR leads entering qualification &middot; Last 6 months</span></div>
+  <div class="two-col">
+    <div class="card"><div class="card-title">New ZAR Leads per Month</div><div class="bar-chart" id="leadsChart"></div></div>
+    <div class="card"><div class="card-title">SA Broadcast Campaigns</div><div class="campaign-row"><div style="flex:1"><div class="campaign-name">Webinar Follow Up</div><div class="campaign-meta">2026-04-08 &middot; 20 recipients</div></div><div class="campaign-stat"><div class="val">20</div><div class="lbl">sent</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">55% open rate</div><div class="open-rate-bar"><div class="open-rate-fill" style="width:55%"></div></div></div></div><div class="campaign-row"><div style="flex:1"><div class="campaign-name">2026 March Mailer SA Webinar Series</div><div class="campaign-meta">2026-03-27 &middot; 138 recipients</div></div><div class="campaign-stat"><div class="val">138</div><div class="lbl">sent</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">58% open rate</div><div class="open-rate-bar"><div class="open-rate-fill" style="width:58%"></div></div></div></div><div class="campaign-row"><div style="flex:1"><div class="campaign-name">2026 February Mailer SA</div><div class="campaign-meta">2026-02-20 &middot; 31 recipients</div></div><div class="campaign-stat"><div class="val">31</div><div class="lbl">sent</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">39% open rate</div><div class="open-rate-bar"><div class="open-rate-fill" style="width:39%"></div></div></div></div><div class="campaign-row"><div style="flex:1"><div class="campaign-name">2026 January Mailer SA</div><div class="campaign-meta">2026-01-22 &middot; 31 recipients</div></div><div class="campaign-stat"><div class="val">31</div><div class="lbl">sent</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">52% open rate</div><div class="open-rate-bar"><div class="open-rate-fill" style="width:52%"></div></div></div></div><div class="campaign-row"><div style="flex:1"><div class="campaign-name">2025 Closing SA</div><div class="campaign-meta">2025-12-19 &middot; 31 recipients</div></div><div class="campaign-stat"><div class="val">31</div><div class="lbl">sent</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:4px;">45% open rate</div><div class="open-rate-bar"><div class="open-rate-fill" style="width:45%"></div></div></div></div></div>
+  </div>
+</div>
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Customer Account Management</h2><span class="section-note">All Won ZAR deals &middot; Pipeline 6</span></div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Customers by Stage</div>
+      <div style="display:flex;gap:16px;margin-bottom:24px;">
+        <div style="flex:1;background:var(--surface);border-radius:8px;padding:20px;text-align:center;"><div style="font-family:'DM Serif Display',serif;font-size:36px;color:var(--sky);line-height:1;margin-bottom:4px;">2</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);font-weight:600;">Onboarding</div></div>
+        <div style="flex:1;background:#e8f6f5;border-radius:8px;padding:20px;text-align:center;"><div style="font-family:'DM Serif Display',serif;font-size:36px;color:var(--green);line-height:1;margin-bottom:4px;">49</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);font-weight:600;">Activated</div></div>
+      </div>
+      <div class="card-title">ARR by Tier</div>
+      <div class="arr-tier"><div class="arr-tier-label">R12,000 / year</div><div class="arr-bar"><div class="arr-bar-fill" style="width:39%;background:var(--lapis)"></div></div><div class="arr-tier-count">20 schools</div><div class="arr-tier-val">R268k</div></div>
+      <div class="arr-tier"><div class="arr-tier-label">R8,050 / year</div><div class="arr-bar"><div class="arr-bar-fill" style="width:41%;background:var(--sky)"></div></div><div class="arr-tier-count">21 schools</div><div class="arr-tier-val">R169k</div></div>
+      <div class="arr-tier"><div class="arr-tier-label">&lt; R8,050 / year</div><div class="arr-bar"><div class="arr-bar-fill" style="width:20%;background:var(--shale)"></div></div><div class="arr-tier-count">10 schools</div><div class="arr-tier-val">R46k</div></div>
+      <div class="arr-tier" style="border-top:1px solid var(--border);margin-top:4px;"><div class="arr-tier-label" style="font-weight:600;">Total ARR</div><div class="arr-bar"></div><div class="arr-tier-count" style="font-weight:600;">51 schools</div><div class="arr-tier-val" style="color:var(--green);font-weight:700;">R483k</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Customers Won by Month</div>
+      <div class="bar-chart" id="wonChart"></div>
+      <div style="margin-top:28px;"><div class="card-title">Lost Deals (ZAR)</div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+          <div style="flex:1;text-align:center;padding:14px;background:var(--warn-bg);border-radius:8px;"><div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--warn);">20</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);font-weight:600;margin-top:2px;">Conversion</div></div>
+          <div style="flex:1;text-align:center;padding:14px;background:var(--surface);border-radius:8px;"><div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--muted);">38</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);font-weight:600;margin-top:2px;">Qualification</div></div>
+        </div>
+        <div style="background:var(--surface);border-radius:8px;padding:16px;font-size:12px;color:var(--muted);line-height:1.7;"><div style="color:var(--ink);font-weight:500;margin-bottom:4px;">Renewal tracking &mdash; Month 3 of Year 1</div>First renewals due Sep&ndash;Oct 2026. Churn rate measurable from Q4 2026.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Deals Needing Attention</h2><span class="section-note">Stuck &gt;30 days in current stage &middot; Top 20</span></div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table class="flag-table"><thead><tr><th>School / Deal</th><th>Stage</th><th>Days in Stage</th><th>Value</th><th>Status</th></tr></thead><tbody><tr><td style="font-weight:500;">BMS: Clarendon Primary School</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">814 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">BMS: Somerset College</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">814 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Online(SA): Teneo Education</td><td><span class="pill pill-blue">Negotiation</span></td><td style="font-weight:600;">814 days</td><td>R36k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Steyn City School</td><td><span class="pill pill-blue">Negotiation</span></td><td style="font-weight:600;">814 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Anne Duthie -  Anne Duthie - TRAILBLAZER SA</td><td><span class="pill pill-blue">Negotiation</span></td><td style="font-weight:600;">764 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Willowmoore High School -  Lorna Sanders - TRAILBLAZER </td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">763 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Willowmoore High School -  Lorna Sanders - TRAILBLAZER </td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">763 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Greenfields</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">757 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Westville Primary School</td><td><span class="pill pill-blue">Negotiation</span></td><td style="font-weight:600;">757 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">George Faneti</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">756 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Wynberg Girls Junior School - SchoolScape Cape Town 202</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">756 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Marvin Park Primary School- SchoolScape Cape Town 2024</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">756 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Martin Adamson - SchoolScape Cape Town 2024</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">756 days</td><td>R5k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Kommetjie Primary - Ansie Whitby - TRAILBLAZER SA</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">671 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Pinelands North Primary School - Bramlin Solomons - TRA</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">671 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Cannons Creek Independent School - Bronwyn Harvey - TRA</td><td><span class="pill pill-amber">Demo / Pilot</span></td><td style="font-weight:600;">671 days</td><td>R12k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Norma Primary - Trailblazer</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">644 days</td><td>R8k</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Summerdale High School  Waldilene Folding - SS CT AUG24</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">595 days</td><td>R0</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Klein Locheland, Laerskool Lochnerhof  Maritha Human - </td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">595 days</td><td>R0</td><td><span class="pill pill-red">Critical</span></td></tr><tr><td style="font-weight:500;">Westcott Primary School  Jessica de Villiers - SS CT AU</td><td><span class="pill pill-amber">New Lead</span></td><td style="font-weight:600;">595 days</td><td>R0</td><td><span class="pill pill-red">Critical</span></td></tr></tbody></table>
+  </div>
+</div>
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:40px;">
+  <strong style="color:var(--ink);">Data:</strong> ActiveCampaign (ZAR &middot; SA only) &middot; Pipelines 4, 5, 6 &middot; UK/GBP excluded &middot; Renewal metrics activate Q4 2026 &middot; <strong style="color:var(--ink);">Updated:</strong> 09 April 2026
+</div>
+</main>
+<footer><span>the eAr Academy &middot; Sales Dashboard &middot; Confidential</span><span>Auto-generated 2026-04-09</span></footer>
 <script>
-  // Load pipeline data from pipeline_data.json if available
-  fetch('pipeline_data.json')
-    .then(r => r.json())
-    .then(data => {
-      // Pipeline stage values are manually hardcoded — AC data paused temporarily
-      if (data.email) {
-        document.getElementById('emailsSent').textContent    = data.email.sent      ?? '—';
-        document.getElementById('emailsReplied').textContent = data.email.replied   ?? '—';
-        document.getElementById('responseRate').textContent  = data.email.rate      ?? '—';
-        document.getElementById('newContacts').textContent   = data.email.new_contacts ?? '—';
-        const emailNote = document.getElementById('emailNote');
-        if (emailNote) emailNote.style.display = 'none';
-      }
-      if (data.weekly) {
-        document.getElementById('weekly-new-leads').textContent = data.weekly.new_leads   ?? '—';
-        document.getElementById('weekly-emails').textContent    = data.weekly.emails_sent ?? '—';
-        document.getElementById('weekly-advances').textContent  = data.weekly.advances    ?? '—';
-        document.getElementById('weekly-customers').textContent = data.weekly.new_customers ?? '—';
-        const weeklyNote = document.getElementById('weeklyNote');
-        if (weeklyNote) weeklyNote.style.display = 'none';
-      }
-      if (data.monthly) {
-        if (data.monthly.jan) {
-          document.getElementById('monthly-leads-jan').textContent = data.monthly.jan.new_leads ?? '—';
-          document.getElementById('monthly-deals-jan').textContent = data.monthly.jan.new_deals ?? '—';
-        }
-        if (data.monthly.feb) {
-          document.getElementById('monthly-leads-feb').textContent = data.monthly.feb.new_leads ?? '—';
-          document.getElementById('monthly-deals-feb').textContent = data.monthly.feb.new_deals ?? '—';
-        }
-        if (data.monthly.mar) {
-          document.getElementById('monthly-leads-mar').textContent = data.monthly.mar.new_leads ?? '—';
-          document.getElementById('monthly-deals-mar').textContent = data.monthly.mar.new_deals ?? '—';
-        }
-      }
-      if (data.last_updated) {
-        document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.last_updated;
-      }
-    })
-    .catch(() => {
-      // pipeline_data.json not yet generated — dashes remain
-    });
+const leadsData=[0, 0, 0, 3, 11, 92],wonData=[0, 2, 6, 25, 0, 16],labels=["Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26"];
+function renderBars(id,data,color){var el=document.getElementById(id);if(!el)return;var max=Math.max.apply(null,data.concat([1]));el.innerHTML=data.map(function(v,i){var h=Math.max(2,Math.round(v/max*96));return'<div class="bar-wrap"><div class="bar" style="height:'+h+'px;background:'+color+';position:relative;"><span class="bar-val">'+(v||'')+'</span></div><span class="bar-label">'+labels[i]+'</span></div>';}).join('');}
+renderBars('leadsChart',leadsData,'var(--lapis)');renderBars('wonChart',wonData,'var(--green)');
 </script>
-
-</body>
-</html>
+</body></html>
