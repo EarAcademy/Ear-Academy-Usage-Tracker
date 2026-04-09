@@ -1,54 +1,64 @@
 {
   "stages": {
-    "New Lead": 206,
-    "Demo/Pilot": 9,
-    "Negotiation": 22,
-    "Agreed": 47
+    "New Lead": 428,
+    "Demo/Pilot": 109,
+    "Negotiation": 34,
+    "Agreed": 52
   },
   "all_stages": {
-    "New Lead (Sales Qualification)": 292,
-    "Demo / Pilot": 82,
-    "Negotiation": 30,
+    "Churning": 2,
+    "Negotiation": 34,
+    "Activated": 47,
+    "Stage 4": 244,
+    "New Lead": 428,
+    "Demo / Pilot": 109,
+    "Lost": 7,
+    "Not Interested": 11,
+    "Onboarding": 2,
     "Agreed": 1,
-    "Onboarding (Won)": 3,
-    "Activated (Won)": 45
+    "Long Term Interest": 2,
+    "Stage 5": 250,
+    "Disqualified": 3,
+    "Won": 1
   },
   "weekly": {
-    "new_leads": "78",
-    "emails_sent": "148",
+    "new_leads": "3",
+    "emails_sent": "\u2014",
     "advances": "\u2014",
-    "new_customers": "1"
+    "new_customers": "16"
   },
   "monthly": {
     "jan": {
       "new_leads": "11",
-      "new_deals": "0"
+      "new_deals": "\u2014"
     },
     "feb": {
       "new_leads": "144",
-      "new_deals": "4"
+      "new_deals": "\u2014"
     },
     "mar": {
-      "new_leads": "162",
-      "new_deals": "35"
+      "new_leads": "163",
+      "new_deals": "\u2014"
     }
   },
   "email": {
-    "sent": "73,416",
-    "replied": "5,455",
-    "rate": "7.4%",
-    "new_contacts": "162"
+    "sent": "338",
+    "replied": "396",
+    "rate": "117.2%",
+    "new_contacts": "3"
   },
-  "last_updated": "31 Mar 2026 at 09:00",
-  "total_deals": 1063,
-  "total_contacts": 8001,
+  "last_updated": "07 Apr 2026 at 13:02",
+  "total_deals": 1141,
+  "total_contacts": 8005,
   "notes": {
     "New Lead": "Active deals in Sales Qualification pipeline, New Lead stage (across ZAR/GBP/USD)",
     "Demo/Pilot": "Active deals in Sales Conversion pipeline, Demo/Pilot stage",
     "Negotiation": "Active deals in Sales Conversion pipeline, Negotiation stage",
     "Agreed": "Paying schools confirmed by Rus (Customer Account Management Won: Onboarding + Activated)",
-    "email_sent": "All-time total across 91 campaigns",
-    "email_replied": "Email opens (7.4% of 73,416 sent)",
-    "new_contacts": "New contacts added in last 30 days (7,839 to 8,001)"
+    "advances": "Deals modified into Demo/Pilot or Negotiation in last 7 days",
+    "new_customers": "Non-churned deals modified into an Agreed-type stage in last 7 days",
+    "email_sent": "Sum of send_amt across last 10 campaigns",
+    "email_replied": "Email opens across last 10 campaigns",
+    "new_contacts": "New contacts added this calendar month"
   }
 }
