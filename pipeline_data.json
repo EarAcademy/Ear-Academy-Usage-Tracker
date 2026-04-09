@@ -1,64 +1,37 @@
 {
-  "stages": {
-    "New Lead": 428,
-    "Demo/Pilot": 109,
-    "Negotiation": 34,
-    "Agreed": 52
-  },
-  "all_stages": {
-    "Churning": 2,
-    "Negotiation": 34,
-    "Activated": 47,
-    "Stage 4": 244,
-    "New Lead": 428,
-    "Demo / Pilot": 109,
-    "Lost": 7,
-    "Not Interested": 11,
-    "Onboarding": 2,
-    "Agreed": 1,
-    "Long Term Interest": 2,
-    "Stage 5": 250,
-    "Disqualified": 3,
-    "Won": 1
-  },
-  "weekly": {
-    "new_leads": "3",
-    "emails_sent": "\u2014",
-    "advances": "\u2014",
-    "new_customers": "16"
+  "pipeline": {
+    "qualification": 0,
+    "demo": 0,
+    "negotiation": 0,
+    "customers": 0
   },
   "monthly": {
     "jan": {
-      "new_leads": "11",
-      "new_deals": "\u2014"
+      "new_leads": "0",
+      "new_deals": "0"
     },
     "feb": {
-      "new_leads": "144",
-      "new_deals": "\u2014"
+      "new_leads": "0",
+      "new_deals": "0"
     },
     "mar": {
-      "new_leads": "163",
-      "new_deals": "\u2014"
+      "new_leads": "0",
+      "new_deals": "0"
     }
   },
   "email": {
-    "sent": "338",
-    "replied": "396",
-    "rate": "117.2%",
-    "new_contacts": "3"
+    "sent": "\u2014",
+    "replied": "\u2014",
+    "rate": "\u2014",
+    "new_contacts": "\u2014"
   },
-  "last_updated": "07 Apr 2026 at 13:02",
-  "total_deals": 1141,
-  "total_contacts": 8005,
+  "last_updated": "09 Apr 2026 at 15:58",
   "notes": {
-    "New Lead": "Active deals in Sales Qualification pipeline, New Lead stage (across ZAR/GBP/USD)",
-    "Demo/Pilot": "Active deals in Sales Conversion pipeline, Demo/Pilot stage",
-    "Negotiation": "Active deals in Sales Conversion pipeline, Negotiation stage",
-    "Agreed": "Paying schools confirmed by Rus (Customer Account Management Won: Onboarding + Activated)",
-    "advances": "Deals modified into Demo/Pilot or Negotiation in last 7 days",
-    "new_customers": "Non-churned deals modified into an Agreed-type stage in last 7 days",
-    "email_sent": "Sum of send_amt across last 10 campaigns",
-    "email_replied": "Email opens across last 10 campaigns",
-    "new_contacts": "New contacts added this calendar month"
+    "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
+    "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
+    "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
+    "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
+    "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
+    "customers": "Onboarding (0) + Activated (0) in Pipeline 6"
   }
 }

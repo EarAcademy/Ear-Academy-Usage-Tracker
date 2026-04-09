@@ -42,7 +42,7 @@
       overflow: hidden;
     }
     .header-inner {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -53,7 +53,7 @@
     .logo-lockup svg { display: block; width: 150px; height: auto; margin-bottom: 0.75rem; }
     h1 {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--dark);
     }
@@ -69,20 +69,21 @@
 
     /* ── Decorative circles ── */
     .bouncies {
-      position: absolute; top: 0; right: 0; bottom: 0; width: 40%;
-      pointer-events: none; opacity: 0.1; overflow: hidden;
+      position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+      pointer-events: none; opacity: 0.12; overflow: hidden;
     }
     .b { position: absolute; border-radius: 50%; }
-    .b1 { width:80px; height:80px; background:var(--sky);   top:15%; right:8%;  }
-    .b2 { width:55px; height:55px; background:var(--lapis); top:50%; right:22%; }
-    .b3 { width:45px; height:45px; background:var(--green); top:65%; right:5%;  }
-    .b4 { width:35px; height:35px; background:var(--gold);  top:30%; right:38%; }
+    .b1 { width:80px; height:80px; background:var(--sky);   top:20%; right:10%; }
+    .b2 { width:60px; height:60px; background:var(--lapis); top:45%; right:25%; }
+    .b3 { width:50px; height:50px; background:var(--green); top:60%; right:5%;  }
+    .b4 { width:40px; height:40px; background:var(--gold2); top:30%; right:40%; }
+    .b5 { width:70px; height:70px; background:var(--shale); top:10%; right:50%; }
 
     /* ── Layout ── */
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 2.5rem 2rem;
+      padding: 2.5rem 3rem;
       display: flex;
       flex-direction: column;
       gap: 2rem;
@@ -92,26 +93,29 @@
     .section {
       background: var(--white);
       border-radius: var(--radius);
-      padding: 2rem 2.5rem;
+      padding: 2rem 2.5rem 2.5rem;
       box-shadow: var(--shadow);
     }
     .section-title {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       font-weight: 700;
-      color: var(--lapis);
+      color: var(--dark);
       margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--lgray);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
-    .section-title .dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      display: inline-block;
+    .section-title::before {
+      content: '';
+      width: 4px; height: 28px;
+      border-radius: 2px;
+      flex-shrink: 0;
     }
+    .section-title.turkish::before { background: var(--lapis); }
+    .section-title.pacific::before { background: var(--sky);   }
+    .section-title.forest::before  { background: var(--green); }
+    .section-title.gold::before    { background: var(--gold2); }
 
     /* ── Stat cards ── */
     .stats-grid {
@@ -371,6 +375,7 @@
   <div class="bouncies">
     <div class="b b1"></div><div class="b b2"></div>
     <div class="b b3"></div><div class="b b4"></div>
+    <div class="b b5"></div>
   </div>
 </header>
 
@@ -385,8 +390,7 @@
 
   <!-- ── 1b. Monthly Sales Activity ── -->
   <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--lapis)"></span>
+    <div class="section-title turkish">
       Monthly Sales Activity
       <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)">Jan – Mar 2026</span>
     </div>
@@ -427,25 +431,24 @@
 
   <!-- ── 3. Sales Pipeline ── -->
   <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--lapis)"></span>
+    <div class="section-title turkish">
       Sales Pipeline
     </div>
     <div class="pipeline-grid" id="pipelineGrid">
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--sky)">205</div>
+        <div class="stage-count" style="color:var(--sky)" id="stageQual">—</div>
         <div class="stage-name">Sales Qualification</div>
         <div class="stage-bar" style="background:var(--sky);"></div>
       </div>
       <div class="pipeline-stage">
         <div class="stage-split">
           <div class="stage-split-item">
-            <div class="stage-count" style="color:var(--lapis);font-size:1.7rem">9</div>
+            <div class="stage-count" style="color:var(--lapis);font-size:1.7rem" id="stageDemo">—</div>
             <div class="stage-name" style="margin-top:0.2rem">Demo</div>
           </div>
           <div class="stage-split-divider">+</div>
           <div class="stage-split-item">
-            <div class="stage-count" style="color:var(--gold);font-size:1.7rem">23</div>
+            <div class="stage-count" style="color:var(--gold);font-size:1.7rem" id="stageNeg">—</div>
             <div class="stage-name" style="margin-top:0.2rem">Negotiation</div>
           </div>
         </div>
@@ -453,7 +456,7 @@
         <div class="stage-bar" style="background:linear-gradient(to right,var(--lapis),var(--gold));"></div>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--green)">50</div>
+        <div class="stage-count" style="color:var(--green)" id="stageCust">—</div>
         <div class="stage-name">Customer Acc Management</div>
         <div class="stage-bar" style="background:var(--green);"></div>
       </div>
@@ -465,8 +468,7 @@
 
   <!-- ── 4. Email Outreach Activity ── -->
   <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--gold)"></span>
+    <div class="section-title gold">
       Email Outreach Activity
     </div>
     <div class="email-grid" id="emailGrid">
@@ -498,8 +500,7 @@
 
   <!-- ── 6. All Paying Schools ── -->
   <section class="section">
-    <div class="section-title">
-      <span class="dot" style="background:var(--sky)"></span>
+    <div class="section-title pacific">
       All Paying Customer Schools
       <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">50 schools</span>
     </div>
@@ -570,27 +571,33 @@
 </footer>
 
 <script>
-  // Load pipeline data from pipeline_data.json if available
+  // Load all dynamic data from pipeline_data.json
+  // Manual sections (Product Demos, Schools list) are in HTML and never touched by script
   fetch('pipeline_data.json')
     .then(r => r.json())
     .then(data => {
-      // Pipeline stage values are manually hardcoded — AC data paused temporarily
+
+      // ── Pipeline stage counts (from AC) ──
+      if (data.pipeline) {
+        document.getElementById('stageQual').textContent = data.pipeline.qualification ?? '—';
+        document.getElementById('stageDemo').textContent = data.pipeline.demo          ?? '—';
+        document.getElementById('stageNeg').textContent  = data.pipeline.negotiation   ?? '—';
+        document.getElementById('stageCust').textContent = data.pipeline.customers     ?? '—';
+        const pipelineNote = document.getElementById('pipelineNote');
+        if (pipelineNote) pipelineNote.style.display = 'none';
+      }
+
+      // ── Email outreach (from AC campaigns) ──
       if (data.email) {
-        document.getElementById('emailsSent').textContent    = data.email.sent      ?? '—';
-        document.getElementById('emailsReplied').textContent = data.email.replied   ?? '—';
-        document.getElementById('responseRate').textContent  = data.email.rate      ?? '—';
-        document.getElementById('newContacts').textContent   = data.email.new_contacts ?? '—';
+        document.getElementById('emailsSent').textContent    = data.email.sent           ?? '—';
+        document.getElementById('emailsReplied').textContent = data.email.replied        ?? '—';
+        document.getElementById('responseRate').textContent  = data.email.rate           ?? '—';
+        document.getElementById('newContacts').textContent   = data.email.new_contacts   ?? '—';
         const emailNote = document.getElementById('emailNote');
         if (emailNote) emailNote.style.display = 'none';
       }
-      if (data.weekly) {
-        document.getElementById('weekly-new-leads').textContent = data.weekly.new_leads   ?? '—';
-        document.getElementById('weekly-emails').textContent    = data.weekly.emails_sent ?? '—';
-        document.getElementById('weekly-advances').textContent  = data.weekly.advances    ?? '—';
-        document.getElementById('weekly-customers').textContent = data.weekly.new_customers ?? '—';
-        const weeklyNote = document.getElementById('weeklyNote');
-        if (weeklyNote) weeklyNote.style.display = 'none';
-      }
+
+      // ── Monthly leads & deals (from AC) — Product Demos row stays in HTML ──
       if (data.monthly) {
         if (data.monthly.jan) {
           document.getElementById('monthly-leads-jan').textContent = data.monthly.jan.new_leads ?? '—';
@@ -605,12 +612,14 @@
           document.getElementById('monthly-deals-mar').textContent = data.monthly.mar.new_deals ?? '—';
         }
       }
+
+      // ── Last updated timestamp ──
       if (data.last_updated) {
         document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.last_updated;
       }
     })
     .catch(() => {
-      // pipeline_data.json not yet generated — dashes remain
+      // pipeline_data.json not available locally — dashes remain, live site will load fine
     });
 </script>
 
