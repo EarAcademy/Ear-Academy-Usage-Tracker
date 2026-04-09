@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ear Academy – Sales Activity Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -34,7 +34,7 @@ body {
   background: var(--cream);
   color: var(--dark);
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 /* ── HEADER ─────────────────────────────────────── */
@@ -61,27 +61,16 @@ body {
   gap: 0.9rem;
   flex-shrink: 0;
 }
-.logo-circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--lapis), var(--sky));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 900;
-  font-size: 18px;
-  letter-spacing: -0.5px;
-}
 .logo-text h1 {
-  font-size: 1.2rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--lapis);
   line-height: 1.2;
 }
 .logo-text p {
-  font-size: 0.78rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.8rem;
   color: var(--gray);
   font-weight: 400;
   letter-spacing: 0.03em;
@@ -89,14 +78,15 @@ body {
 }
 .header-divider {
   width: 1px;
-  height: 36px;
+  height: 40px;
   background: var(--lgray);
 }
 .header-meta {
   flex: 1;
 }
 .header-meta h2 {
-  font-size: 1rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--dark);
 }
@@ -139,15 +129,16 @@ body {
   background: var(--white);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 1.5rem 1.75rem;
+  padding: 1.75rem 2rem;
 }
 .card-title {
-  font-size: 0.7rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--lapis);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -159,16 +150,18 @@ body {
   height: 14px;
   background: var(--sky);
   border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* ── SECTION LABEL ──────────────────────────────── */
 .section-label {
-  font-size: 0.68rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--gray);
-  margin: 2.2rem 0 0.85rem;
+  margin: 2.5rem 0 1rem;
 }
 
 /* ── HERO METRICS ───────────────────────────────── */
@@ -195,16 +188,18 @@ body {
 .hero-card.gold   { border-top-color: var(--gold2); }
 
 .hero-label {
-  font-size: 0.72rem;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--gray);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
 }
 .hero-value {
-  font-size: 2rem;
-  font-weight: 900;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
   color: var(--dark);
   line-height: 1.1;
 }
@@ -623,7 +618,12 @@ body {
   <div class="bubble bubble-4"></div>
   <div class="header-inner">
     <div class="logo-block">
-      <div class="logo-circle">EA</div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:52px;height:52px;flex-shrink:0;">
+        <rect width="80" height="80" rx="16" fill="#1d70b8"/>
+        <path d="M40 14C28.95 14 20 22.95 20 34c0 7.18 3.8 13.47 9.5 17.1V58a4 4 0 004 4h1a4 4 0 004-4v-4.5c.83.32 1.73.5 2.65.5 4.14 0 7.5-3.36 7.5-7.5 0-1.55-.47-2.99-1.28-4.18A13.96 13.96 0 0054 34c0-11.05-8.95-20-14-20z" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="40" cy="34" r="5" fill="white" opacity="0.9"/>
+        <path d="M40 29v-8M40 47v-8" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      </svg>
       <div class="logo-text">
         <h1>Ear Academy</h1>
         <p>Sales Activity Dashboard</p>
@@ -867,13 +867,7 @@ body {
 
   <!-- ══════════ ROW: WON BY MONTH + LOST + ARR TIERS ══════════ -->
   <p class="section-label">Customer Analysis</p>
-  <div class="grid-3" style="margin-bottom: 1rem;">
-
-    <!-- Customers Won by Month -->
-    <div class="card">
-      <p class="card-title">Customers Won by Month</p>
-      <div class="won-months" id="wonBars"></div>
-    </div>
+  <div class="grid-2" style="margin-bottom: 1rem;">
 
     <!-- Lost Deal Breakdown -->
     <div class="card">
@@ -905,7 +899,7 @@ body {
           <span class="lost-count">3</span>
         </div>
       </div>
-      <p style="font-size: 0.72rem; color: var(--gray); margin-top: 0.9rem; line-height: 1.5;">
+      <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;">
         Total 68 lost deals. Top opportunity: 31 "No Response" may be re-engageable with a new touch.
       </p>
     </div>
@@ -945,10 +939,16 @@ body {
           <span class="tier-arr">R0</span>
         </div>
       </div>
-      <p style="font-size: 0.72rem; color: var(--gray); margin-top: 0.85rem; line-height: 1.5;">
+      <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;">
         Total ARR: R483k across 50 paying schools. Tier 3 schools generate 42% of revenue from just 12% of customers.
       </p>
     </div>
+  </div>
+
+  <!-- Customers Won by Month — full width -->
+  <div class="card" style="margin-bottom: 1rem;">
+    <p class="card-title">Customers Won by Month</p>
+    <div class="won-months" id="wonBars" style="height: 140px;"></div>
   </div>
 
   <!-- ══════════ CUSTOMER ACCOUNT MANAGEMENT ══════════ -->
