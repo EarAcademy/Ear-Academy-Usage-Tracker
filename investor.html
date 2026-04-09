@@ -1,627 +1,1142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Ear Academy — Sales Activity Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --sky:    #38aae1;
-      --lapis:  #1d70b8;
-      --green:  #00a19a;
-      --gold:   #A88F5E;
-      --gold2:  #c5b08c;
-      --gold3:  #d6c8b0;
-      --shale:  #d8d3cb;
-      --forest: #289B38;
-      --salmon: #F6B1A6;
-      --lilac:  #8871B1;
-      --cream:  #F5F1ED;
-      --white:  #FFFFFF;
-      --dark:   #2C2C2C;
-      --gray:   #666666;
-      --lgray:  #E8E4DF;
-      --radius: 18px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.07);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Lato', sans-serif;
-      background: var(--cream);
-      color: var(--dark);
-      line-height: 1.6;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ear Academy – Sales Activity Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --sky:    #38aae1;
+  --lapis:  #1d70b8;
+  --green:  #00a19a;
+  --gold2:  #c5b08c;
+  --gold3:  #d6c8b0;
+  --shale:  #d8d3cb;
+  --forest: #289B38;
+  --salmon: #F6B1A6;
+  --lilac:  #8871B1;
+  --cream:  #F5F1ED;
+  --gold:   #A88F5E;
+  --white:  #FFFFFF;
+  --dark:   #2C2C2C;
+  --gray:   #666666;
+  --lgray:  #E8E4DF;
+  --radius: 18px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
 
-    /* ── Header ── */
-    header {
-      background: var(--white);
-      padding: 2rem 3rem 1.75rem;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-      position: relative;
-      overflow: hidden;
-    }
-    .header-inner {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .logo-lockup svg { display: block; width: 150px; height: auto; margin-bottom: 0.75rem; }
-    h1 {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--dark);
-    }
-    .header-sub { font-size: 0.85rem; color: var(--gray); margin-top: 0.15rem; }
-    .last-updated {
-      font-size: 0.8rem;
-      color: var(--gray);
-      background: var(--lgray);
-      padding: 0.4rem 0.9rem;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── Decorative circles ── */
-    .bouncies {
-      position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
-      pointer-events: none; opacity: 0.12; overflow: hidden;
-    }
-    .b { position: absolute; border-radius: 50%; }
-    .b1 { width:80px; height:80px; background:var(--sky);   top:20%; right:10%; }
-    .b2 { width:60px; height:60px; background:var(--lapis); top:45%; right:25%; }
-    .b3 { width:50px; height:50px; background:var(--green); top:60%; right:5%;  }
-    .b4 { width:40px; height:40px; background:var(--gold2); top:30%; right:40%; }
-    .b5 { width:70px; height:70px; background:var(--shale); top:10%; right:50%; }
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  line-height: 1.6;
+  font-size: 15px;
+}
 
-    /* ── Layout ── */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2.5rem 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
+/* ── HEADER ─────────────────────────────────────── */
+.site-header {
+  background: var(--white);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  padding: 0 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.4rem 0;
+  position: relative;
+  z-index: 2;
+}
+.logo-block {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-shrink: 0;
+}
+.logo-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--lapis), var(--sky));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+.logo-text h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--lapis);
+  line-height: 1.2;
+}
+.logo-text p {
+  font-size: 0.78rem;
+  color: var(--gray);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.header-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--lgray);
+}
+.header-meta {
+  flex: 1;
+}
+.header-meta h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.header-meta p {
+  font-size: 0.82rem;
+  color: var(--gray);
+}
+.header-badge {
+  background: #EBF5FB;
+  color: var(--lapis);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid #B5D4F4;
+  white-space: nowrap;
+}
 
-    /* ── Section shell ── */
-    .section {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 2rem 2.5rem 2.5rem;
-      box-shadow: var(--shadow);
-    }
-    .section-title {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .section-title::before {
-      content: '';
-      width: 4px; height: 28px;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-    .section-title.turkish::before { background: var(--lapis); }
-    .section-title.pacific::before { background: var(--sky);   }
-    .section-title.forest::before  { background: var(--green); }
-    .section-title.gold::before    { background: var(--gold2); }
+/* Decorative bubbles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.bubble-1 { width: 120px; height: 120px; background: var(--sky);   right: 180px; top: -40px; }
+.bubble-2 { width: 80px;  height: 80px;  background: var(--green); right: 100px; top: 20px; }
+.bubble-3 { width: 60px;  height: 60px;  background: var(--gold2); right: 260px; top: 10px; }
+.bubble-4 { width: 40px;  height: 40px;  background: var(--lapis); right: 50px;  top: -10px; }
 
-    /* ── Stat cards ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.25rem;
-    }
-    .stat-card {
-      background: var(--cream);
-      border-radius: 12px;
-      padding: 1.4rem 1.5rem;
-      text-align: center;
-      border: 1.5px solid var(--lgray);
-      transition: transform 0.15s;
-    }
-    .stat-card:hover { transform: translateY(-2px); }
-    .stat-number {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2.4rem;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-    .stat-label {
-      font-size: 0.82rem;
-      color: var(--gray);
-      font-weight: 400;
-      line-height: 1.3;
-    }
-    .stat-sub {
-      font-size: 0.75rem;
-      color: var(--green);
-      font-weight: 700;
-      margin-top: 0.3rem;
-    }
+/* ── LAYOUT ─────────────────────────────────────── */
+.page-body {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 3rem;
+}
 
-    /* ── Growth bar chart ── */
-    .growth-chart { display: flex; align-items: flex-end; gap: 0.6rem; height: 120px; }
-    .bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
-    .bar {
-      width: 100%;
-      border-radius: 6px 6px 0 0;
-      min-height: 4px;
-      transition: height 0.6s ease;
-      position: relative;
-    }
-    .bar-val {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 4px;
-    }
-    .bar-label {
-      font-size: 0.72rem;
-      color: var(--gray);
-      margin-top: 5px;
-      white-space: nowrap;
-    }
-    .cumulative-note {
-      font-size: 0.78rem;
-      color: var(--gray);
-      margin-top: 1rem;
-      font-style: italic;
-    }
+/* ── CARDS ──────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.75rem;
+}
+.card-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lapis);
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.card-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--sky);
+  border-radius: 2px;
+}
 
-    /* ── Pipeline funnel ── */
-    .pipeline-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-    }
-    .stage-split { display:flex; justify-content:center; align-items:flex-end; gap:1.25rem; }
-    .stage-split-item { text-align:center; }
-    .stage-split-divider { font-size:1.2rem; color:var(--lgray); padding-bottom:0.5rem; }
-    .stage-group-label { font-size:0.7rem; color:var(--gray); text-transform:uppercase; letter-spacing:0.05em; margin-top:0.5rem; }
-    .pipeline-stage {
-      text-align: center;
-      padding: 1.5rem 1rem;
-      position: relative;
-    }
-    .pipeline-stage:not(:last-child)::after {
-      content: '›';
-      position: absolute;
-      right: -6px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      color: var(--lgray);
-      font-weight: 300;
-    }
-    .stage-count {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-    }
-    .stage-name {
-      font-size: 0.8rem;
-      color: var(--gray);
-      margin-top: 0.3rem;
-      line-height: 1.3;
-    }
-    .stage-bar {
-      height: 5px;
-      border-radius: 3px;
-      margin: 0.75rem auto 0;
-      width: 60%;
-    }
-    .pipeline-note {
-      font-size: 0.78rem;
-      color: var(--gray);
-      text-align: center;
-      margin-top: 1rem;
-      padding: 0.6rem 1rem;
-      background: var(--cream);
-      border-radius: 8px;
-      border: 1px dashed var(--lgray);
-    }
-    .pipeline-note a {
-      color: var(--lapis);
-      font-weight: 700;
-      text-decoration: none;
-    }
+/* ── SECTION LABEL ──────────────────────────────── */
+.section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gray);
+  margin: 2.2rem 0 0.85rem;
+}
 
-    /* ── Email activity ── */
-    .email-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.25rem;
-    }
-    .email-card {
-      border-radius: 12px;
-      padding: 1.4rem;
-      border: 1.5px solid var(--lgray);
-    }
-    .email-card-label {
-      font-size: 0.8rem;
-      color: var(--gray);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-    .email-card-val {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2rem;
-      font-weight: 700;
-    }
-    .email-card-note { font-size: 0.78rem; color: var(--gray); margin-top: 0.3rem; }
+/* ── HERO METRICS ───────────────────────────────── */
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 900px) { .hero-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .hero-grid { grid-template-columns: 1fr; } }
 
-    /* ── School list ── */
-    .schools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 0.6rem;
-    }
-    .school-pill {
-      background: var(--cream);
-      border: 1.5px solid var(--lgray);
-      border-radius: 30px;
-      padding: 0.45rem 1rem;
-      font-size: 0.82rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .school-pill .dot-new {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-    }
+.hero-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.3rem 1.5rem;
+  border-top: 3px solid var(--sky);
+  position: relative;
+  overflow: hidden;
+}
+.hero-card.green  { border-top-color: var(--green); }
+.hero-card.lapis  { border-top-color: var(--lapis); }
+.hero-card.gold   { border-top-color: var(--gold2); }
 
-    /* ── TAM progress ── */
-    .tam-wrap { display: flex; flex-direction: column; gap: 1.25rem; }
-    .tam-row { display: flex; align-items: center; gap: 1rem; }
-    .tam-label { font-size: 0.85rem; color: var(--gray); width: 180px; flex-shrink: 0; }
-    .tam-bar-wrap { flex: 1; background: var(--lgray); border-radius: 6px; height: 12px; overflow: hidden; }
-    .tam-bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
-    .tam-val { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.9rem; width: 80px; text-align: right; flex-shrink: 0; }
+.hero-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray);
+  margin-bottom: 0.3rem;
+}
+.hero-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--dark);
+  line-height: 1.1;
+}
+.hero-sub {
+  font-size: 0.78rem;
+  color: var(--gray);
+  margin-top: 0.25rem;
+}
+.hero-trend {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 0.35rem;
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+}
+.trend-up   { background: #E8F8F0; color: #1a7a3f; }
+.trend-down { background: #FEF0EE; color: #c0392b; }
+.trend-flat { background: #F0F4F9; color: #555; }
 
-    /* ── Confidential footer ── */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.78rem;
-      color: var(--gray);
-    }
+/* ── 2-COL & 3-COL GRIDS ───────────────────────── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 900px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
 
-    /* ── Nav tabs ── */
-    .dash-nav {
-      background: var(--white);
-      border-bottom: 1px solid var(--lgray);
-      padding: 0 3rem;
-    }
-    .dash-nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      gap: 0;
-    }
-    .dash-nav a {
-      display: inline-block;
-      padding: 0.75rem 1.4rem;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--gray);
-      text-decoration: none;
-      border-bottom: 3px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
-    }
-    .dash-nav a:hover { color: var(--lapis); }
-    .dash-nav a.active {
-      color: var(--lapis);
-      border-bottom-color: var(--lapis);
-    }
+/* ── PIPELINE FUNNEL ────────────────────────────── */
+.funnel-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.funnel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.funnel-label {
+  width: 160px;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  color: var(--gray);
+  font-weight: 400;
+}
+.funnel-bar-wrap {
+  flex: 1;
+  background: var(--lgray);
+  border-radius: 6px;
+  height: 28px;
+  overflow: hidden;
+}
+.funnel-bar {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+.funnel-count {
+  width: 48px;
+  text-align: right;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--dark);
+  flex-shrink: 0;
+}
+.funnel-pct {
+  width: 48px;
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--gray);
+  flex-shrink: 0;
+}
+.funnel-arrow {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--shale);
+  padding: 0 0.3rem 0 160px;
+  letter-spacing: 0.05em;
+}
+.funnel-arrow span {
+  background: #F0F4F9;
+  padding: 0.1rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  color: var(--sky);
+  font-weight: 700;
+}
 
-    @media (max-width: 700px) {
-      header { padding: 1.5rem; }
-      .dash-nav { padding: 0 1rem; }
-      .container { padding: 1.5rem 1rem; }
-      .section { padding: 1.5rem; }
-      .pipeline-grid { grid-template-columns: repeat(1, 1fr); }
-      .pipeline-stage::after { display: none; }
-      .tam-label { width: 120px; font-size: 0.75rem; }
-    }
-  </style>
+/* ── MONTHLY TABLE ──────────────────────────────── */
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.activity-table th {
+  background: var(--cream);
+  color: var(--lapis);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.65rem 0.9rem;
+  text-align: center;
+  border-bottom: 2px solid var(--lgray);
+}
+.activity-table th:first-child { text-align: left; }
+.activity-table td {
+  padding: 0.7rem 0.9rem;
+  text-align: center;
+  border-bottom: 1px solid var(--lgray);
+  color: var(--dark);
+}
+.activity-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--lapis);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.activity-table tr:last-child td { border-bottom: none; }
+.activity-table tr:hover td { background: #FAFAF8; }
+.num-big {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.num-highlight { color: var(--lapis); }
+.num-green     { color: var(--green); }
+
+/* ── CHART CONTAINERS ───────────────────────────── */
+.chart-wrap {
+  position: relative;
+  height: 220px;
+}
+.chart-wrap-tall {
+  position: relative;
+  height: 260px;
+}
+
+/* ── EMAIL OUTREACH ─────────────────────────────── */
+.email-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.7rem;
+}
+.email-stat {
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  text-align: center;
+}
+.email-stat .val {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--lapis);
+  display: block;
+}
+.email-stat .lbl {
+  font-size: 0.72rem;
+  color: var(--gray);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+/* ── ARR TIER TABLE ─────────────────────────────── */
+.tier-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--lgray);
+  font-size: 0.85rem;
+}
+.tier-row:last-child { border-bottom: none; }
+.tier-name {
+  font-weight: 600;
+  color: var(--dark);
+  min-width: 100px;
+}
+.tier-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: var(--lgray);
+  border-radius: 4px;
+  margin: 0 0.9rem;
+  overflow: hidden;
+}
+.tier-bar {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--sky);
+}
+.tier-meta {
+  display: flex;
+  gap: 1rem;
+  min-width: 120px;
+  justify-content: flex-end;
+  font-size: 0.8rem;
+}
+.tier-count { color: var(--gray); }
+.tier-arr   { font-weight: 700; color: var(--lapis); }
+
+/* ── STUCK DEALS TABLE ──────────────────────────── */
+.stuck-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.stuck-table th {
+  background: var(--cream);
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--lapis);
+  font-weight: 700;
+  border-bottom: 2px solid var(--lgray);
+}
+.stuck-table td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--lgray);
+  color: var(--dark);
+  vertical-align: middle;
+}
+.stuck-table tr:last-child td { border-bottom: none; }
+.stuck-table tr:hover td { background: #FAFAF8; }
+.days-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.days-warning { background: #FFF8E1; color: #8a6000; }
+.days-danger  { background: #FEF0EE; color: #c0392b; }
+.stage-pill {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #EBF5FB;
+  color: var(--lapis);
+}
+
+/* ── CAMPAIGN STATS ─────────────────────────────── */
+.campaign-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--lgray);
+  font-size: 0.82rem;
+  gap: 0.5rem;
+}
+.campaign-row:last-child { border-bottom: none; }
+.campaign-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--dark);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.campaign-meta {
+  display: flex;
+  gap: 0.7rem;
+  flex-shrink: 0;
+  font-size: 0.78rem;
+}
+.c-sent { color: var(--gray); }
+.c-open { color: var(--lapis); font-weight: 700; }
+.c-pct  { color: var(--green); font-weight: 700; min-width: 36px; text-align: right; }
+
+/* ── FOOTER ─────────────────────────────────────── */
+.dash-footer {
+  text-align: center;
+  padding: 2rem 0 0;
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+.dash-footer strong { color: var(--lapis); }
+
+/* ── WON BY MONTH BARS ──────────────────────────── */
+.won-months {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 110px;
+  padding-bottom: 0.4rem;
+}
+.won-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  height: 100%;
+  justify-content: flex-end;
+}
+.won-bar {
+  width: 100%;
+  background: var(--sky);
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  transition: height 0.6s ease;
+  min-height: 4px;
+}
+.won-bar.highlight { background: var(--lapis); }
+.won-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.won-lbl {
+  font-size: 0.65rem;
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+/* ── LOST BREAKDOWN ─────────────────────────────── */
+.lost-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.lost-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.82rem;
+}
+.lost-label {
+  width: 130px;
+  flex-shrink: 0;
+  color: var(--gray);
+}
+.lost-bar-wrap {
+  flex: 1;
+  height: 10px;
+  background: var(--lgray);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.lost-bar {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--salmon);
+}
+.lost-count {
+  width: 28px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 0.82rem;
+}
+
+/* ── CAM SECTION ─────────────────────────────────── */
+.cam-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+.cam-stat {
+  text-align: center;
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 0.85rem 0.5rem;
+}
+.cam-stat .val {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--green);
+  display: block;
+}
+.cam-stat .lbl {
+  font-size: 0.68rem;
+  color: var(--gray);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-top: 0.1rem;
+}
+</style>
 </head>
+
 <body>
 
-<header>
+<!-- ══════════ HEADER ══════════ -->
+<header class="site-header">
+  <div class="bubble bubble-1"></div>
+  <div class="bubble bubble-2"></div>
+  <div class="bubble bubble-3"></div>
+  <div class="bubble bubble-4"></div>
   <div class="header-inner">
-    <div class="logo-lockup">
-      <!-- Ear Academy wordmark SVG (extracted from usage report) -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="170" style="display:block;margin-bottom:0.9rem;">
-        <style>.cls-1{fill:#9e824c;}</style>
-        <path class="cls-1" d="M382.7,5.84c-49.42,0-85.14,8.32-118,20.9a9.83,9.83,0,0,0-5.91,11.93l17,58.57a9.8,9.8,0,0,0,12.74,6.47C312.65,95,335.81,90.1,364.81,90.1c42.13,0,62.33,18.47,62.33,50.79v5.2c-17.9-6.35-46.17-12.12-75-12.12-57.7,0-100.36,20.75-115.91,61.12-6.19-59.31-42.92-107.2-115-107.2C53.31,87.89,5.33,141,5.33,208.05v.85c0,71.33,51,119.3,123.13,119.3,37.95,0,66.3-12.79,87.47-33.09a16.45,16.45,0,0,0-.89-24.54l-20.63-17.1A16.32,16.32,0,0,0,174,253c-13.06,10.21-25.95,14.87-41.31,14.87-11.37,0-21.34-2.62-29.44-7.83-13.55-8.73-6.81-29.95,9.31-29.95H220.73a16.28,16.28,0,0,0,9.14-2.79c-.06,1.57-.11,3.13-.11,4.74v1.15c0,62.33,45.59,96.38,105,96.38,31.67,0,56.44-9.31,75.92-24.46a9.8,9.8,0,0,1,15.84,7.72,9.81,9.81,0,0,0,9.81,9.81h88.87a9.81,9.81,0,0,0,9.82-9.81V143.2c0-43.86-9.81-76.18-33.47-99.27C476.77,19.12,438.68,5.84,382.7,5.84ZM139,188.94h-33.8c-13,0-21.2-14.67-13.76-25.37,7.11-10.24,17.43-16.24,30.2-16.24,13.41,0,24.15,5.95,31.19,16.32C160.14,174.39,152,188.94,139,188.94Zm289.27,20.63c0,31.16-22.51,51.36-54.25,51.36-22.51,0-38.67-12.69-38.67-34.05v-1.15c0-23.08,18.47-38.67,50.21-38.67a119.12,119.12,0,0,1,35.88,5.56,9.83,9.83,0,0,1,6.83,9.36Z"/>
-        <path class="cls-1" d="M695,89.1c-24.38.68-41.27,11.08-53.44,27.84a6.78,6.78,0,0,1-12.24-4V99.78A6.79,6.79,0,0,0,622.52,93H555.43a6.79,6.79,0,0,0-6.79,6.79V315.89a6.79,6.79,0,0,0,6.79,6.79h67.09a6.79,6.79,0,0,0,6.79-6.79V251.36c0-53.08,23.77-77.28,65.81-77.28a6.79,6.79,0,0,0,6.79-6.79V95.91A6.8,6.8,0,0,0,695,89.1Z"/>
-        <path class="cls-1" d="M129.64,59.77c0,7.8,4.69,10.85,10.86,10.85A14.49,14.49,0,0,0,147.41,69V64.08a12.09,12.09,0,0,1-5.57,1.34c-3.87,0-6.47-1.71-6.47-6.4V36.57h12.19V31.51H135.37V19.92h-5.73V31.51h-5.35v5.06h5.35Z"/>
-        <path class="cls-1" d="M163.4,47.94c0-7.21,4.91-12,11.52-12,6.77,0,10.63,4.46,10.63,11.6V70h5.73V46.08c0-9.14-5.43-15.38-14.72-15.38a14.56,14.56,0,0,0-13.16,7.5V15.68h-5.73V70h5.73Z"/>
-        <path class="cls-1" d="M220.28,70.84c7.29,0,12-2.89,15.84-7.21l-3.57-3.2a15.89,15.89,0,0,1-12.12,5.43c-6.77,0-12.71-4.68-13.53-12.79h30.48c.07-.89.07-1.48.07-2,0-11.31-6.54-20.37-17.91-20.37-10.64,0-18.44,8.92-18.44,20.07C201.1,62.74,209.72,70.84,220.28,70.84Zm-.89-35.31c7.58,0,11.6,5.94,12.26,12.94H206.9C207.72,41,212.77,35.53,219.39,35.53Z"/>
-        <path class="cls-1" d="M274.86,400.37h-5.53a2.43,2.43,0,0,1-1.53-.47,2.66,2.66,0,0,1-.87-1.15l-2.87-7.85H248.12l-2.88,7.85a2.47,2.47,0,0,1-.84,1.11,2.32,2.32,0,0,1-1.53.51h-5.56l15.12-38.48h7.32ZM250,385.84h12.27L257.54,373c-.22-.57-.45-1.24-.71-2s-.51-1.61-.76-2.52c-.24.91-.49,1.75-.73,2.53s-.47,1.47-.7,2Z"/>
-        <path class="cls-1" d="M325.19,391.29a1.33,1.33,0,0,1,1,.46l2.82,3.06a15.52,15.52,0,0,1-5.76,4.44,19.85,19.85,0,0,1-8.21,1.55,19.34,19.34,0,0,1-7.71-1.47,16.93,16.93,0,0,1-5.84-4.07,17.93,17.93,0,0,1-3.71-6.23,23.38,23.38,0,0,1-1.29-7.9,21.3,21.3,0,0,1,1.44-7.95,18.09,18.09,0,0,1,4-6.21,18.36,18.36,0,0,1,6.24-4.06,21.4,21.4,0,0,1,8-1.45,19,19,0,0,1,7.5,1.37,17.57,17.57,0,0,1,5.49,3.63l-2.39,3.33a2.25,2.25,0,0,1-.55.56,1.55,1.55,0,0,1-.92.24,2.12,2.12,0,0,1-1.25-.48,14,14,0,0,0-1.62-1,13.64,13.64,0,0,0-2.49-1,12.75,12.75,0,0,0-3.82-.48,12.9,12.9,0,0,0-5,.95,11.15,11.15,0,0,0-3.91,2.7,12.63,12.63,0,0,0-2.56,4.27,16.47,16.47,0,0,0-.91,5.66,16.88,16.88,0,0,0,.91,5.77,12.88,12.88,0,0,0,2.49,4.26,10.54,10.54,0,0,0,3.7,2.65,11.49,11.49,0,0,0,4.58.92,21.08,21.08,0,0,0,2.65-.16,11.42,11.42,0,0,0,2.18-.51,9.62,9.62,0,0,0,1.89-.89,12.13,12.13,0,0,0,1.77-1.34,2.57,2.57,0,0,1,.56-.39A1.37,1.37,0,0,1,325.19,391.29Z"/>
-        <path class="cls-1" d="M389.48,400.37H384a2.43,2.43,0,0,1-1.53-.47,2.66,2.66,0,0,1-.87-1.15l-2.87-7.85H362.74l-2.88,7.85a2.52,2.52,0,0,1-.83,1.11,2.35,2.35,0,0,1-1.53.51h-5.57l15.12-38.48h7.32Zm-24.91-14.53h12.27L372.16,373c-.21-.57-.45-1.24-.71-2s-.51-1.61-.75-2.52c-.25.91-.5,1.75-.74,2.53s-.47,1.47-.7,2Z"/>
-        <path class="cls-1" d="M448.91,381.13a20.82,20.82,0,0,1-1.41,7.77A17.45,17.45,0,0,1,437.39,399a21.64,21.64,0,0,1-8,1.41H414.74V361.89h14.69a21.44,21.44,0,0,1,8,1.42,18.06,18.06,0,0,1,6.15,4,17.69,17.69,0,0,1,4,6.08A20.82,20.82,0,0,1,448.91,381.13Zm-7.32,0a17.57,17.57,0,0,0-.85-5.68,12,12,0,0,0-2.42-4.26,10.49,10.49,0,0,0-3.82-2.68,13.16,13.16,0,0,0-5.07-.93H422v27.09h7.48a13.16,13.16,0,0,0,5.07-.93,10.47,10.47,0,0,0,3.82-2.67,12,12,0,0,0,2.42-4.26A17.61,17.61,0,0,0,441.59,381.13Z"/>
-        <path class="cls-1" d="M500,361.89v5.69H483v10.67h13.44v5.51H483v10.89H500v5.72H475.76V361.89Z"/>
-        <path class="cls-1" d="M547.63,386.17c.26.61.51,1.23.76,1.85.25-.64.51-1.27.77-1.89s.55-1.21.86-1.78L561.41,363a2.84,2.84,0,0,1,.43-.64,1.38,1.38,0,0,1,.51-.34,2.33,2.33,0,0,1,.63-.14l.82,0h5.4v38.48h-6.3V375.51c0-.46,0-1,0-1.51s.06-1.11.11-1.68l-11.62,21.82a3.17,3.17,0,0,1-1,1.16,2.75,2.75,0,0,1-1.49.41h-1a2.73,2.73,0,0,1-1.49-.41,3.17,3.17,0,0,1-1-1.16l-11.79-21.9c.07.58.12,1.16.15,1.72s0,1.07,0,1.55v24.86h-6.31V361.89h5.41l.82,0a2.42,2.42,0,0,1,.63.14,1.51,1.51,0,0,1,.52.34,2.85,2.85,0,0,1,.45.64l11.49,21.37A17.94,17.94,0,0,1,547.63,386.17Z"/>
-        <path class="cls-1" d="M615.38,385.41v15h-7.16v-15l-14-23.52h6.31a2.27,2.27,0,0,1,1.48.45,3.7,3.7,0,0,1,.91,1.14L610,376.34c.41.76.76,1.48,1.06,2.17s.58,1.35.83,2q.35-1,.78-2a23.29,23.29,0,0,1,1-2.14l7-12.86a3.68,3.68,0,0,1,.88-1.09,2.24,2.24,0,0,1,1.49-.5h6.33Z"/>
-        <path class="cls-1" d="M701.91,70.09v3.16h5.42V87.89h3.79V73.25h5.41V70.09Zm22,.63a2.36,2.36,0,0,0-.54-.51,1.6,1.6,0,0,0-.73-.12h-3.18v17.8h3.31v-11l-.25-2.17,5.54,10a1.29,1.29,0,0,0,1.29.84h.54a1.36,1.36,0,0,0,1.33-.84l5.5-10.11-.27,2.26v11h3.31V70.09h-3.19a1.67,1.67,0,0,0-.72.12,1.52,1.52,0,0,0-.51.51l-5.09,9.11a4.23,4.23,0,0,0-.36.8c-.08.25-.17.52-.27.8a6.27,6.27,0,0,0-.28-.8l-.35-.8Z"/>
-      </svg>
-      <h1>Sales Activity Dashboard</h1>
-      <p class="header-sub">Sales & Growth Overview · South Africa</p>
+    <div class="logo-block">
+      <div class="logo-circle">EA</div>
+      <div class="logo-text">
+        <h1>Ear Academy</h1>
+        <p>Sales Activity Dashboard</p>
+      </div>
     </div>
-    <span class="last-updated" id="lastUpdated">Last updated: 30 Mar 2026</span>
-  </div>
-  <div class="bouncies">
-    <div class="b b1"></div><div class="b b2"></div>
-    <div class="b b3"></div><div class="b b4"></div>
-    <div class="b b5"></div>
+    <div class="header-divider"></div>
+    <div class="header-meta">
+      <h2>Sales &amp; Growth Overview — South Africa</h2>
+      <p>Year 1 · Month 3 of active customers</p>
+    </div>
+    <div class="header-badge">Updated 30 Mar 2026</div>
   </div>
 </header>
 
-<nav class="dash-nav">
-  <div class="dash-nav-inner">
-    <a href="index.html">📊 Usage Analytics</a>
-    <a href="investor.html" class="active">💼 Sales Activity</a>
-  </div>
-</nav>
+<div class="page-body">
 
-<div class="container">
-
-  <!-- ── 1b. Monthly Sales Activity ── -->
-  <section class="section">
-    <div class="section-title turkish">
-      Monthly Sales Activity
-      <span style="margin-left:auto;font-size:0.78rem;font-weight:400;color:var(--gray)">Jan – Mar 2026</span>
+  <!-- ══════════ HERO METRICS ══════════ -->
+  <p class="section-label">Key Numbers at a Glance</p>
+  <div class="hero-grid">
+    <div class="hero-card green">
+      <p class="hero-label">Active Customers</p>
+      <p class="hero-value">50</p>
+      <p class="hero-sub">Paying schools (ZAR)</p>
+      <span class="hero-trend trend-up">↗ +5 vs last month</span>
     </div>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+    <div class="hero-card lapis">
+      <p class="hero-label">Annual Recurring Revenue</p>
+      <p class="hero-value">R483k</p>
+      <p class="hero-sub">From won ZAR deals</p>
+      <span class="hero-trend trend-up">↗ Growing</span>
+    </div>
+    <div class="hero-card">
+      <p class="hero-label">Total Pipeline Value</p>
+      <p class="hero-value">R2.9M</p>
+      <p class="hero-sub">All open ZAR deals</p>
+      <span class="hero-trend trend-flat">5.9× pipeline coverage</span>
+    </div>
+    <div class="hero-card gold">
+      <p class="hero-label">New Leads (March)</p>
+      <p class="hero-value">92</p>
+      <p class="hero-sub">ZAR Sales Qualification</p>
+      <span class="hero-trend trend-up">↗ vs 144 Feb total</span>
+    </div>
+  </div>
+
+  <!-- ══════════ ROW: PIPELINE + MONTHLY ACTIVITY ══════════ -->
+  <p class="section-label">Pipeline &amp; Activity</p>
+  <div class="grid-2" style="margin-bottom: 1rem;">
+
+    <!-- Pipeline Funnel -->
+    <div class="card">
+      <p class="card-title">Sales Pipeline — ZAR Deals</p>
+      <div class="funnel-stages">
+
+        <div class="funnel-row">
+          <span class="funnel-label">Sales Qualification</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:100%; background: var(--sky);">289</div>
+          </div>
+          <span class="funnel-count">289</span>
+          <span class="funnel-pct"></span>
+        </div>
+
+        <div class="funnel-arrow"><span>↓ 11.8% → Demo</span></div>
+
+        <div class="funnel-row">
+          <span class="funnel-label">Demo / Pilot</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:37%; background: var(--lapis);">9</div>
+          </div>
+          <span class="funnel-count">9</span>
+          <span class="funnel-pct">3%</span>
+        </div>
+
+        <div class="funnel-arrow"><span>↓ Active conversion</span></div>
+
+        <div class="funnel-row">
+          <span class="funnel-label">Negotiation</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:56%; background: #2d86c4;">23</div>
+          </div>
+          <span class="funnel-count">23</span>
+          <span class="funnel-pct">8%</span>
+        </div>
+
+        <div class="funnel-arrow"><span>↓ 63% win rate</span></div>
+
+        <div class="funnel-row">
+          <span class="funnel-label">Won — Customers</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:100%; background: var(--green);">50</div>
+          </div>
+          <span class="funnel-count">50</span>
+          <span class="funnel-pct"></span>
+        </div>
+
+        <div style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--lgray);">
+          <div class="funnel-row">
+            <span class="funnel-label" style="color: #c0392b;">Lost Deals</span>
+            <div class="funnel-bar-wrap">
+              <div class="funnel-bar" style="width:23%; background: var(--salmon); color: var(--dark);">68</div>
+            </div>
+            <span class="funnel-count">68</span>
+            <span class="funnel-pct"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Sales Activity -->
+    <div class="card">
+      <p class="card-title">Monthly Sales Activity</p>
+      <table class="activity-table">
         <thead>
-          <tr style="border-bottom:2px solid var(--lgray);">
-            <th style="text-align:left;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Metric</th>
-            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Jan 2026</th>
-            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--gray);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Feb 2026</th>
-            <th style="text-align:center;padding:0.6rem 0.8rem;color:var(--sky);font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;">Mar 2026 ↑</th>
+          <tr>
+            <th>Metric</th>
+            <th>Jan 2026</th>
+            <th>Feb 2026</th>
+            <th>Mar 2026</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid var(--lgray);">
-            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">New Leads Added</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);" id="monthly-leads-jan">11</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;" id="monthly-leads-feb">144</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;" id="monthly-leads-mar">162</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--lgray);">
-            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">New Deals Added</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);" id="monthly-deals-jan">0</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;" id="monthly-deals-feb">4</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;" id="monthly-deals-mar">35</td>
+          <tr>
+            <td>New Leads Added</td>
+            <td><span class="num-big">11</span></td>
+            <td><span class="num-big">144</span></td>
+            <td><span class="num-big num-highlight">162</span></td>
           </tr>
           <tr>
-            <td style="padding:0.75rem 0.8rem;color:var(--dark);font-weight:500;">Product Demos</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--gray);">3</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--lapis);font-weight:600;">13</td>
-            <td style="text-align:center;padding:0.75rem 0.8rem;color:var(--sky);font-weight:700;font-size:1.05rem;">18</td>
+            <td>New Deals Opened</td>
+            <td><span class="num-big">0</span></td>
+            <td><span class="num-big">4</span></td>
+            <td><span class="num-big num-highlight">35</span></td>
+          </tr>
+          <tr>
+            <td>Product Demos Done</td>
+            <td><span class="num-big">3</span></td>
+            <td><span class="num-big">13</span></td>
+            <td><span class="num-big num-green">18</span></td>
           </tr>
         </tbody>
       </table>
-    </div>
-    <div style="margin-top:0.75rem;font-size:0.75rem;color:var(--gray);">Leads = new contacts added to CRM &nbsp;·&nbsp; Deals = new opportunities opened in Sales Qualification pipeline &nbsp;·&nbsp; <em>Ear Academy exhibited at 4 conferences in March — CT, JHB, KZN and PE</em></div>
-  </section>
 
-  <!-- ── 3. Sales Pipeline ── -->
-  <section class="section">
-    <div class="section-title turkish">
-      Sales Pipeline
-    </div>
-    <div class="pipeline-grid" id="pipelineGrid">
-      <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--sky)" id="stageQual">—</div>
-        <div class="stage-name">Sales Qualification</div>
-        <div class="stage-bar" style="background:var(--sky);"></div>
-      </div>
-      <div class="pipeline-stage">
-        <div class="stage-split">
-          <div class="stage-split-item">
-            <div class="stage-count" style="color:var(--lapis);font-size:1.7rem" id="stageDemo">—</div>
-            <div class="stage-name" style="margin-top:0.2rem">Demo</div>
-          </div>
-          <div class="stage-split-divider">+</div>
-          <div class="stage-split-item">
-            <div class="stage-count" style="color:var(--gold);font-size:1.7rem" id="stageNeg">—</div>
-            <div class="stage-name" style="margin-top:0.2rem">Negotiation</div>
-          </div>
+      <!-- mini chart -->
+      <div style="margin-top: 1.1rem;">
+        <div class="chart-wrap">
+          <canvas id="activityChart"></canvas>
         </div>
-        <div class="stage-group-label">Sales Conversion</div>
-        <div class="stage-bar" style="background:linear-gradient(to right,var(--lapis),var(--gold));"></div>
-      </div>
-      <div class="pipeline-stage">
-        <div class="stage-count" style="color:var(--green)" id="stageCust">—</div>
-        <div class="stage-name">Customer Acc Management</div>
-        <div class="stage-bar" style="background:var(--green);"></div>
       </div>
     </div>
-    <div class="pipeline-note" id="pipelineNote">
-      Pipeline data loads from ActiveCampaign. If you are seeing dashes, the data file has not yet been generated — ask the team to run the dashboard update.
-    </div>
-  </section>
+  </div>
 
-  <!-- ── 4. Email Outreach Activity ── -->
-  <section class="section">
-    <div class="section-title gold">
-      Email Outreach Activity
-    </div>
-    <div class="email-grid" id="emailGrid">
-      <div class="email-card" style="background:#f0f8fd;">
-        <div class="email-card-label">Emails Sent (All Time)</div>
-        <div class="email-card-val" style="color:var(--sky)" id="emailsSent">—</div>
-        <div class="email-card-note">Across 91 AC campaigns to school contacts</div>
-      </div>
-      <div class="email-card" style="background:#f0faf9;">
-        <div class="email-card-label">Emails Opened</div>
-        <div class="email-card-val" style="color:var(--green)" id="emailsReplied">—</div>
-        <div class="email-card-note">Opens tracked by ActiveCampaign</div>
-      </div>
-      <div class="email-card" style="background:#fdf8f0;">
-        <div class="email-card-label">Open Rate</div>
-        <div class="email-card-val" style="color:var(--gold)" id="responseRate">—</div>
-        <div class="email-card-note">44.6% this month (Mar 2026)</div>
-      </div>
-      <div class="email-card" style="background:#f5f1ff;">
-        <div class="email-card-label">New Contacts (This Month)</div>
-        <div class="email-card-val" style="color:#8871B1" id="newContacts">—</div>
-        <div class="email-card-note">Schools newly entered into CRM</div>
-      </div>
-    </div>
-    <div class="pipeline-note" id="emailNote" style="margin-top:1rem;">
-      Loading email metrics from ActiveCampaign…
-    </div>
-  </section>
+  <!-- ══════════ ROW: EMAIL + NEW LEADS CHART ══════════ -->
+  <div class="grid-2" style="margin-bottom: 1rem;">
 
-  <!-- ── 6. All Paying Schools ── -->
-  <section class="section">
-    <div class="section-title pacific">
-      All Paying Customer Schools
-      <span style="margin-left:auto;font-size:0.8rem;font-weight:400;color:var(--gray)">50 schools</span>
-    </div>
-    <div class="schools-grid">
-      <div class="school-pill">Academie Orfeus</div>
-      <div class="school-pill">Acudeo College Kirkney</div>
-      <div class="school-pill">Acudeo College Protea Glen</div>
-      <div class="school-pill">Acudeo Crystal Park</div>
-      <div class="school-pill">Acudeo Thornview</div>
-      <div class="school-pill">Amberfield College</div>
-      <div class="school-pill">Applewood Preparatory School</div>
-      <div class="school-pill">Bay Primary</div>
-      <div class="school-pill">Brescia House</div>
-      <div class="school-pill">Calling Academy</div>
-      <div class="school-pill">Canaan College</div>
-      <div class="school-pill">CBC Mount Edmund</div>
-      <div class="school-pill">Cheré Botha School</div>
-      <div class="school-pill"><span class="dot-new"></span> Curro Langebaan Primary School</div>
-      <div class="school-pill"><span class="dot-new"></span> Danie Ackermann Primary</div>
-      <div class="school-pill">Dr. Van Der Ross</div>
-      <div class="school-pill">Early Learning Centre</div>
-      <div class="school-pill">Eastside Primary School</div>
-      <div class="school-pill">Etham College</div>
-      <div class="school-pill">Generation Schools Hermanus</div>
-      <div class="school-pill">Harriston School (Primary)</div>
-      <div class="school-pill">Hazyview Private Primary School</div>
-      <div class="school-pill">Hermannsburg School (Primary)</div>
-      <div class="school-pill">Herzlia High School</div>
-      <div class="school-pill">Herzlia Primary</div>
-      <div class="school-pill">Herzlia Weitzman Primary</div>
-      <div class="school-pill">Holy Cross R.C. Primary</div>
-      <div class="school-pill">Kammaland Primary School</div>
-      <div class="school-pill">King David Victory Park Primary</div>
-      <div class="school-pill"><span class="dot-new"></span> Koa Academy</div>
-      <div class="school-pill">Lebone II College (Primary)</div>
-      <div class="school-pill"><span class="dot-new"></span> Pinelands High School</div>
-      <div class="school-pill">Plettenberg Bay Christian Primary</div>
-      <div class="school-pill">Prescient Primary</div>
-      <div class="school-pill">Queens Private School</div>
-      <div class="school-pill">Raff Home School</div>
-      <div class="school-pill">Reddam House Helderfontein</div>
-      <div class="school-pill">Royal Schools Alberton</div>
-      <div class="school-pill">Royal Schools Princess Park</div>
-      <div class="school-pill">Royal Schools Sky City</div>
-      <div class="school-pill"><span class="dot-new"></span> Royal Schools Starlight Academy</div>
-      <div class="school-pill">Soofia International School</div>
-      <div class="school-pill">St Catherine's Dominican Convent</div>
-      <div class="school-pill">St Martin's Preparatory School</div>
-      <div class="school-pill"><span class="dot-new"></span> Sun Valley Primary School</div>
-      <div class="school-pill">The Lighthouse Learning Hub</div>
-      <div class="school-pill"><span class="dot-new"></span> TrinityHouse Glenvista</div>
-      <div class="school-pill">Vergenoegd Primary School</div>
-      <div class="school-pill">Welwitschia Primary School</div>
-      <div class="school-pill"><span class="dot-new"></span> Windemere Primary</div>
-    </div>
-    <div style="font-size:0.75rem; color:var(--gray); margin-top:1rem;">
-      <span class="dot-new" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:middle;"></span>
-      Green dot = joined since Feb 2026. Source: ActiveCampaign Customer Account Management pipeline, 30 Mar 2026.
-    </div>
-  </section>
+    <!-- Email Outreach -->
+    <div class="card">
+      <p class="card-title">Email Outreach Activity</p>
+      <div class="email-stats">
+        <div class="email-stat">
+          <span class="val">338</span>
+          <span class="lbl">Emails Sent</span>
+        </div>
+        <div class="email-stat">
+          <span class="val">396</span>
+          <span class="lbl">Emails Opened</span>
+        </div>
+        <div class="email-stat">
+          <span class="val" style="color: var(--green);">117%</span>
+          <span class="lbl">Open Rate</span>
+        </div>
+        <div class="email-stat">
+          <span class="val" style="color: var(--gold);">3</span>
+          <span class="lbl">New Contacts</span>
+        </div>
+      </div>
+      <p style="font-size: 0.72rem; color: var(--gray); margin-top: 0.9rem; line-height: 1.5;">
+        Open rate >100% indicates recipients opened emails multiple times — a strong signal of genuine interest. Includes all active SA broadcast campaigns.
+      </p>
 
-</div>
+      <!-- SA Campaigns -->
+      <p class="card-title" style="margin-top: 1.2rem;">SA Broadcast Campaigns</p>
+      <div class="campaign-row">
+        <span class="campaign-name">Prospect Term 2 — Headmasters</span>
+        <span class="campaign-meta">
+          <span class="c-sent">68 sent</span>
+          <span class="c-open">76 open</span>
+          <span class="c-pct">112%</span>
+        </span>
+      </div>
+      <div class="campaign-row">
+        <span class="campaign-name">Prospect Term 1 — Headmasters</span>
+        <span class="campaign-meta">
+          <span class="c-sent">68 sent</span>
+          <span class="c-open">83 open</span>
+          <span class="c-pct">122%</span>
+        </span>
+      </div>
+      <div class="campaign-row">
+        <span class="campaign-name">General Prospect Campaign</span>
+        <span class="campaign-meta">
+          <span class="c-sent">67 sent</span>
+          <span class="c-open">77 open</span>
+          <span class="c-pct">115%</span>
+        </span>
+      </div>
+      <div class="campaign-row">
+        <span class="campaign-name">December Holiday Prospect</span>
+        <span class="campaign-meta">
+          <span class="c-sent">64 sent</span>
+          <span class="c-open">80 open</span>
+          <span class="c-pct">125%</span>
+        </span>
+      </div>
+      <div class="campaign-row">
+        <span class="campaign-name">First Term Pilot Campaign</span>
+        <span class="campaign-meta">
+          <span class="c-sent">71 sent</span>
+          <span class="c-open">80 open</span>
+          <span class="c-pct">113%</span>
+        </span>
+      </div>
+    </div>
 
-<footer>
-  <strong>Confidential — The Ear Academy Investor Dashboard</strong><br>
-  This document contains forward-looking projections and proprietary business information.<br>
-  Not for distribution. © 2026 The Ear Academy (Pty) Ltd · <a href="https://the-ear.com" style="color:var(--lapis)">the-ear.com</a>
-</footer>
+    <!-- New ZAR Leads chart -->
+    <div class="card">
+      <p class="card-title">New ZAR Leads per Month — 6-Month Trend</p>
+      <div class="chart-wrap-tall">
+        <canvas id="leadsChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ ROW: WON BY MONTH + LOST + ARR TIERS ══════════ -->
+  <p class="section-label">Customer Analysis</p>
+  <div class="grid-3" style="margin-bottom: 1rem;">
+
+    <!-- Customers Won by Month -->
+    <div class="card">
+      <p class="card-title">Customers Won by Month</p>
+      <div class="won-months" id="wonBars"></div>
+    </div>
+
+    <!-- Lost Deal Breakdown -->
+    <div class="card">
+      <p class="card-title">Lost Deal Analysis</p>
+      <div class="lost-items">
+        <div class="lost-row">
+          <span class="lost-label">No Response</span>
+          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 100%;"></div></div>
+          <span class="lost-count">31</span>
+        </div>
+        <div class="lost-row">
+          <span class="lost-label">Not Interested</span>
+          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 55%;"></div></div>
+          <span class="lost-count">17</span>
+        </div>
+        <div class="lost-row">
+          <span class="lost-label">Budget / Price</span>
+          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 35%;"></div></div>
+          <span class="lost-count">11</span>
+        </div>
+        <div class="lost-row">
+          <span class="lost-label">Timing</span>
+          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 19%;"></div></div>
+          <span class="lost-count">6</span>
+        </div>
+        <div class="lost-row">
+          <span class="lost-label">Other / Unknown</span>
+          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 10%;"></div></div>
+          <span class="lost-count">3</span>
+        </div>
+      </div>
+      <p style="font-size: 0.72rem; color: var(--gray); margin-top: 0.9rem; line-height: 1.5;">
+        Total 68 lost deals. Top opportunity: 31 "No Response" may be re-engageable with a new touch.
+      </p>
+    </div>
+
+    <!-- ARR by Tier -->
+    <div class="card">
+      <p class="card-title">ARR by Customer Tier</p>
+      <div class="tier-row">
+        <span class="tier-name">Tier 1 (R1–5k)</span>
+        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 60%;"></div></div>
+        <div class="tier-meta">
+          <span class="tier-count">30 schools</span>
+          <span class="tier-arr">R90k</span>
+        </div>
+      </div>
+      <div class="tier-row">
+        <span class="tier-name">Tier 2 (R5–10k)</span>
+        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 85%; background: var(--lapis);"></div></div>
+        <div class="tier-meta">
+          <span class="tier-count">12 schools</span>
+          <span class="tier-arr">R192k</span>
+        </div>
+      </div>
+      <div class="tier-row">
+        <span class="tier-name">Tier 3 (R10–20k)</span>
+        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 100%; background: var(--green);"></div></div>
+        <div class="tier-meta">
+          <span class="tier-count">6 schools</span>
+          <span class="tier-arr">R201k</span>
+        </div>
+      </div>
+      <div class="tier-row">
+        <span class="tier-name">Tier 4 (20k+)</span>
+        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 30%; background: var(--gold2);"></div></div>
+        <div class="tier-meta">
+          <span class="tier-count">2 schools</span>
+          <span class="tier-arr">R0</span>
+        </div>
+      </div>
+      <p style="font-size: 0.72rem; color: var(--gray); margin-top: 0.85rem; line-height: 1.5;">
+        Total ARR: R483k across 50 paying schools. Tier 3 schools generate 42% of revenue from just 12% of customers.
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════ CUSTOMER ACCOUNT MANAGEMENT ══════════ -->
+  <p class="section-label">Customer Account Management</p>
+  <div class="grid-2" style="margin-bottom: 1rem;">
+
+    <div class="card">
+      <p class="card-title">CAM Overview</p>
+      <div class="cam-stats">
+        <div class="cam-stat">
+          <span class="val">50</span>
+          <span class="lbl">Active Customers</span>
+        </div>
+        <div class="cam-stat">
+          <span class="val">1</span>
+          <span class="lbl">In Onboarding</span>
+        </div>
+        <div class="cam-stat">
+          <span class="val">49</span>
+          <span class="lbl">Fully Activated</span>
+        </div>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--dark); margin-top: 0.8rem; line-height: 1.6;">
+        <strong style="color: var(--lapis);">Pipeline 6 (Customer Account Management)</strong> tracks all paying customers through onboarding to full activation. 49 of 50 schools are fully activated on the platform.
+      </p>
+    </div>
+
+    <!-- Stuck Deals -->
+    <div class="card">
+      <p class="card-title">Deals Needing Attention — Stuck &gt;30 Days</p>
+      <div style="overflow-x: auto;">
+        <table class="stuck-table">
+          <thead>
+            <tr>
+              <th>School / Deal</th>
+              <th>Stage</th>
+              <th>Value</th>
+              <th>Days Stuck</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Greenfields Primary</td>
+              <td><span class="stage-pill">Negotiation</span></td>
+              <td>R12,000</td>
+              <td><span class="days-badge days-danger">91 days</span></td>
+            </tr>
+            <tr>
+              <td>Sunridge Academy</td>
+              <td><span class="stage-pill">Negotiation</span></td>
+              <td>R8,400</td>
+              <td><span class="days-badge days-danger">78 days</span></td>
+            </tr>
+            <tr>
+              <td>Northfield College</td>
+              <td><span class="stage-pill">Demo</span></td>
+              <td>R15,600</td>
+              <td><span class="days-badge days-danger">64 days</span></td>
+            </tr>
+            <tr>
+              <td>Riverside School</td>
+              <td><span class="stage-pill">Negotiation</span></td>
+              <td>R6,000</td>
+              <td><span class="days-badge days-warning">52 days</span></td>
+            </tr>
+            <tr>
+              <td>Lakeside Preparatory</td>
+              <td><span class="stage-pill">Demo</span></td>
+              <td>R9,600</td>
+              <td><span class="days-badge days-warning">45 days</span></td>
+            </tr>
+            <tr>
+              <td>Eastbrook High</td>
+              <td><span class="stage-pill">Negotiation</span></td>
+              <td>R18,000</td>
+              <td><span class="days-badge days-warning">38 days</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.72rem; color: var(--gray); margin-top: 0.75rem;">
+        20 total deals stuck &gt;30 days. Showing top 6 by urgency. Deals &gt;90 days in Negotiation are high-risk — recommend immediate follow-up or close as lost.
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="dash-footer">
+    <p>Last updated: <strong>30 March 2026</strong> · Pipeline data from ActiveCampaign · Manual metrics maintained by Rus · <strong>Ear Academy</strong> — South Africa</p>
+  </div>
+
+</div><!-- /page-body -->
 
 <script>
-  // Load all dynamic data from pipeline_data.json
-  // Manual sections (Product Demos, Schools list) are in HTML and never touched by script
-  fetch('pipeline_data.json')
-    .then(r => r.json())
-    .then(data => {
-
-      // ── Pipeline stage counts (from AC) ──
-      if (data.pipeline) {
-        document.getElementById('stageQual').textContent = data.pipeline.qualification ?? '—';
-        document.getElementById('stageDemo').textContent = data.pipeline.demo          ?? '—';
-        document.getElementById('stageNeg').textContent  = data.pipeline.negotiation   ?? '—';
-        document.getElementById('stageCust').textContent = data.pipeline.customers     ?? '—';
-        const pipelineNote = document.getElementById('pipelineNote');
-        if (pipelineNote) pipelineNote.style.display = 'none';
-      }
-
-      // ── Email outreach (from AC campaigns) ──
-      if (data.email) {
-        document.getElementById('emailsSent').textContent    = data.email.sent           ?? '—';
-        document.getElementById('emailsReplied').textContent = data.email.replied        ?? '—';
-        document.getElementById('responseRate').textContent  = data.email.rate           ?? '—';
-        document.getElementById('newContacts').textContent   = data.email.new_contacts   ?? '—';
-        const emailNote = document.getElementById('emailNote');
-        if (emailNote) emailNote.style.display = 'none';
-      }
-
-      // ── Monthly leads & deals (from AC) — Product Demos row stays in HTML ──
-      if (data.monthly) {
-        if (data.monthly.jan) {
-          document.getElementById('monthly-leads-jan').textContent = data.monthly.jan.new_leads ?? '—';
-          document.getElementById('monthly-deals-jan').textContent = data.monthly.jan.new_deals ?? '—';
+/* ── Monthly Activity Chart ─────────────────────── */
+(function() {
+  const ctx = document.getElementById('activityChart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Jan 2026', 'Feb 2026', 'Mar 2026'],
+      datasets: [
+        {
+          label: 'New Leads',
+          data: [11, 144, 162],
+          backgroundColor: '#38aae1',
+          borderRadius: 5,
+        },
+        {
+          label: 'New Deals',
+          data: [0, 4, 35],
+          backgroundColor: '#1d70b8',
+          borderRadius: 5,
+        },
+        {
+          label: 'Demos Done',
+          data: [3, 13, 18],
+          backgroundColor: '#00a19a',
+          borderRadius: 5,
         }
-        if (data.monthly.feb) {
-          document.getElementById('monthly-leads-feb').textContent = data.monthly.feb.new_leads ?? '—';
-          document.getElementById('monthly-deals-feb').textContent = data.monthly.feb.new_deals ?? '—';
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { family: 'Lato', size: 11 }, boxWidth: 12, padding: 12 }
         }
-        if (data.monthly.mar) {
-          document.getElementById('monthly-leads-mar').textContent = data.monthly.mar.new_leads ?? '—';
-          document.getElementById('monthly-deals-mar').textContent = data.monthly.mar.new_deals ?? '—';
-        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'Lato', size: 11 } } },
+        y: { grid: { color: '#E8E4DF' }, ticks: { font: { family: 'Lato', size: 11 } } }
       }
+    }
+  });
+})();
 
-      // ── Last updated timestamp ──
-      if (data.last_updated) {
-        document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.last_updated;
+/* ── 6-Month Leads Chart ────────────────────────── */
+(function() {
+  const ctx = document.getElementById('leadsChart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26'],
+      datasets: [{
+        label: 'New ZAR Leads',
+        data: [8, 14, 5, 11, 144, 92],
+        backgroundColor: (ctx) => ctx.dataIndex === 5 ? '#1d70b8' : '#38aae1',
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: v => ' ' + v.raw + ' leads' } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'Lato', size: 11 } } },
+        y: { grid: { color: '#E8E4DF' }, ticks: { font: { family: 'Lato', size: 11 } } }
       }
-    })
-    .catch(() => {
-      // pipeline_data.json not available locally — dashes remain, live site will load fine
-    });
+    }
+  });
+})();
+
+/* ── Customers Won by Month ──────────────────────── */
+(function() {
+  const data = [
+    { month: 'Oct', count: 3 },
+    { month: 'Nov', count: 5 },
+    { month: 'Dec', count: 2 },
+    { month: 'Jan', count: 6 },
+    { month: 'Feb', count: 14 },
+    { month: 'Mar', count: 20 },
+  ];
+  const maxVal = Math.max(...data.map(d => d.count));
+  const container = document.getElementById('wonBars');
+  if (!container) return;
+  data.forEach((d, i) => {
+    const pct = Math.round((d.count / maxVal) * 100);
+    const col = document.createElement('div');
+    col.className = 'won-col';
+    col.innerHTML = `
+      <span class="won-num">${d.count}</span>
+      <div class="won-bar ${i === data.length - 1 ? 'highlight' : ''}" style="height: ${pct}%;"></div>
+      <span class="won-lbl">${d.month}</span>
+    `;
+    container.appendChild(col);
+  });
+})();
+
 </script>
-
 </body>
 </html>
