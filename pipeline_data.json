@@ -12,26 +12,54 @@
     },
     "feb": {
       "new_leads": "144",
-      "new_deals": "4"
+      "new_deals": "3"
     },
     "mar": {
       "new_leads": "163",
-      "new_deals": "35"
+      "new_deals": "22"
     }
   },
   "email": {
-    "sent": "338",
-    "replied": "396",
-    "rate": "117.2%",
+    "sent": "754",
+    "replied": "536",
+    "rate": "71.1%",
     "new_contacts": "4"
   },
-  "last_updated": "09 Apr 2026",
+  "arr_tiers": {
+    "tier1": {
+      "label": "R1\u20135k",
+      "count": 10,
+      "revenue": 45663.0
+    },
+    "tier2": {
+      "label": "R5\u201310k",
+      "count": 21,
+      "revenue": 169050.0
+    },
+    "tier3": {
+      "label": "R10\u201320k",
+      "count": 17,
+      "revenue": 204000.0
+    },
+    "tier4": {
+      "label": "R20k+",
+      "count": 3,
+      "revenue": 64100.0
+    }
+  },
+  "lost_deals": {
+    "count": 21,
+    "total_value": 171495.0
+  },
+  "last_updated": "10 Apr 2026 at 09:24",
   "notes": {
-    "pipeline": "ZAR-only open deals in Pipelines 4 and 5; all-currency open deals in Pipeline 6",
-    "monthly_leads": "New contacts created in AC that month (contacts API, all currencies)",
-    "monthly_deals": "New ZAR deals created in Pipeline 4 (Sales Qualification) that month",
-    "product_demos": "Manually tracked — edit the Product Demos row in investor.html directly",
-    "schools_list": "Manually maintained — edit the school pills in investor.html directly",
-    "customers": "Onboarding (2) + Activated (49) in Pipeline 6"
+    "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
+    "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
+    "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
+    "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
+    "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
+    "customers": "Onboarding (2) + Activated (49) in Pipeline 6",
+    "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100)",
+    "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }
 }
