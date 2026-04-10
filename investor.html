@@ -899,8 +899,8 @@ body {
           <span class="lost-count">3</span>
         </div>
       </div>
-      <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;">
-        Total 68 lost deals. Top opportunity: 31 "No Response" may be re-engageable with a new touch.
+      <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;" id="lost-summary">
+        Total 21 lost deals (Sales Conversion pipeline only). Top opportunity: "No Response" deals may be re-engageable with a new touch.
       </p>
     </div>
 
@@ -909,38 +909,38 @@ body {
       <p class="card-title">ARR by Customer Tier</p>
       <div class="tier-row">
         <span class="tier-name">Tier 1 (R1–5k)</span>
-        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 60%;"></div></div>
+        <div class="tier-bar-wrap"><div class="tier-bar" id="tier1-bar" style="width: 60%;"></div></div>
         <div class="tier-meta">
-          <span class="tier-count">30 schools</span>
-          <span class="tier-arr">R90k</span>
+          <span class="tier-count"><span id="tier1-count">10</span> schools</span>
+          <span class="tier-arr" id="tier1-arr">R46k</span>
         </div>
       </div>
       <div class="tier-row">
         <span class="tier-name">Tier 2 (R5–10k)</span>
-        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 85%; background: var(--lapis);"></div></div>
+        <div class="tier-bar-wrap"><div class="tier-bar" id="tier2-bar" style="width: 85%; background: var(--lapis);"></div></div>
         <div class="tier-meta">
-          <span class="tier-count">12 schools</span>
-          <span class="tier-arr">R192k</span>
+          <span class="tier-count"><span id="tier2-count">21</span> schools</span>
+          <span class="tier-arr" id="tier2-arr">R169k</span>
         </div>
       </div>
       <div class="tier-row">
         <span class="tier-name">Tier 3 (R10–20k)</span>
-        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 100%; background: var(--green);"></div></div>
+        <div class="tier-bar-wrap"><div class="tier-bar" id="tier3-bar" style="width: 100%; background: var(--green);"></div></div>
         <div class="tier-meta">
-          <span class="tier-count">6 schools</span>
-          <span class="tier-arr">R201k</span>
+          <span class="tier-count"><span id="tier3-count">17</span> schools</span>
+          <span class="tier-arr" id="tier3-arr">R204k</span>
         </div>
       </div>
       <div class="tier-row">
-        <span class="tier-name">Tier 4 (20k+)</span>
-        <div class="tier-bar-wrap"><div class="tier-bar" style="width: 30%; background: var(--gold2);"></div></div>
+        <span class="tier-name">Tier 4 (R20k+)</span>
+        <div class="tier-bar-wrap"><div class="tier-bar" id="tier4-bar" style="width: 30%; background: var(--gold2);"></div></div>
         <div class="tier-meta">
-          <span class="tier-count">2 schools</span>
-          <span class="tier-arr">R0</span>
+          <span class="tier-count"><span id="tier4-count">3</span> schools</span>
+          <span class="tier-arr" id="tier4-arr">R64k</span>
         </div>
       </div>
-      <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;">
-        Total ARR: R483k across 50 paying schools. Tier 3 schools generate 42% of revenue from just 12% of customers.
+      <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;" id="tier-summary">
+        Total ARR: R483k across 51 paying schools. Tier 3 schools generate the highest revenue concentration.
       </p>
     </div>
   </div>
@@ -1155,34 +1155,44 @@ body {
     const el = document.getElementById(id);
     if (el) el.style.width = Math.max(4, pct) + '%';
   }
+  function fmtR(val) {
+    // Format a number as e.g. "R204k" or "R64k"
+    if (!val && val !== 0) return '—';
+    const k = Math.round(val / 1000);
+    return 'R' + k + 'k';
+  }
 
   fetch('pipeline_data.json?v=' + Date.now())
     .then(r => r.json())
     .then(d => {
-      const p = d.pipeline || {};
-      const m = d.monthly || {};
-      const e = d.email || {};
+      const p  = d.pipeline   || {};
+      const m  = d.monthly    || {};
+      const e  = d.email      || {};
+      const t  = d.arr_tiers  || {};
+      const ld = d.lost_deals || {};
 
       // Hero metrics
       set('val-customers', p.customers);
-      // val-arr and val-pipeline stay as hardcoded values (not in JSON yet)
-      // Latest month leads = mar new_leads
+      // Latest month leads = last key in monthly
       const m_keys = Object.keys(m);
       const lastMonth = m_keys[m_keys.length - 1];
       if (lastMonth && m[lastMonth]) set('val-leads-month', m[lastMonth].new_leads);
 
       // Pipeline funnel — scale bars relative to qualification count
       const maxDeals = Math.max(p.qualification || 1, 1);
-      set('bar-qual', p.qualification); set('count-qual', p.qualification);
+      set('bar-qual',  p.qualification); set('count-qual', p.qualification);
       setWidth('bar-qual', 100);
-      set('bar-demo', p.demo); set('count-demo', p.demo);
+      set('bar-demo',  p.demo);        set('count-demo', p.demo);
       setWidth('bar-demo', Math.round(((p.demo || 0) / maxDeals) * 100));
-      set('bar-neg', p.negotiation); set('count-neg', p.negotiation);
-      setWidth('bar-neg', Math.round(((p.negotiation || 0) / maxDeals) * 100));
-      set('bar-won', p.customers); set('count-won', p.customers);
-      setWidth('bar-won', Math.round(((p.customers || 0) / maxDeals) * 100));
-      set('bar-lost', d.lost || 68); set('count-lost', d.lost || 68);
-      setWidth('bar-lost', Math.round(((d.lost || 68) / maxDeals) * 100));
+      set('bar-neg',   p.negotiation); set('count-neg',  p.negotiation);
+      setWidth('bar-neg',  Math.round(((p.negotiation || 0) / maxDeals) * 100));
+      set('bar-won',   p.customers);   set('count-won',  p.customers);
+      setWidth('bar-won',  Math.round(((p.customers || 0) / maxDeals) * 100));
+
+      // Lost deals count in funnel — now sourced from pipeline 5 only
+      const lostCount = ld.count || 0;
+      set('bar-lost',  lostCount); set('count-lost', lostCount);
+      setWidth('bar-lost', Math.round((lostCount / maxDeals) * 100));
 
       // Monthly table — leads & deals only (Product Demos row stays manual)
       if (m.jan) { set('leads-jan', m.jan.new_leads); set('deals-jan', m.jan.new_deals); }
@@ -1190,10 +1200,61 @@ body {
       if (m.mar) { set('leads-mar', m.mar.new_leads); set('deals-mar', m.mar.new_deals); }
 
       // Email stats
-      set('email-sent', e.sent);
-      set('email-opened', e.replied);
-      set('email-rate', e.rate);
+      set('email-sent',     e.sent);
+      set('email-opened',   e.replied);
+      set('email-rate',     e.rate);
       set('email-contacts', e.new_contacts);
+
+      // ARR tiers
+      if (t.tier1) {
+        set('tier1-count', t.tier1.count);
+        set('tier1-arr',   fmtR(t.tier1.revenue));
+      }
+      if (t.tier2) {
+        set('tier2-count', t.tier2.count);
+        set('tier2-arr',   fmtR(t.tier2.revenue));
+      }
+      if (t.tier3) {
+        set('tier3-count', t.tier3.count);
+        set('tier3-arr',   fmtR(t.tier3.revenue));
+      }
+      if (t.tier4) {
+        set('tier4-count', t.tier4.count);
+        set('tier4-arr',   fmtR(t.tier4.revenue));
+      }
+
+      // ARR tier bar widths — scale relative to highest revenue tier
+      const maxRev = Math.max(
+        (t.tier1 || {}).revenue || 0,
+        (t.tier2 || {}).revenue || 0,
+        (t.tier3 || {}).revenue || 0,
+        (t.tier4 || {}).revenue || 0,
+        1
+      );
+      if (t.tier1) setWidth('tier1-bar', Math.round((t.tier1.revenue / maxRev) * 100));
+      if (t.tier2) setWidth('tier2-bar', Math.round((t.tier2.revenue / maxRev) * 100));
+      if (t.tier3) setWidth('tier3-bar', Math.round((t.tier3.revenue / maxRev) * 100));
+      if (t.tier4) setWidth('tier4-bar', Math.round((t.tier4.revenue / maxRev) * 100));
+
+      // Total ARR hero card
+      const totalARR = ((t.tier1 || {}).revenue || 0) + ((t.tier2 || {}).revenue || 0)
+                     + ((t.tier3 || {}).revenue || 0) + ((t.tier4 || {}).revenue || 0);
+      if (totalARR > 0) set('val-arr', fmtR(totalARR));
+
+      // ARR tier summary line
+      const totalSchools = ((t.tier1 || {}).count || 0) + ((t.tier2 || {}).count || 0)
+                         + ((t.tier3 || {}).count || 0) + ((t.tier4 || {}).count || 0);
+      if (totalARR > 0 && totalSchools > 0) {
+        set('tier-summary', 'Total ARR: ' + fmtR(totalARR) + ' across ' + totalSchools
+          + ' paying schools. Data sourced live from ActiveCampaign.');
+      }
+
+      // Lost deals summary line
+      if (lostCount > 0) {
+        set('lost-summary', 'Total ' + lostCount + ' lost deals (Sales Conversion pipeline only). '
+          + 'Total value R' + Math.round(ld.total_value).toLocaleString()
+          + '. Top opportunity: "No Response" deals may be re-engageable with a new touch.');
+      }
 
       // Last updated badge
       if (d.last_updated) set('last-updated', 'Updated ' + d.last_updated);
