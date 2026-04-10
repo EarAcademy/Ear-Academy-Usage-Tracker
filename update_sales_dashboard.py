@@ -212,6 +212,84 @@ def fetch_email_stats():
     }
 
 
+# ── ARR Tier helpers ───────────────────────────────────────────────────────────
+def fetch_won_zar_deals():
+    """Fetch all Won ZAR deals from Pipeline 6 (Customer Account Management).
+    These are the paying schools — used to calculate ARR tier breakdown.
+    AC returns values in cents as strings: divide by 100 to get ZAR.
+    """
+    print("  Fetching won ZAR deals (Pipeline 6) for ARR tiers…")
+    deals = ac_get("deals", {
+        "filters[pipeline]": P_CAM,
+        "filters[status]":   WON,
+    })
+    zar = [d for d in deals if d.get("currency", "").lower() == "zar"]
+    print(f"    → {len(zar)} won ZAR deals found")
+    return zar
+
+
+def calculate_arr_tiers(won_deals):
+    """Bucket won ZAR deals into ARR tiers by annual value.
+
+    Tier boundaries (in ZAR — AFTER dividing cents value by 100):
+      Tier 1: R1     – R4,999
+      Tier 2: R5,000 – R9,999
+      Tier 3: R10,000 – R19,999
+      Tier 4: R20,000+
+    """
+    tiers = {
+        "tier1": {"label": "R1–5k",   "min": 1,      "max": 4999,  "count": 0, "revenue": 0.0},
+        "tier2": {"label": "R5–10k",  "min": 5000,   "max": 9999,  "count": 0, "revenue": 0.0},
+        "tier3": {"label": "R10–20k", "min": 10000,  "max": 19999, "count": 0, "revenue": 0.0},
+        "tier4": {"label": "R20k+",   "min": 20000,  "max": None,  "count": 0, "revenue": 0.0},
+    }
+
+    for deal in won_deals:
+        try:
+            value_zar = int(deal.get("value", 0)) / 100  # cents → ZAR
+        except (ValueError, TypeError):
+            continue
+
+        for tier in tiers.values():
+            if tier["max"] is None:
+                if value_zar >= tier["min"]:
+                    tier["count"]   += 1
+                    tier["revenue"] += value_zar
+                    break
+            else:
+                if tier["min"] <= value_zar <= tier["max"]:
+                    tier["count"]   += 1
+                    tier["revenue"] += value_zar
+                    break
+
+    print("    ARR tier breakdown:")
+    for t in tiers.values():
+        print(f"      {t['label']}: {t['count']} schools, R{t['revenue']:,.0f}")
+
+    return tiers
+
+
+def fetch_lost_deals_pipeline5():
+    """Fetch Lost deals from Pipeline 5 (Sales Conversion) only.
+
+    WHY Pipeline 5 only: Pipeline 4 losses are leads that never got to demo
+    stage — not the same as deals we actively worked and didn't close.
+    Pipeline 5 losses give the true strike rate.
+    """
+    print("  Fetching lost deals (Pipeline 5 — Sales Conversion only)…")
+    deals = ac_get("deals", {
+        "filters[pipeline]": P_CONV,
+        "filters[status]":   "2",   # 2 = Lost
+    })
+    zar = [d for d in deals if d.get("currency", "").lower() == "zar"]
+    total_value = sum(int(d.get("value", 0)) / 100 for d in zar)
+    print(f"    → {len(zar)} lost deals, total value R{total_value:,.0f}")
+    return {
+        "count":       len(zar),
+        "total_value": round(total_value, 2),
+    }
+
+
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
     print("\n🔄  Ear Academy — Updating Sales Dashboard")
@@ -258,7 +336,15 @@ def main():
     print("\n📧  Email stats:")
     email = fetch_email_stats()
 
-    # ── 4. Build JSON ────────────────────────────────────────────────────────
+    # ── 4. ARR tiers & lost deals ────────────────────────────────────────────
+    print("\n🏫  ARR tier breakdown:")
+    won_deals  = fetch_won_zar_deals()
+    arr_tiers  = calculate_arr_tiers(won_deals)
+
+    print("\n❌  Lost deals (Pipeline 5 only):")
+    lost_deals = fetch_lost_deals_pipeline5()
+
+    # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
     data = {
         "pipeline": {
@@ -273,6 +359,29 @@ def main():
             "mar": {"new_leads": str(mar_leads), "new_deals": str(mar_deals)},
         },
         "email": email,
+        "arr_tiers": {
+            "tier1": {
+                "label":   arr_tiers["tier1"]["label"],
+                "count":   arr_tiers["tier1"]["count"],
+                "revenue": round(arr_tiers["tier1"]["revenue"], 2),
+            },
+            "tier2": {
+                "label":   arr_tiers["tier2"]["label"],
+                "count":   arr_tiers["tier2"]["count"],
+                "revenue": round(arr_tiers["tier2"]["revenue"], 2),
+            },
+            "tier3": {
+                "label":   arr_tiers["tier3"]["label"],
+                "count":   arr_tiers["tier3"]["count"],
+                "revenue": round(arr_tiers["tier3"]["revenue"], 2),
+            },
+            "tier4": {
+                "label":   arr_tiers["tier4"]["label"],
+                "count":   arr_tiers["tier4"]["count"],
+                "revenue": round(arr_tiers["tier4"]["revenue"], 2),
+            },
+        },
+        "lost_deals": lost_deals,
         "last_updated": timestamp,
         "notes": {
             "pipeline":       "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
@@ -281,15 +390,17 @@ def main():
             "product_demos":  "Manually tracked — edit the Product Demos row in investor.html directly",
             "schools_list":   "Manually maintained — edit the school pills in investor.html directly",
             "customers":      f"Onboarding ({onboarding}) + Activated ({activated}) in Pipeline 6",
+            "arr_tiers":      "Won ZAR deals in Pipeline 6, bucketed by annual value (cents ÷ 100)",
+            "lost_deals":     "Lost deals in Pipeline 5 (Sales Conversion) only — excludes Pipeline 4 qualification rejections",
         }
     }
 
-    # ── 5. Write JSON ────────────────────────────────────────────────────────
+    # ── 6. Write JSON ────────────────────────────────────────────────────────
     with open(JSON_FILE, "w") as f:
         json.dump(data, f, indent=2)
     print(f"\n✅  pipeline_data.json updated ({timestamp})")
 
-    # ── 6. Git commit & push ─────────────────────────────────────────────────
+    # ── 7. Git commit & push ─────────────────────────────────────────────────
     print("\n🚀  Publishing to GitHub…")
     try:
         subprocess.run(["git", "-C", str(SCRIPT_DIR), "add", "pipeline_data.json", "investor.html"], check=True)
