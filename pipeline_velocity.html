@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Velocity — Ear Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --lapis:#1d70b8;--sky:#38aae1;--green:#00a19a;--amber:#e8a020;--red:#d63b3b;--cream:#F5F1ED;--white:#ffffff;--dark:#2C2C2C;--gray:#666666;--lgray:#E8E4DF;--shadow:0 4px 24px rgba(0,0,0,0.07);--radius:18px; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+  .header{background:var(--white);border-bottom:1px solid var(--lgray);padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .header-left{display:flex;align-items:center;gap:1rem}
+  .logo{width:42px;height:42px;background:var(--lapis);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .logo svg{width:26px;height:26px}
+  .htitle{font-family:'Quicksand',sans-serif;font-size:1.15rem;font-weight:700;color:var(--lapis)}
+  .hsub{font-size:0.8rem;color:var(--gray);margin-top:1px}
+  .nav{display:flex;gap:0.5rem}
+  .ntab{padding:0.45rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;color:var(--gray);border:1.5px solid var(--lgray);transition:all .18s}
+  .ntab:hover{color:var(--lapis);border-color:var(--lapis)}
+  .ntab.active{background:var(--lapis);color:var(--white);border-color:var(--lapis)}
+  .updated{font-size:0.75rem;color:var(--gray);white-space:nowrap}
+  .main{max-width:1400px;margin:0 auto;padding:2rem 2.5rem}
+  .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.75rem 2rem}
+  .ctitle{font-family:'Quicksand',sans-serif;font-size:0.85rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.6px;margin-bottom:1.25rem}
+  .slabel{font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;color:var(--lapis);letter-spacing:.3px;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+  .slabel::after{content:'';flex:1;height:1px;background:var(--lgray)}
+  /* HERO */
+  .hgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.1rem;margin-bottom:2rem}
+  .hcard{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.4rem 1.6rem;border-left:4px solid var(--lgray)}
+  .hcard.blue{border-left-color:var(--sky)}.hcard.green{border-left-color:var(--green)}.hcard.amber{border-left-color:var(--amber)}.hcard.red{border-left-color:var(--red)}.hcard.lapis{border-left-color:var(--lapis)}
+  .hlabel{font-size:.72rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px}
+  .hval{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:var(--dark);line-height:1.1;margin:.25rem 0 .2rem}
+  .hval.green{color:var(--green)}.hval.amber{color:var(--amber)}.hval.red{color:var(--red)}
+  .hsub2{font-size:.75rem;color:var(--gray);line-height:1.4}
+  /* FUNNEL */
+  .funnel{display:flex;align-items:stretch;margin-bottom:2rem;box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden}
+  .fstage{flex:1;background:var(--white);padding:1.5rem;border-right:1px solid var(--lgray)}
+  .fstage:last-child{border-right:none}
+  .farrow{width:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--white);color:#ccc;font-size:1.3rem;border-top:1px solid var(--lgray);border-bottom:1px solid var(--lgray)}
+  .flab{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:.35rem}
+  .fcount{font-family:'Quicksand',sans-serif;font-size:2.3rem;font-weight:700;line-height:1}
+  .c1{color:var(--lapis)}.c2{color:var(--sky)}.c3{color:var(--green)}
+  .fsub{font-size:.77rem;color:var(--gray);margin:.3rem 0 .6rem}
+  .fpill{display:inline-block;padding:.18rem .6rem;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:.6rem}
+  .pgood{background:#e6f7f7;color:#007a74}.pwarn{background:#fff3e0;color:#b8760a}
+  /* MINI BAR */
+  .mbar-wrap{margin-top:.7rem}
+  .mbar-label{font-size:.67rem;color:var(--gray);font-weight:700;margin-bottom:.25rem}
+  .mbar{display:flex;height:7px;border-radius:4px;overflow:hidden;background:var(--lgray)}
+  .ms{height:7px}.ms-g{background:var(--green)}.ms-s{background:var(--sky)}.ms-a{background:var(--amber)}.ms-r{background:var(--red)}
+  .mleg{display:flex;gap:.7rem;margin-top:.3rem;flex-wrap:wrap}
+  .mli{font-size:.65rem;color:var(--gray);display:flex;align-items:center;gap:3px}
+  .mld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+  /* INSIGHT */
+  .insight{background:linear-gradient(135deg,#eef4fb,#f5f1ed);border:1px solid #c8ddf0;border-radius:var(--radius);padding:1.4rem 1.75rem;margin-bottom:2rem}
+  .ititle{font-family:'Quicksand',sans-serif;font-weight:700;font-size:.95rem;color:var(--lapis);margin-bottom:.75rem}
+  .igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  .ilab{font-size:.7rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.2rem}
+  .ival{font-family:'Quicksand',sans-serif;font-size:1.3rem;font-weight:700}
+  .isub{font-size:.73rem;color:var(--gray);margin-top:1px}
+  /* DIST */
+  .tcol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.5rem}
+  .drow{display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem}
+  .dlab{width:82px;font-size:.75rem;color:var(--gray);flex-shrink:0}
+  .dbw{flex:1;background:var(--lgray);border-radius:4px;height:20px}
+  .dbf{height:20px;border-radius:4px;display:flex;align-items:center;padding-left:5px;min-width:3px}
+  .dbl{font-size:.67rem;font-weight:700;color:white}
+  .dcnt{width:28px;font-size:.77rem;color:var(--dark);font-weight:700;text-align:right;flex-shrink:0}
+  /* TABLE */
+  .tw{overflow-x:auto}
+  table.dt{width:100%;border-collapse:collapse;font-size:.82rem}
+  .dt th{background:var(--cream);color:var(--lapis);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;padding:.6rem .9rem;text-align:left;border-bottom:2px solid var(--lgray);white-space:nowrap}
+  .dt td{padding:.65rem .9rem;border-bottom:1px solid var(--lgray);vertical-align:middle}
+  .dt tr:last-child td{border-bottom:none}
+  .dt tr:hover td{background:#faf9f7}
+  .dn{font-weight:700;color:var(--dark)}
+  .bdg{display:inline-block;padding:.18rem .6rem;border-radius:20px;font-size:.73rem;font-weight:700;white-space:nowrap}
+  .bg{background:#e6f7f7;color:#007a74}.bs{background:#e6f4fb;color:#1a7aaa}.ba{background:#fff3e0;color:#b8760a}.br{background:#fde8e8;color:#c0392b}
+  /* ALERTS */
+  .abox{border-radius:10px;padding:.85rem 1.1rem;margin-bottom:.65rem;display:flex;align-items:flex-start;gap:.75rem}
+  .ared{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red)}
+  .aamb{background:#fef9ec;border:1px solid #f5d97a;border-left:4px solid var(--amber)}
+  .agrn{background:#f0faf9;border:1px solid #99d9d6;border-left:4px solid var(--green)}
+  .aicon{font-size:1.05rem;flex-shrink:0;margin-top:1px}
+  .atitle{font-weight:700;font-size:.87rem;color:var(--dark)}
+  .abody{font-size:.76rem;color:var(--gray);margin-top:2px;line-height:1.5}
+  .footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--gray);border-top:1px solid var(--lgray);margin-top:1rem}
+  .footer a{color:var(--lapis);text-decoration:none}
+  @media(max-width:1000px){.hgrid{grid-template-columns:repeat(3,1fr)}.tcol,.igrid{grid-template-columns:1fr}.funnel{flex-direction:column}.fstage{border-right:none;border-bottom:1px solid var(--lgray)}.farrow{width:100%;height:24px}.main{padding:1.25rem 1rem}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <div class="logo">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 4C8.58 4 5 7.58 5 12c0 2.76 1.4 5.19 3.54 6.65V20h8.92v-1.35A8 8 0 0013 4z" fill="white" fill-opacity="0.9"/>
+        <circle cx="13" cy="12" r="3" fill="#1d70b8"/>
+        <path d="M13 9v6M10 12h6" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="htitle">Ear Academy — Pipeline Velocity</div>
+      <div class="hsub">Full funnel · New Lead → Demo → Negotiation · ZAR only</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="ntab">Usage Analytics</a>
+    <a href="investor.html" class="ntab">Sales Activity</a>
+    <a href="pipeline_velocity.html" class="ntab active">Pipeline Velocity</a>
+  </nav>
+  <div class="updated" id="hdate">Loading…</div>
+</header>
+
+<main class="main">
+
+<div class="hgrid">
+  <div class="hcard lapis"><div class="hlabel">New Leads (Stage 1)</div><div class="hval" id="h1">281</div><div class="hsub2" id="h1s">Avg 99d in stage · 166 stuck 180d+</div></div>
+  <div class="hcard blue"><div class="hlabel">Demo / Pilot (Stage 2)</div><div class="hval" id="h2">—</div><div class="hsub2" id="h2s">—</div></div>
+  <div class="hcard blue"><div class="hlabel">Negotiation (Stage 3)</div><div class="hval" id="h3">—</div><div class="hsub2" id="h3s">—</div></div>
+  <div class="hcard" id="hstuck"><div class="hlabel">Stuck &gt;90 Days</div><div class="hval" id="h4">—</div><div class="hsub2" id="h4s">—</div></div>
+  <div class="hcard blue"><div class="hlabel">Total Pipeline Value</div><div class="hval" id="h5" style="font-size:1.5rem">—</div><div class="hsub2" id="h5s">—</div></div>
+</div>
+
+<div class="slabel">Complete Sales Funnel — ZAR Deals</div>
+<div class="funnel" id="funnel"></div>
+
+<div class="insight" id="insight">
+  <div class="ititle">📊 What this means for investors</div>
+  <div class="igrid" id="igrid"></div>
+</div>
+
+<div class="slabel">Time-in-Stage Distribution</div>
+<div class="tcol" id="distcols"></div>
+
+<div class="slabel">Deals Needing Attention — stuck &gt;60 days</div>
+<div id="attention" style="margin-bottom:2rem"></div>
+
+<div class="slabel">Negotiation Stage — All Deals</div>
+<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School / Deal</th><th>Days in Negotiation</th><th>Total Age</th><th>Value</th><th>Status</th></tr></thead><tbody id="ntbody"></tbody></table></div></div>
+
+<div class="slabel">Demo / Pilot Stage — All Deals</div>
+<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School / Deal</th><th>Days in Demo/Pilot</th><th>Total Age</th><th>Value</th><th>Status</th></tr></thead><tbody id="dtbody"></tbody></table></div></div>
+
+</main>
+<footer class="footer"><a href="investor.html">← Back to Sales Dashboard</a> &nbsp;·&nbsp; ActiveCampaign · ZAR · Pipeline 4 (New Lead) + Pipeline 5 (Sales Conversion) · <span id="footdate">24 Apr 2026</span></footer>
+
+<script>
+// ─── Utility functions ────────────────────────────────────────────────────────
+const TODAY = new Date();
+function db(a,b){return Math.round(Math.abs(b-a)/86400000)}
+function pd(s){if(!s)return null;const c=s.replace(' ','T').replace(/-0[56]:00$/,'');return new Date(c+(c.includes('T')&&!c.includes('+')&&!c.includes('Z')?'Z':''))}
+function dis(d){const e=pd(d.edate)||pd(d.cdate);return e?db(e,TODAY):0}
+function age(d){const e=pd(d.cdate);return e?db(e,TODAY):0}
+function zarCents(c){return'R'+Math.round(parseInt(c||0)/100).toLocaleString('en-ZA')}
+function zarRand(r){return'R'+Math.round(r||0).toLocaleString('en-ZA')}
+function bc(n){return n<=30?'bg':n<=60?'bs':n<=90?'ba':'br'}
+function bl(n){return`${n}d ${n<=30?'✓':n<=60?'':n<=90?'⚠':'🔴'}`.trim()}
+function clean(t){return t.replace(/^Online\(SA\):\s*/i,'').replace(/\s*-\s*TRAILBLAZER SA$/i,'').replace(/\s*-\s*(Free trial|Two Term.*|14 DAY TRIAL|Schoolscape Event.*|2 term.*)/i,'').trim()}
+function statusLabel(n){return n>90?'Critical':n>60?'At risk':n>30?'Watch':'Healthy'}
+function statusColor(n){return n>90?'var(--red)':n>60?'var(--amber)':n>30?'var(--sky)':'var(--green)'}
+
+// ─── Fallback data (April 24 2026 snapshot — used until velocity_data.json exists) ───
+const FALLBACK = {
+  generated_label: "24 Apr 2026 (snapshot — run update_velocity.py to refresh)",
+  pipeline4: {
+    total: 281, avg_days_in_stage: 99, total_value_zar: 2391938,
+    buckets: {u30:50,u60:20,u90:15,u180:30,over180:166}
+  },
+  pipeline5: {
+    demo: { count:10, avg_days_in_stage:35, total_value_zar:120000,
+      buckets:{u30:5,u60:3,u90:1,over:1},
+      deals:[
+        {title:"Cannons Creek Independent School - TRAILBLAZER SA",stage:"43",cdate:"2024-06-07",edate:"2026-01-19",days_in_stage:96,total_age_days:686,value_zar:12000},
+        {title:"Drakensberg Boys Choir",stage:"43",cdate:"2025-03-17",edate:"2026-01-19",days_in_stage:96,total_age_days:404,value_zar:12000},
+        {title:"John Blight - Groote Schuur",stage:"43",cdate:"2025-03-04",edate:"2026-03-20",days_in_stage:35,total_age_days:416,value_zar:12000},
+        {title:"Generations Somerset West",stage:"43",cdate:"2026-02-24",edate:"2026-03-11",days_in_stage:44,total_age_days:59,value_zar:12000},
+        {title:"Cambridge Academy Ethiopia",stage:"43",cdate:"2026-03-05",edate:"2026-03-11",days_in_stage:44,total_age_days:50,value_zar:12000},
+        {title:"Masonwabe Primary School",stage:"43",cdate:"2026-03-05",edate:"2026-03-11",days_in_stage:44,total_age_days:50,value_zar:12000},
+        {title:"Wynberg Boys Junior School",stage:"43",cdate:"2026-03-05",edate:"2026-03-25",days_in_stage:30,total_age_days:50,value_zar:12000},
+        {title:"Eduplex Primary",stage:"43",cdate:"2026-03-25",edate:"2026-03-25",days_in_stage:30,total_age_days:30,value_zar:12000},
+        {title:"Felixton College",stage:"43",cdate:"2026-03-23",edate:"2026-04-22",days_in_stage:2,total_age_days:32,value_zar:12000},
+        {title:"Greenwood School",stage:"43",cdate:"2026-03-26",edate:"2026-04-21",days_in_stage:3,total_age_days:29,value_zar:12000},
+      ]},
+    nego: { count:28, avg_days_in_stage:66, total_value_zar:331700,
+      buckets:{u30:4,u60:6,u90:6,over:12},
+      deals:[
+        {title:"Online(SA): Teneo Education",stage:"46",cdate:"2024-01-16",edate:"2026-01-23",days_in_stage:91,total_age_days:829,value_zar:36000},
+        {title:"Camps Bay Primary",stage:"46",cdate:"2025-07-21",edate:"2026-01-19",days_in_stage:95,total_age_days:277,value_zar:20500},
+        {title:"Curro Salt Rock",stage:"46",cdate:"2025-08-04",edate:"2026-01-19",days_in_stage:95,total_age_days:263,value_zar:20050},
+        {title:"Blue Hills",stage:"46",cdate:"2025-09-08",edate:"2026-01-19",days_in_stage:95,total_age_days:228,value_zar:16050},
+        {title:"Edenglen High School",stage:"46",cdate:"2024-09-03",edate:"2026-01-19",days_in_stage:95,total_age_days:599,value_zar:12000},
+        {title:"Assumption Convent School",stage:"46",cdate:"2025-03-12",edate:"2026-01-19",days_in_stage:95,total_age_days:408,value_zar:4750},
+        {title:"Kronendal Primary School",stage:"46",cdate:"2025-09-11",edate:"2026-01-19",days_in_stage:95,total_age_days:225,value_zar:8050},
+        {title:"Woodbridge Primary",stage:"46",cdate:"2025-09-30",edate:"2026-01-19",days_in_stage:95,total_age_days:206,value_zar:8050},
+        {title:"MEPS",stage:"46",cdate:"2025-09-17",edate:"2026-01-19",days_in_stage:95,total_age_days:219,value_zar:12000},
+        {title:"Fourways High School",stage:"46",cdate:"2025-04-22",edate:"2026-01-20",days_in_stage:94,total_age_days:367,value_zar:4500},
+        {title:"Anne Duthie - TRAILBLAZER SA",stage:"46",cdate:"2024-03-06",edate:"2025-11-04",days_in_stage:171,total_age_days:784,value_zar:8050},
+        {title:"Herschel Girls Primary",stage:"46",cdate:"2025-11-07",edate:"2025-11-12",days_in_stage:163,total_age_days:168,value_zar:8050},
+        {title:"Bernardo Home School",stage:"46",cdate:"2025-12-04",edate:"2025-12-04",days_in_stage:141,total_age_days:141,value_zar:4750},
+        {title:"Mpaka High School",stage:"46",cdate:"2026-01-30",edate:"2026-02-17",days_in_stage:66,total_age_days:84,value_zar:12000},
+        {title:"Cedar House",stage:"46",cdate:"2026-02-17",edate:"2026-02-17",days_in_stage:66,total_age_days:66,value_zar:12000},
+        {title:"Westville Primary School",stage:"46",cdate:"2024-03-13",edate:"2026-02-17",days_in_stage:66,total_age_days:772,value_zar:12000},
+        {title:"Blouberg International School",stage:"46",cdate:"2025-05-30",edate:"2026-02-04",days_in_stage:79,total_age_days:329,value_zar:4750},
+        {title:"Courtney House",stage:"46",cdate:"2025-11-03",edate:"2026-03-10",days_in_stage:45,total_age_days:172,value_zar:12000},
+        {title:"St Cyprian's School",stage:"46",cdate:"2026-02-18",edate:"2026-03-03",days_in_stage:52,total_age_days:65,value_zar:12000},
+        {title:"Nguzo Saba School",stage:"46",cdate:"2026-03-05",edate:"2026-03-19",days_in_stage:36,total_age_days:50,value_zar:8050},
+        {title:"Redwood College La Lucia",stage:"46",cdate:"2026-03-23",edate:"2026-03-25",days_in_stage:30,total_age_days:32,value_zar:12000},
+        {title:"Bishops",stage:"46",cdate:"2026-02-17",edate:"2026-03-25",days_in_stage:30,total_age_days:66,value_zar:12000},
+        {title:"Steyn City School",stage:"46",cdate:"2024-01-16",edate:"2026-03-26",days_in_stage:29,total_age_days:829,value_zar:12000},
+        {title:"Malaika House",stage:"46",cdate:"2026-04-07",edate:"2026-04-17",days_in_stage:7,total_age_days:17,value_zar:12000},
+        {title:"Pinnacle College Kyalami",stage:"46",cdate:"2025-06-09",edate:"2026-04-20",days_in_stage:4,total_age_days:319,value_zar:12000},
+        {title:"Winston Park Primary",stage:"46",cdate:"2026-04-09",edate:"2026-04-22",days_in_stage:2,total_age_days:15,value_zar:12000},
+        {title:"Willow Academy",stage:"46",cdate:"2026-04-10",edate:"2026-04-20",days_in_stage:4,total_age_days:14,value_zar:12000},
+        {title:"Elsen Academy",stage:"46",cdate:"2025-05-30",edate:"2026-04-23",days_in_stage:1,total_age_days:329,value_zar:12000},
+      ]},
+    total_in_conversion: 38,
+  },
+  conversion_rates: {lead_to_demo_pct: 13.5, demo_to_nego_pct: 74},
+  stuck_summary: {conversion_over_60:17, conversion_over_90:12, new_leads_over_180:166, all_stages_over_90:211},
+};
+
+// ─── Render from either live JSON or fallback ─────────────────────────────────
+function renderDashboard(vd) {
+  const P4     = vd.pipeline4;
+  const p5demo = vd.pipeline5.demo;
+  const p5nego = vd.pipeline5.nego;
+  const rates  = vd.conversion_rates;
+  const stuck  = vd.stuck_summary;
+
+  // Normalise deal objects so both sources work the same way
+  // Live JSON uses days_in_stage/total_age_days/value_zar (pre-computed by Python)
+  // Fallback also uses the same shape (we built it that way above)
+  const NEGO = (p5nego.deals || []).sort((a,b)=>(b.days_in_stage||0)-(a.days_in_stage||0));
+  const DEMO = (p5demo.deals || []).sort((a,b)=>(b.days_in_stage||0)-(a.days_in_stage||0));
+
+  const avgN = p5nego.avg_days_in_stage || 0;
+  const avgD = p5demo.avg_days_in_stage || 0;
+  const nb   = p5nego.buckets || {};
+  const db2  = p5demo.buckets || {};
+
+  const totalStuck90 = stuck.all_stages_over_90 || 0;
+  const p5val  = (p5nego.total_value_zar || 0) + (p5demo.total_value_zar || 0);
+  const totalVal = p5val + (P4.total_value_zar || 0);
+  const leadToDemo  = rates.lead_to_demo_pct || 0;
+  const demoToNego  = rates.demo_to_nego_pct || 0;
+
+  function miniBar(buckets,total,hasOver180){
+    const redCount=hasOver180?(buckets.u180||0)+(buckets.over180||0):(buckets.over||0);
+    const pG=Math.round((buckets.u30||0)/total*100);
+    const pS=Math.round((buckets.u60||0)/total*100);
+    const pA=Math.round((buckets.u90||0)/total*100);
+    const pR=Math.round(redCount/total*100);
+    return`<div class="mbar-wrap"><div class="mbar-label">Time in stage</div>
+      <div class="mbar"><div class="ms ms-g" style="width:${pG}%"></div><div class="ms ms-s" style="width:${pS}%"></div><div class="ms ms-a" style="width:${pA}%"></div><div class="ms ms-r" style="width:${pR}%"></div></div>
+      <div class="mleg">
+        <div class="mli"><div class="mld" style="background:var(--green)"></div>0–30d: ${buckets.u30||0}</div>
+        <div class="mli"><div class="mld" style="background:var(--sky)"></div>31–60d: ${buckets.u60||0}</div>
+        <div class="mli"><div class="mld" style="background:var(--amber)"></div>61–90d: ${buckets.u90||0}</div>
+        <div class="mli"><div class="mld" style="background:var(--red)"></div>90d+: ${redCount}</div>
+      </div></div>`;
+  }
+
+  // Header date
+  document.getElementById('hdate').textContent = vd.generated_label || 'snapshot';
+  const fd = document.getElementById('footdate');
+  if(fd) fd.textContent = vd.generated_label || 'snapshot';
+
+  // Hero
+  document.getElementById('h1s').textContent=`Avg ${P4.avg_days_in_stage||P4.avg||0}d in stage · ${P4.buckets.over180||0} stuck 180d+`;
+  document.getElementById('h2').textContent=DEMO.length;
+  document.getElementById('h2s').textContent=`Avg ${avgD}d in stage`;
+  document.getElementById('h3').textContent=NEGO.length;
+  document.getElementById('h3s').textContent=`Avg ${avgN}d in stage`;
+  const sc=document.getElementById('hstuck');
+  sc.className='hcard '+(totalStuck90>50?'red':totalStuck90>20?'amber':'green');
+  const sv=document.getElementById('h4');sv.textContent=totalStuck90;sv.className='hval '+(totalStuck90>50?'red':totalStuck90>20?'amber':'green');
+  document.getElementById('h4s').textContent=`All stages · ${stuck.conversion_over_90||0} in conversion pipeline`;
+  document.getElementById('h5').textContent=zarRand(totalVal);
+  document.getElementById('h5s').textContent=`Conversion pipeline: ${zarRand(p5val)}`;
+
+
+  // Funnel
+  document.getElementById('funnel').innerHTML=`
+    <div class="fstage">
+      <div class="flab">Stage 1 · Sales Qualification</div>
+      <div class="fcount c1">${P4.total}</div>
+      <div class="fsub">New Leads · ZAR · Avg ${P4.avg_days_in_stage||P4.avg||0}d</div>
+      ${miniBar(P4.buckets,P4.total,true)}
+    </div>
+    <div class="farrow">›</div>
+    <div class="fstage">
+      <div class="flab">Stage 2 · Demo / Pilot</div>
+      <div class="fcount c2">${DEMO.length}</div>
+      <div class="fsub">Sales Conversion · Avg ${avgD}d</div>
+      <span class="fpill ${leadToDemo>=10?'pgood':'pwarn'}">${leadToDemo}% of leads reach demo</span>
+      ${miniBar(db2,DEMO.length||1,false)}
+    </div>
+    <div class="farrow">›</div>
+    <div class="fstage">
+      <div class="flab">Stage 3 · Negotiation</div>
+      <div class="fcount c3">${NEGO.length}</div>
+      <div class="fsub">Sales Conversion · Avg ${avgN}d</div>
+      <span class="fpill ${demoToNego>=30?'pgood':'pwarn'}">${demoToNego}% of demos reach negotiation</span>
+      ${miniBar(nb,NEGO.length||1,false)}
+    </div>
+    <div class="farrow">›</div>
+    <div class="fstage">
+      <div class="flab">Stage 4 · Customer Management</div>
+      <div class="fcount c3">51+</div>
+      <div class="fsub">Paying customers · Active &amp; onboarding</div>
+      <span class="fpill pgood">Won deals</span>
+      <div class="mbar-wrap"><div class="mbar-label" style="color:var(--gray)">See Sales Activity dashboard for customer detail</div></div>
+    </div>`;
+
+  // Insight
+  document.getElementById('igrid').innerHTML=`
+    <div><div class="ilab">Lead → Demo conversion</div><div class="ival" style="color:${leadToDemo>=10?'var(--green)':'var(--amber)'}">${leadToDemo}%</div><div class="isub">Target: 10%+ · ${DEMO.length+NEGO.length} of ${P4.total} leads progressed</div></div>
+    <div><div class="ilab">New Lead backlog 180d+</div><div class="ival" style="color:var(--red)">${P4.buckets.over180||0}</div><div class="isub">${Math.round((P4.buckets.over180||0)/P4.total*100)}% of total leads · Need re-qualification or closure</div></div>
+    <div><div class="ilab">Avg days in Negotiation</div><div class="ival" style="color:${avgN>90?'var(--red)':avgN>60?'var(--amber)':'var(--green)'}">${avgN}d</div><div class="isub">Target: &lt;45d · ${nb.over||0} of ${NEGO.length} deals past 90 days</div></div>`;
+
+  // Distribution columns
+  function distCol(title,buckets,total,rows){
+    return`<div class="card"><div class="ctitle">${title} (${total})</div>${rows.map(r=>{
+      const c=buckets[r.k]||0,p=total?Math.round(c/total*100):0;
+      return`<div class="drow"><div class="dlab">${r.l}</div><div class="dbw"><div class="dbf ${r.c}" style="width:${Math.max(p,c?3:0)}%">${p>8?`<span class="dbl">${p}%</span>`:''}</div></div><div class="dcnt">${c}</div></div>`;
+    }).join('')}</div>`;}
+
+  document.getElementById('distcols').innerHTML=
+    distCol('New Lead Stage',P4.buckets,P4.total,[
+      {k:'u30',l:'0–30 days',c:'ms-g'},{k:'u60',l:'31–60 days',c:'ms-s'},{k:'u90',l:'61–90 days',c:'ms-a'},{k:'u180',l:'91–180 days',c:'ms-r'},{k:'over180',l:'180+ days',c:'ms-r'}
+    ])+
+    distCol('Demo / Pilot Stage',db2,DEMO.length,[
+      {k:'u30',l:'0–30 days',c:'ms-g'},{k:'u60',l:'31–60 days',c:'ms-s'},{k:'u90',l:'61–90 days',c:'ms-a'},{k:'over',l:'90+ days',c:'ms-r'}
+    ])+
+    distCol('Negotiation Stage',nb,NEGO.length,[
+      {k:'u30',l:'0–30 days',c:'ms-g'},{k:'u60',l:'31–60 days',c:'ms-s'},{k:'u90',l:'61–90 days',c:'ms-a'},{k:'over',l:'90+ days',c:'ms-r'}
+    ]);
+
+  // Attention panel
+  const allP5=[...NEGO,...DEMO];
+  const stuckDeals=[...allP5].filter(d=>(d.days_in_stage||0)>60).sort((a,b)=>(b.days_in_stage||0)-(a.days_in_stage||0));
+  let att=`<div class="abox ared"><div class="aicon">🔴</div><div>
+    <div class="atitle">New Lead backlog: ${P4.buckets.over180||0} leads stuck 180+ days (${Math.round((P4.buckets.over180||0)/P4.total*100)}% of pipeline)</div>
+    <div class="abody">The majority of your New Lead pipeline — including the Schoolscape Event batch from Sep 2024 and free trial leads from early 2025 — has not progressed in over 6 months. These need a deliberate re-qualification pass: either move promising ones into Demo, or formally close them. An investor will ask about this number.</div>
+  </div></div>`;
+  if(!stuckDeals.length){
+    att+=`<div class="abox agrn"><div class="aicon">✓</div><div><div class="atitle">No conversion deals stuck over 60 days</div><div class="abody">Demo and Negotiation pipeline is moving well.</div></div></div>`;
+  } else {
+    stuckDeals.forEach(d=>{
+      const n=d.days_in_stage||0, isc=n>90, sn=d.stage==='46'?'Negotiation':'Demo/Pilot';
+      att+=`<div class="abox ${isc?'ared':'aamb'}"><div class="aicon">${isc?'🔴':'⚠️'}</div><div>
+        <div class="atitle">${clean(d.title)}</div>
+        <div class="abody"><strong>${n} days</strong> in ${sn} · Total age: ${d.total_age_days||0}d · ${zarRand(d.value_zar)} · ${isc?'<strong style="color:var(--red)">Close, park, or escalate immediately</strong>':'Follow up needed to unblock'}</div>
+      </div></div>`;
+    });
+  }
+  document.getElementById('attention').innerHTML=att;
+
+  // Deal tables
+  document.getElementById('ntbody').innerHTML=NEGO.map(d=>{
+    const n=d.days_in_stage||0;
+    return`<tr><td><div class="dn">${clean(d.title)}</div></td><td><span class="bdg ${bc(n)}">${bl(n)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${d.total_age_days||0}d</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(d.value_zar)}</span></td><td><span style="font-size:.78rem;color:${statusColor(n)}">${statusLabel(n)}</span></td></tr>`;
+  }).join('');
+  document.getElementById('dtbody').innerHTML=DEMO.map(d=>{
+    const n=d.days_in_stage||0;
+    return`<tr><td><div class="dn">${clean(d.title)}</div></td><td><span class="bdg ${bc(n)}">${bl(n)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${d.total_age_days||0}d</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(d.value_zar)}</span></td><td><span style="font-size:.78rem;color:${statusColor(n)}">${statusLabel(n)}</span></td></tr>`;
+  }).join('');
+
+} // end renderDashboard
+
+// ─── Boot: try velocity_data.json, fall back to snapshot ─────────────────────
+(async () => {
+  try {
+    const r = await fetch('velocity_data.json?t=' + Date.now());
+    if (!r.ok) throw new Error('not found');
+    const vd = await r.json();
+    renderDashboard(vd);
+  } catch(e) {
+    // JSON not yet generated — use April 24 snapshot
+    renderDashboard(FALLBACK);
+  }
+})();
+</script>
+</body>
+</html>
