@@ -1,40 +1,40 @@
 {
-  "generated_at": "2026-05-05T08:45:41Z",
-  "generated_label": "5 May 2026 at 08:45",
+  "generated_at": "2026-05-05T11:00:17Z",
+  "generated_label": "5 May 2026 at 11:00",
   "pipeline4": {
-    "total": 279,
-    "avg_days_in_stage": 181,
-    "total_value_zar": 2412537,
+    "total": 283,
+    "avg_days_in_stage": 182,
+    "total_value_zar": 2429387,
     "buckets": {
-      "u30": 89,
+      "u30": 85,
       "u60": 12,
       "u90": 13,
-      "u180": 24,
-      "over180": 141
+      "u180": 28,
+      "over180": 145
     }
   },
   "pipeline5": {
     "demo": {
-      "count": 14,
-      "avg_days_in_stage": 33,
-      "total_value_zar": 160100,
+      "count": 13,
+      "avg_days_in_stage": 27,
+      "total_value_zar": 148100,
       "buckets": {
         "u30": 8,
         "u60": 4,
         "u90": 0,
-        "u180": 2,
+        "u180": 1,
         "over180": 0
       },
       "deals": [
         {
-          "id": "362",
-          "title": "Cannons Creek Independent School - Bronwyn Harvey - TRAILBLAZER SA",
+          "id": "1256",
+          "title": "Joshua Seymour - Drakensberg boys choir - Two term",
           "stage": "43",
           "days_in_stage": 106,
-          "total_age_days": 696,
+          "total_age_days": 414,
           "value_zar": 12000,
           "edate": "2026-01-19",
-          "cdate": "2024-06-07",
+          "cdate": "2025-03-17",
           "stage_history": [
             {
               "stage_id": "43",
@@ -45,20 +45,20 @@
           ]
         },
         {
-          "id": "1256",
-          "title": "Joshua Seymour - Drakensberg boys choir - Two term",
+          "id": "1665",
+          "title": "Generations Somerset West",
           "stage": "43",
-          "days_in_stage": 106,
-          "total_age_days": 413,
+          "days_in_stage": 55,
+          "total_age_days": 70,
           "value_zar": 12000,
-          "edate": "2026-01-19",
-          "cdate": "2025-03-17",
+          "edate": "2026-03-11",
+          "cdate": "2026-02-24",
           "stage_history": [
             {
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
-              "entered": "2026-02-20",
-              "days": 73
+              "entered": "2026-02-24",
+              "days": 70
             }
           ]
         },
@@ -111,28 +111,10 @@
           ]
         },
         {
-          "id": "1665",
-          "title": "Generations Somerset West",
-          "stage": "43",
-          "days_in_stage": 54,
-          "total_age_days": 70,
-          "value_zar": 12000,
-          "edate": "2026-03-11",
-          "cdate": "2026-02-24",
-          "stage_history": [
-            {
-              "stage_id": "43",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-02-24",
-              "days": 70
-            }
-          ]
-        },
-        {
           "id": "1193",
           "title": "John  Blight - Groote schuur - Two Term Trial",
           "stage": "43",
-          "days_in_stage": 45,
+          "days_in_stage": 46,
           "total_age_days": 426,
           "value_zar": 12000,
           "edate": "2026-03-20",
@@ -175,7 +157,7 @@
           "title": "Greenwood School",
           "stage": "43",
           "days_in_stage": 7,
-          "total_age_days": 39,
+          "total_age_days": 40,
           "value_zar": 12000,
           "edate": "2026-04-28",
           "cdate": "2026-03-26",
@@ -310,41 +292,17 @@
       ]
     },
     "nego": {
-      "count": 23,
-      "avg_days_in_stage": 64,
-      "total_value_zar": 254250,
+      "count": 18,
+      "avg_days_in_stage": 38,
+      "total_value_zar": 228800,
       "buckets": {
-        "u30": 7,
+        "u30": 9,
         "u60": 4,
         "u90": 4,
-        "u180": 8,
+        "u180": 1,
         "over180": 0
       },
       "deals": [
-        {
-          "id": "1548",
-          "title": "Jax6Quote1Item",
-          "stage": "46",
-          "days_in_stage": 169,
-          "total_age_days": 274,
-          "value_zar": 100,
-          "edate": "2025-11-17",
-          "cdate": "2025-08-04",
-          "stage_history": [
-            {
-              "stage_id": "47",
-              "stage_name": "Negotiation",
-              "entered": "2025-08-29",
-              "days": 0
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2025-08-29",
-              "days": 249
-            }
-          ]
-        },
         {
           "id": "581",
           "title": "Edenglen High School  Megan Maddocks - Schoolscape Event",
@@ -360,155 +318,6 @@
               "stage_name": "Negotiation",
               "entered": "2025-08-04",
               "days": 273
-            }
-          ]
-        },
-        {
-          "id": "1603",
-          "title": "MEPS",
-          "stage": "46",
-          "days_in_stage": 106,
-          "total_age_days": 229,
-          "value_zar": 12000,
-          "edate": "2026-01-19",
-          "cdate": "2025-09-17",
-          "stage_history": [
-            {
-              "stage_id": "36",
-              "stage_name": "New Lead",
-              "entered": "2026-01-18",
-              "days": 0
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-01-18",
-              "days": 106
-            }
-          ]
-        },
-        {
-          "id": "1591",
-          "title": "Kronendal Primary School",
-          "stage": "46",
-          "days_in_stage": 106,
-          "total_age_days": 236,
-          "value_zar": 8050,
-          "edate": "2026-01-19",
-          "cdate": "2025-09-11",
-          "stage_history": [
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-02-20",
-              "days": 73
-            }
-          ]
-        },
-        {
-          "id": "1617",
-          "title": "Woodbridge Primary",
-          "stage": "46",
-          "days_in_stage": 106,
-          "total_age_days": 217,
-          "value_zar": 8050,
-          "edate": "2026-01-19",
-          "cdate": "2025-09-30",
-          "stage_history": []
-        },
-        {
-          "id": "1237",
-          "title": "Daniela Martis - Assumption Convent School - Free Trial",
-          "stage": "46",
-          "days_in_stage": 106,
-          "total_age_days": 418,
-          "value_zar": 4750,
-          "edate": "2026-01-19",
-          "cdate": "2025-03-12",
-          "stage_history": [
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2025-08-20",
-              "days": 0
-            },
-            {
-              "stage_id": "47",
-              "stage_name": "Negotiation",
-              "entered": "2025-08-20",
-              "days": 6
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2025-08-27",
-              "days": 251
-            }
-          ]
-        },
-        {
-          "id": "1304",
-          "title": "Fourways High School",
-          "stage": "46",
-          "days_in_stage": 105,
-          "total_age_days": 378,
-          "value_zar": 4500,
-          "edate": "2026-01-20",
-          "cdate": "2025-04-22",
-          "stage_history": [
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-02-20",
-              "days": 73
-            }
-          ]
-        },
-        {
-          "id": "50",
-          "title": "Online(SA): Teneo Education",
-          "stage": "46",
-          "days_in_stage": 102,
-          "total_age_days": 840,
-          "value_zar": 36000,
-          "edate": "2026-01-23",
-          "cdate": "2024-01-16",
-          "stage_history": [
-            {
-              "stage_id": "27",
-              "stage_name": "Negotiation",
-              "entered": "2024-05-02",
-              "days": 55
-            },
-            {
-              "stage_id": "13",
-              "stage_name": "Demo/Pilot",
-              "entered": "2024-06-27",
-              "days": 75
-            },
-            {
-              "stage_id": "25",
-              "stage_name": "Onboarding",
-              "entered": "2024-09-10",
-              "days": 495
-            },
-            {
-              "stage_id": "51",
-              "stage_name": "Activated",
-              "entered": "2026-01-18",
-              "days": 4
-            },
-            {
-              "stage_id": "45",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-01-23",
-              "days": 28
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-02-20",
-              "days": 73
             }
           ]
         },
@@ -610,7 +419,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2025-11-03",
-              "days": 182
+              "days": 183
             }
           ]
         },
@@ -758,7 +567,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-04-20",
-              "days": 14
+              "days": 15
             }
           ]
         },
@@ -809,19 +618,103 @@
               "days": 73
             }
           ]
+        },
+        {
+          "id": "50",
+          "title": "Online(SA): Teneo Education",
+          "stage": "46",
+          "days_in_stage": 0,
+          "total_age_days": 840,
+          "value_zar": 36000,
+          "edate": "2026-05-05",
+          "cdate": "2024-01-16",
+          "stage_history": [
+            {
+              "stage_id": "27",
+              "stage_name": "Negotiation",
+              "entered": "2024-05-02",
+              "days": 55
+            },
+            {
+              "stage_id": "13",
+              "stage_name": "Demo/Pilot",
+              "entered": "2024-06-27",
+              "days": 75
+            },
+            {
+              "stage_id": "25",
+              "stage_name": "Onboarding",
+              "entered": "2024-09-10",
+              "days": 495
+            },
+            {
+              "stage_id": "51",
+              "stage_name": "Activated",
+              "entered": "2026-01-18",
+              "days": 4
+            },
+            {
+              "stage_id": "45",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-01-23",
+              "days": 28
+            },
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-02-20",
+              "days": 73
+            }
+          ]
+        },
+        {
+          "id": "1525",
+          "title": "Camps Bay Primary",
+          "stage": "46",
+          "days_in_stage": 0,
+          "total_age_days": 288,
+          "value_zar": 12000,
+          "edate": "2026-05-05",
+          "cdate": "2025-07-21",
+          "stage_history": [
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2025-07-24",
+              "days": 284
+            },
+            {
+              "stage_id": "43",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-05-05",
+              "days": 0
+            },
+            {
+              "stage_id": "36",
+              "stage_name": "New Lead",
+              "entered": "2026-05-05",
+              "days": 0
+            },
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-05-05",
+              "days": 0
+            }
+          ]
         }
       ]
     },
-    "total_in_conversion": 37
+    "total_in_conversion": 31
   },
   "conversion_rates": {
-    "lead_to_demo_pct": 13.3,
-    "demo_to_nego_pct": 62
+    "lead_to_demo_pct": 11.0,
+    "demo_to_nego_pct": 58
   },
   "stuck_summary": {
-    "conversion_over_60": 14,
-    "conversion_over_90": 10,
-    "new_leads_over_180": 141,
+    "conversion_over_60": 6,
+    "conversion_over_90": 2,
+    "new_leads_over_180": 145,
     "all_stages_over_90": 175
   }
 }
