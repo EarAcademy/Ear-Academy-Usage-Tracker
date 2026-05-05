@@ -1,8 +1,8 @@
 {
   "pipeline": {
-    "qualification": 281,
-    "demo": 10,
-    "negotiation": 28,
+    "qualification": 279,
+    "demo": 14,
+    "negotiation": 23,
     "customers": 52
   },
   "monthly": {
@@ -16,14 +16,14 @@
     },
     "mar": {
       "new_leads": "163",
-      "new_deals": "21"
+      "new_deals": "20"
     }
   },
   "email": {
     "sent": "891",
-    "replied": "651",
-    "rate": "73.1%",
-    "new_contacts": "35"
+    "replied": "665",
+    "rate": "74.6%",
+    "new_contacts": "1"
   },
   "arr_tiers": {
     "tier1": {
@@ -48,10 +48,10 @@
     }
   },
   "lost_deals": {
-    "count": 20,
-    "total_value": 151445.0
+    "count": 21,
+    "total_value": 156195.0
   },
-  "last_updated": "28 Apr 2026 at 15:52",
+  "last_updated": "05 May 2026 at 10:43",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
