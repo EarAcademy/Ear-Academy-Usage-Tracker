@@ -137,6 +137,25 @@
 <div class="slabel">Deals Needing Attention — stuck &gt;60 days</div>
 <div id="attention" style="margin-bottom:2rem"></div>
 
+<div class="slabel">🔴 All Stale Deals — Stuck 90+ Days (All Stages)</div>
+<div class="card" style="margin-bottom:2rem">
+  <div id="stale-banner" style="margin-bottom:1.1rem;padding:.75rem 1rem;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;font-size:.82rem;color:#c0392b;display:none"></div>
+  <div id="stale-notice" style="margin-bottom:1rem;padding:.75rem 1rem;background:#fef9ec;border:1px solid #f5d97a;border-radius:10px;font-size:.82rem;color:#7a5a0a;display:none">
+    ⚠️ New Lead names will appear here after you run <code style="background:#f0ebe4;padding:.1rem .35rem;border-radius:4px">python3 update_velocity.py</code> — the current data was generated before this feature was added.
+  </div>
+  <div class="tw"><table class="dt">
+    <thead><tr>
+      <th>School / Deal</th>
+      <th>Stage</th>
+      <th>Days Stuck</th>
+      <th>Total Age</th>
+      <th>Value</th>
+      <th>Action</th>
+    </tr></thead>
+    <tbody id="stale-tbody"></tbody>
+  </table></div>
+</div>
+
 <div class="slabel">Negotiation Stage — All Deals</div>
 <div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School / Deal</th><th>Days in Negotiation</th><th>Total Age</th><th>Value</th><th>Status</th></tr></thead><tbody id="ntbody"></tbody></table></div></div>
 
@@ -357,6 +376,46 @@ function renderDashboard(vd) {
     });
   }
   document.getElementById('attention').innerHTML=att;
+
+  // ── All Stale Deals table ────────────────────────────────────────────────────
+  const p4StaleDeals = P4.stale_deals || null;
+  const convStale90 = [
+    ...NEGO.filter(d=>(d.days_in_stage||0)>=90).map(d=>({...d,stageName:'Negotiation'})),
+    ...DEMO.filter(d=>(d.days_in_stage||0)>=90).map(d=>({...d,stageName:'Demo/Pilot'})),
+  ];
+
+  if(p4StaleDeals===null){
+    // Data pre-dates this feature — show notice, still list conversion stale deals
+    document.getElementById('stale-notice').style.display='block';
+    const allStale=[...convStale90].sort((a,b)=>(b.days_in_stage||0)-(a.days_in_stage||0));
+    document.getElementById('stale-tbody').innerHTML=allStale.length
+      ? allStale.map(d=>staleRow(d,d.stageName)).join('')
+      : '<tr><td colspan="6" style="color:var(--gray);font-size:.8rem;text-align:center;padding:1.2rem">No conversion deals stuck 90+ days right now.</td></tr>';
+  } else {
+    const p4Rows = p4StaleDeals.map(d=>({...d,stageName:'New Lead'}));
+    const allStale=[...p4Rows,...convStale90].sort((a,b)=>(b.days_in_stage||0)-(a.days_in_stage||0));
+    const banner=document.getElementById('stale-banner');
+    banner.textContent=`${allStale.length} deals stuck 90+ days — sorted worst first. Work through this list: follow up with promising leads, remove or mark lost the rest.`;
+    banner.style.display='block';
+    document.getElementById('stale-tbody').innerHTML=allStale.length
+      ? allStale.map(d=>staleRow(d,d.stageName)).join('')
+      : '<tr><td colspan="6" style="color:var(--green);font-size:.8rem;text-align:center;padding:1.2rem">✓ No deals stuck 90+ days. Great work!</td></tr>';
+  }
+
+  function staleRow(d,stageName){
+    const n=d.days_in_stage||0;
+    const urgency=n>365?'🚨 1yr+':n>180?'🔴 6mo+':n>90?'⚠️ Stale':'';
+    const urgColor=n>365?'#8b0000':n>180?'var(--red)':'var(--amber)';
+    const stageColor=stageName==='New Lead'?'var(--lapis)':stageName==='Negotiation'?'var(--green)':'var(--sky)';
+    return`<tr>
+      <td><div class="dn">${clean(d.title)}</div></td>
+      <td><span style="font-size:.75rem;font-weight:700;color:${stageColor}">${stageName}</span></td>
+      <td><span class="bdg br">${n}d</span></td>
+      <td><span style="color:var(--gray);font-size:.8rem">${d.total_age_days||0}d</span></td>
+      <td><span style="color:var(--gray);font-size:.8rem">${zarRand(d.value_zar)}</span></td>
+      <td><span style="font-size:.78rem;font-weight:700;color:${urgColor}">${urgency}</span></td>
+    </tr>`;
+  }
 
   // Deal tables
   document.getElementById('ntbody').innerHTML=NEGO.map(d=>{

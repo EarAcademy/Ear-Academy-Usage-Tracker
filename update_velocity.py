@@ -206,15 +206,31 @@ def fetch_pipeline4():
     buckets = bucket_deals(deals)
     avg = round(sum(d["days_in_stage"] or 0 for d in deals) / len(deals)) if deals else 0
     total_val = sum(d["value_zar"] for d in deals)
+    # Stale deals (90+ days) — saved individually so the HTML can list them by name
+    stale = sorted(
+        [d for d in deals if (d.get("days_in_stage") or 0) >= 90],
+        key=lambda x: -(x.get("days_in_stage") or 0),
+    )
+    stale_list = [{
+        "id":            d.get("id"),
+        "title":         d.get("title", ""),
+        "days_in_stage": d.get("days_in_stage"),
+        "total_age_days": d.get("total_age_days"),
+        "value_zar":     d.get("value_zar"),
+        "cdate":         (d.get("cdate") or "")[:10],
+    } for d in stale]
+
     print(f"    → {len(deals)} ZAR open deals")
     print(f"    → Avg {avg} days in stage")
     print(f"    → Buckets: 0-30d={buckets['u30']}, 31-60d={buckets['u60']}, "
           f"61-90d={buckets['u90']}, 91-180d={buckets['u180']}, 180d+={buckets['over180']}")
+    print(f"    → Stale (90d+): {len(stale_list)} deals captured for listing")
     return {
         "total": len(deals),
         "avg_days_in_stage": avg,
         "total_value_zar": total_val,
         "buckets": buckets,
+        "stale_deals": stale_list,
     }
 
 
