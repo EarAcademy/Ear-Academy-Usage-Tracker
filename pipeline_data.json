@@ -2,7 +2,7 @@
   "pipeline": {
     "qualification": 285,
     "demo": 11,
-    "negotiation": 16,
+    "negotiation": 15,
     "customers": 53
   },
   "monthly": {
@@ -48,10 +48,10 @@
     }
   },
   "lost_deals": {
-    "count": 21,
-    "total_value": 156195.0
+    "count": 22,
+    "total_value": 168195.0
   },
-  "last_updated": "12 May 2026 at 11:16",
+  "last_updated": "12 May 2026 at 20:57",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
