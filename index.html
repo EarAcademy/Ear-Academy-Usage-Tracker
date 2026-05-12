@@ -3,137 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ear Academy - Usage Analytics Dashboard</title>
+    <title>Ear Academy — Usage Analytics</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --lilac: #8871B1; --turkish-delight: #ED6EA1; --salmon-rose: #F6B1A6;
-            --wheat: #F6E3AC; --pacific: #77C2D6; --forest-green: #289B38;
-            --cream: #F5F1ED; --gold: #A88F5E; --white: #FFFFFF;
-            --dark: #2C2C2C; --gray: #666666; --light-gray: #E8E4DF;
+            --sky:#38aae1;--lapis:#1d70b8;--green:#00a19a;--gold2:#c5b08c;--gold3:#d6c8b0;
+            --shale:#d8d3cb;--forest:#289B38;--salmon:#F6B1A6;--lilac:#8871B1;
+            --cream:#F5F1ED;--gold:#A88F5E;--white:#FFFFFF;--dark:#2C2C2C;
+            --gray:#666666;--lgray:#E8E4DF;--radius:18px;--shadow:0 4px 24px rgba(0,0,0,0.07);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
-        header { background: var(--white); padding: 2rem 3rem; box-shadow: 0 2px 20px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
-        .header-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
-        .logo-svg { margin-bottom: 1rem; }
-        .logo-svg svg { display: block; width: 180px; height: auto; }
-        h1 { font-family: 'Quicksand', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--dark); margin-bottom: 0.25rem; }
-        .subtitle { font-size: 0.95rem; color: var(--gray); font-style: italic; }
-        .bouncies { position: absolute; top: 0; right: 0; bottom: 0; width: 50%; pointer-events: none; opacity: 0.15; overflow: hidden; }
-        .bouncy { position: absolute; border-radius: 50%; }
-        .bouncy-1 { width: 80px; height: 80px; background: var(--pacific); top: 20%; right: 10%; }
-        .bouncy-2 { width: 60px; height: 60px; background: var(--turkish-delight); top: 45%; right: 25%; }
-        .bouncy-3 { width: 50px; height: 50px; background: var(--lilac); top: 60%; right: 5%; }
-        .bouncy-4 { width: 40px; height: 40px; background: var(--salmon-rose); top: 30%; right: 40%; }
-        .bouncy-5 { width: 70px; height: 70px; background: var(--forest-green); top: 10%; right: 50%; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem 3rem; }
-        /* Tab Nav */
-        .tab-nav { display: flex; gap: 0; margin-bottom: 2rem; background: var(--white); border-radius: 16px; padding: 0.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06); overflow-x: auto; }
-        .tab-btn { font-family: 'Quicksand', sans-serif; font-size: 0.95rem; font-weight: 700; padding: 0.75rem 1.5rem; border: none; background: transparent; color: var(--gray); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; flex-shrink: 0; }
-        .tab-btn:hover { color: var(--dark); background: var(--cream); }
-        .tab-btn.active { background: var(--pacific); color: var(--white); }
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-        /* Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-        .stat-card { background: var(--white); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
-        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 20px 20px 0 0; }
-        .stat-card.pacific::before { background: var(--pacific); }
-        .stat-card.turkish::before { background: var(--turkish-delight); }
-        .stat-card.forest::before { background: var(--forest-green); }
-        .stat-card.lilac::before { background: var(--lilac); }
-        .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 0.5rem; font-weight: 600; }
-        .stat-value { font-family: 'Quicksand', sans-serif; font-size: 3rem; font-weight: 700; color: var(--dark); line-height: 1; margin-bottom: 0.25rem; }
-        .stat-subtext { font-size: 0.9rem; color: var(--gray); font-style: italic; }
-        /* Chart section */
-        .chart-section { background: var(--white); padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 3rem; }
-        .trend-summary { background: linear-gradient(135deg, var(--pacific), #5AB0C6); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; color: var(--white); }
-        .trend-highlight { text-align: center; }
-        .trend-label { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 0.5rem; }
-        .trend-value { font-family: 'Quicksand', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.25rem; }
-        .trend-change { font-size: 1.1rem; font-weight: 600; }
-        .weeks-container { display: flex; flex-direction: column; gap: 1.5rem; }
-        .week-bar-item { display: flex; flex-direction: column; gap: 0.5rem; }
-        .week-info { display: flex; justify-content: space-between; align-items: baseline; }
-        .week-label { font-family: 'Quicksand', sans-serif; font-size: 1rem; font-weight: 700; color: var(--dark); }
-        .week-stats { font-size: 0.85rem; color: var(--gray); font-style: italic; }
-        .bar-container { background: var(--light-gray); border-radius: 10px; height: 40px; position: relative; overflow: hidden; }
-        .bar { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: flex-end; padding-right: 1rem; color: var(--white); font-weight: 700; font-size: 0.9rem; background: linear-gradient(135deg, var(--pacific), #5AB0C6); box-shadow: 0 2px 8px rgba(119,194,214,0.3); }
-        .bar::after { content: attr(data-value); }
-        .section-title { font-family: 'Quicksand', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
-        .section-title::before { content: ''; width: 4px; height: 30px; border-radius: 2px; }
-        .section-title.pacific::before { background: var(--pacific); }
-        .section-title.turkish::before { background: var(--turkish-delight); }
-        .section-title.forest::before { background: var(--forest-green); }
-        /* Pattern cards */
-        .pattern-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; }
-        .pattern-card { background: var(--white); padding: 2rem 1.5rem; border-radius: 16px; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
-        .pattern-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; border-radius: 16px 16px 0 0; }
-        .pattern-card.gold-pattern::before { background: linear-gradient(135deg, #FFD700, #FFA500); }
-        .pattern-card.pacific-pattern::before { background: var(--pacific); }
-        .pattern-card.forest-pattern::before { background: var(--forest-green); }
-        .pattern-card.lilac-pattern::before { background: var(--lilac); }
-        .pattern-card.salmon-pattern::before { background: var(--salmon-rose); }
-        .pattern-card.turkish-pattern::before { background: var(--turkish-delight); }
-        .pattern-card.wheat-pattern::before { background: var(--wheat); }
-        .pattern-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-        .pattern-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-        .pattern-count { font-family: 'Quicksand', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--dark); line-height: 1; margin-bottom: 0.25rem; }
-        .pattern-name { font-family: 'Quicksand', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--dark); margin-bottom: 0.25rem; }
-        .pattern-desc { font-size: 0.8rem; color: var(--gray); font-style: italic; }
-        /* Top schools */
-        .pattern-badge { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin: 0.25rem; white-space: nowrap; }
-        .pattern-badge.core5 { background: linear-gradient(135deg, #FFD700, #FFA500); color: var(--dark); }
-        .pattern-badge.biweekly { background: var(--pacific); color: var(--white); }
-        .pattern-badge.active { background: var(--forest-green); color: var(--white); }
-        .pattern-badge.new { background: var(--lilac); color: var(--white); }
-        .top-schools-list { list-style: none; }
-        .top-school-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; margin-bottom: 0.75rem; background: var(--cream); border-radius: 12px; transition: transform 0.2s ease; flex-wrap: wrap; }
-        .top-school-item:hover { transform: translateX(4px); }
-        .rank-number { font-family: 'Quicksand', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--gold); min-width: 40px; }
-        .school-info { flex: 1; }
-        .school-name { font-weight: 700; color: var(--dark); margin-bottom: 0.25rem; }
-        .school-stats { font-size: 0.85rem; color: var(--gray); }
-        /* Footer */
-        footer { text-align: center; padding: 2rem; color: var(--gray); font-size: 0.9rem; font-style: italic; }
-        /* Patterns Tab */
-        .pt-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .pt-summary-card { background: var(--white); border-radius: 16px; padding: 1.25rem 1rem; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
-        .pt-card-num { font-family: 'Quicksand', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--dark); line-height: 1; margin-bottom: 0.25rem; }
-        .pt-card-label { font-size: 0.8rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .pt-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-        .pt-filter-btn { font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; border: 2px solid transparent; cursor: pointer; transition: all 0.15s ease; background: var(--cream); color: var(--gray); }
-        .pt-filter-btn.active { border-color: currentColor; background: var(--white); }
-        .pt-school-list { display: flex; flex-direction: column; }
-        .pt-school-row { display: grid; grid-template-columns: 1fr 220px 110px; align-items: center; padding: 0.85rem 0.75rem; border-radius: 10px; gap: 1rem; }
-        .pt-school-row:hover { background: var(--cream); }
-        .pt-school-row + .pt-school-row { border-top: 1px solid var(--light-gray); }
-        .pt-school-name { font-weight: 700; color: var(--dark); font-size: 0.9rem; }
-        .pt-school-meta { font-size: 0.78rem; color: var(--gray); margin-top: 0.15rem; }
-        .pt-quiet-tag { display: inline-block; background: #fde8e8; color: #c0392b; font-size: 0.62rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.4rem; text-transform: uppercase; letter-spacing: 0.3px; vertical-align: middle; }
-        .pt-heat-row { display: flex; gap: 3px; align-items: center; }
-        .pt-heat-cell { width: 19px; height: 19px; border-radius: 3px; flex-shrink: 0; }
-        .pt-badge { display: inline-block; padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-align: center; white-space: nowrap; }
-        .pt-desc-box { background: var(--cream); border-left: 4px solid var(--pacific); border-radius: 0 12px 12px 0; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--dark); line-height: 1.6; display: none; }
-        .pt-table-header { display: grid; grid-template-columns: 1fr 220px 110px; gap: 1rem; padding: 0.5rem 0.75rem 0.75rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; color: var(--gray); border-bottom: 2px solid var(--light-gray); margin-bottom: 0.25rem; }
-        @media print { body { background: white; } .stat-card, .chart-section { break-inside: avoid; box-shadow: none; border: 1px solid var(--light-gray); } }
-        @media (max-width: 768px) {
-            .container { padding: 1.5rem; } header { padding: 1.5rem; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .pattern-cards-grid { grid-template-columns: 1fr 1fr; }
-            .logo-svg svg { width: 140px; } h1 { font-size: 1.4rem; }
-            .tab-btn { font-size: 0.85rem; padding: 0.6rem 1rem; }
-            .pt-school-row { grid-template-columns: 1fr; gap: 0.5rem; }
-            .pt-summary-grid { grid-template-columns: 1fr 1fr; }
-            .pt-table-header { display: none; }
-            .bar-container { height: 35px; }
-            .section-title { font-size: 1.2rem; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--dark);line-height:1.6;overflow-x:hidden;}
+        header{background:var(--white);padding:2rem 3rem 1.75rem;box-shadow:0 2px 20px rgba(0,0,0,0.05);position:relative;overflow:hidden;}
+        .header-content{max-width:1400px;margin:0 auto;position:relative;z-index:2;}
+        .logo-svg{margin-bottom:0.9rem;}.logo-svg svg{display:block;width:170px;height:auto;}
+        h1{font-family:'Quicksand',sans-serif;font-size:1.75rem;font-weight:700;color:var(--dark);margin-bottom:0.2rem;}
+        .subtitle{font-size:0.9rem;color:var(--gray);font-style:italic;}
+        .bouncies{position:absolute;top:0;right:0;bottom:0;width:50%;pointer-events:none;opacity:0.12;overflow:hidden;}
+        .bouncy{position:absolute;border-radius:50%;}
+        .bouncy-1{width:80px;height:80px;background:var(--sky);top:20%;right:10%;}
+        .bouncy-2{width:60px;height:60px;background:var(--lapis);top:45%;right:25%;}
+        .bouncy-3{width:50px;height:50px;background:var(--green);top:60%;right:5%;}
+        .bouncy-4{width:40px;height:40px;background:var(--gold2);top:30%;right:40%;}
+        .bouncy-5{width:70px;height:70px;background:var(--shale);top:10%;right:50%;}
+        .container{max-width:1400px;margin:0 auto;padding:2.5rem 3rem;display:flex;flex-direction:column;gap:2.5rem;}
+        .dashboard-section{background:var(--white);border-radius:var(--radius);padding:2rem 2.5rem 2.5rem;box-shadow:var(--shadow);}
+        .section-title{font-family:'Quicksand',sans-serif;font-size:1.4rem;font-weight:700;color:var(--dark);margin-bottom:0.3rem;display:flex;align-items:center;gap:0.75rem;}
+        .section-title::before{content:'';width:4px;height:28px;border-radius:2px;flex-shrink:0;}
+        .section-title.pacific::before{background:var(--sky);}
+        .section-title.turkish::before{background:var(--lapis);}
+        .section-title.forest::before{background:var(--green);}
+        .section-desc{font-size:0.88rem;color:var(--gray);font-style:italic;margin-bottom:1.75rem;padding-left:calc(4px + 0.75rem);}
+        .delta{display:inline-flex;align-items:center;font-size:0.75rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:20px;vertical-align:middle;margin-left:0.3rem;}
+        .delta.up{background:#e0f5f4;color:var(--green);}
+        .delta.down{background:#fde8e8;color:#b91c1c;}
+        .delta.flat{background:var(--shale);color:#555;}
+        .delta.new{background:#e3f2fc;color:var(--lapis);}
+        .badge-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.6rem;}
+        .school-badge{display:inline-block;font-size:0.78rem;font-weight:600;padding:0.3rem 0.7rem;border-radius:20px;white-space:nowrap;}
+        .new-badge{background:#e3f2fc;color:var(--lapis);}
+        .cons-badge{background:#e0f5f4;color:var(--green);}
+        .quiet-badge{background:#fde8e8;color:#b91c1c;}
+        .pulse-grid{display:grid;gap:1.5rem;}
+        .pulse-card{background:linear-gradient(135deg,var(--gold2) 0%,var(--gold3) 100%);color:var(--dark);border-radius:16px;padding:1.75rem 2rem;border-left:4px solid var(--gold2);}
+        .pulse-date{font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;opacity:0.85;margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.5px;}
+        .pulse-row{display:flex;align-items:center;gap:2rem;margin-bottom:0.9rem;}
+        .pulse-metric{display:flex;flex-direction:column;gap:0.2rem;}
+        .pulse-value{font-family:'Quicksand',sans-serif;font-size:3.2rem;font-weight:700;line-height:1;}
+        .pulse-label{font-size:0.9rem;font-weight:600;opacity:0.9;}
+        .pulse-divider{width:1px;height:60px;background:rgba(0,0,0,0.15);}
+        .pulse-prev{font-size:0.85rem;opacity:0.75;font-style:italic;margin-bottom:1rem;}
+        .pulse-new-schools{margin-top:0.5rem;}
+        .pulse-new-label{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;opacity:0.85;margin-bottom:0.4rem;}
+        .pulse-new-schools .badge-row .school-badge{background:rgba(255,255,255,0.55);color:var(--dark);}
+        .pulse-split{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;font-weight:600;opacity:0.85;margin-top:0.35rem;flex-wrap:wrap;}
+        .split-cls{color:var(--lapis);background:rgba(255,255,255,0.45);padding:0.15rem 0.45rem;border-radius:6px;}
+        .split-ins{color:var(--dark);background:rgba(255,255,255,0.45);padding:0.15rem 0.45rem;border-radius:6px;}
+        .split-sep{opacity:0.5;}
+        .snapshot-grid-top{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.25rem;}
+        .snapshot-grid-quiet{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+        .snap-badges-scroll{max-height:150px;overflow-y:auto;padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--shale) transparent;}
+        .snap-badges-scroll::-webkit-scrollbar{width:4px;}
+        .snap-badges-scroll::-webkit-scrollbar-thumb{background:var(--shale);border-radius:4px;}
+        .snap-card{border-radius:14px;padding:1.5rem;background:var(--white);border:1px solid var(--lgray);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:0.6rem;}
+        .snap-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:14px 14px 0 0;}
+        .snap-card.accent-pacific::before{background:var(--sky);}
+        .snap-card.accent-forest::before{background:var(--green);}
+        .snap-card.accent-lilac::before{background:var(--lapis);}
+        .snap-card.accent-salmon::before{background:var(--shale);}
+        .snap-label{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;color:var(--gray);}
+        .snap-body{display:flex;flex-direction:column;gap:0.4rem;}
+        .snap-metric{display:flex;align-items:baseline;gap:0.5rem;flex-wrap:wrap;}
+        .snap-value{font-family:'Quicksand',sans-serif;font-size:2.8rem;font-weight:700;line-height:1;color:var(--dark);}
+        .snap-unit{font-size:0.88rem;color:var(--gray);}
+        .snap-prev{font-size:0.82rem;color:var(--gray);font-style:italic;}
+        .snap-badges{display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.25rem;}
+        .snap-segment-row{display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid var(--lgray);flex-wrap:wrap;}
+        .snap-segment-row:last-of-type{border-bottom:none;}
+        .seg-icon{font-size:1rem;flex-shrink:0;}
+        .seg-label{font-size:0.8rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;min-width:80px;}
+        .seg-value{font-family:'Quicksand',sans-serif;font-size:1.4rem;font-weight:700;color:var(--dark);line-height:1;}
+        .seg-sub{font-size:0.78rem;color:var(--gray);font-style:italic;}
+        .snap-total-row{display:flex;align-items:baseline;gap:0.5rem;flex-wrap:wrap;padding-top:0.6rem;margin-top:0.25rem;border-top:2px solid var(--lgray);}
+        .patterns-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
+        .patterns-grid-2col{grid-template-columns:1fr 1fr;}
+        .pattern-block{background:var(--cream);border-radius:14px;padding:1.5rem;}
+        .pattern-block-title{font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:0.2rem;}
+        .pattern-block-desc{font-size:0.8rem;color:var(--gray);font-style:italic;margin-bottom:0.75rem;}
+        .pattern-count-badge{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:var(--dark);margin-bottom:0.4rem;}
+        .pattern-notes{background:#f0f6fb;}
+        .notes-field{width:100%;min-height:120px;border:1px solid var(--shale);border-radius:10px;padding:0.75rem;font-family:'Lato',sans-serif;font-size:0.875rem;color:var(--dark);resize:vertical;background:var(--white);line-height:1.5;}
+        .notes-field:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px rgba(56,170,225,0.15);}
+        .trend-summary{background:linear-gradient(135deg,var(--lapis),var(--sky));padding:1.5rem 2rem;border-radius:14px;margin-bottom:1.75rem;color:var(--white);text-align:center;}
+        .trend-label{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.85;margin-bottom:0.3rem;}
+        .trend-value{font-family:'Quicksand',sans-serif;font-size:2.5rem;font-weight:700;margin-bottom:0.2rem;}
+        .trend-change{font-size:1rem;font-weight:600;}
+        .weeks-container{display:flex;flex-direction:column;gap:1.25rem;}
+        .week-bar-item{display:flex;flex-direction:column;gap:0.4rem;}
+        .week-info{display:flex;justify-content:space-between;align-items:baseline;}
+        .week-label{font-family:'Quicksand',sans-serif;font-size:0.95rem;font-weight:700;color:var(--dark);}
+        .week-stats{font-size:0.82rem;color:var(--gray);font-style:italic;}
+        .bar-container{background:var(--lgray);border-radius:8px;height:36px;overflow:hidden;}
+        .bar{height:100%;border-radius:8px;background:linear-gradient(135deg,var(--sky),#5ab8e8);display:flex;align-items:center;justify-content:flex-end;padding-right:0.9rem;color:var(--white);font-weight:700;font-size:0.85rem;box-shadow:0 2px 8px rgba(56,170,225,0.3);}
+        .bar::after{content:attr(data-value);}
+        .stacked-bar{height:100%;display:flex;align-items:stretch;border-radius:8px;overflow:hidden;position:relative;}
+        .bar-segment{height:100%;flex-shrink:0;}
+        .bar-cls{background:linear-gradient(135deg,var(--lapis),#2a84d4);box-shadow:inset -1px 0 0 rgba(255,255,255,0.15);}
+        .bar-ins{background:linear-gradient(135deg,var(--sky),#5ab8e8);}
+        .bar-latest .bar-cls{background:linear-gradient(135deg,var(--lapis),var(--lapis));}
+        .bar-total-label{position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--white);font-weight:700;font-size:0.85rem;text-shadow:0 1px 3px rgba(0,0,0,0.3);pointer-events:none;}
+        .bar-legend{display:flex;gap:1.25rem;margin-bottom:1.25rem;margin-top:-0.25rem;flex-wrap:wrap;}
+        .legend-item{display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--gray);font-weight:600;}
+        .legend-swatch{display:inline-block;width:16px;height:12px;border-radius:3px;}
+        .swatch-cls{background:var(--lapis);}.swatch-ins{background:var(--sky);}
+        .top-schools-list{list-style:none;display:flex;flex-direction:column;gap:0.6rem;}
+        .top-school-item{display:flex;align-items:center;gap:1rem;padding:0.9rem 1rem;background:var(--cream);border-radius:12px;transition:transform 0.2s ease;flex-wrap:wrap;}
+        .top-school-item:hover{transform:translateX(4px);}
+        .rank-number{font-family:'Quicksand',sans-serif;font-size:1.4rem;font-weight:700;color:var(--gold);min-width:38px;}
+        .school-info{flex:1;min-width:0;}
+        .school-name{font-weight:700;color:var(--dark);margin-bottom:0.15rem;}
+        .school-stats{font-size:0.82rem;color:var(--gray);}
+        .pattern-badge{display:inline-block;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:700;white-space:nowrap;}
+        .badge-core{background:linear-gradient(135deg,#FFD700,#FFA500);color:var(--dark);}
+        .badge-active{background:var(--forest);color:var(--white);}
+        .badge-quiet{background:var(--salmon);color:var(--white);}
+        .lifetime-grid{display:flex;flex-direction:column;gap:0.55rem;}
+        .lifetime-bar-item{display:grid;grid-template-columns:210px 1fr;align-items:center;gap:1rem;}
+        .lifetime-school-name{font-size:0.8rem;font-weight:600;color:var(--dark);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .lifetime-bar-wrap{display:flex;align-items:center;gap:0.6rem;}
+        .lifetime-bar-track{flex:1;background:var(--lgray);border-radius:6px;height:26px;overflow:hidden;}
+        .lifetime-bar-fill{height:100%;background:linear-gradient(135deg,var(--lapis),var(--sky));border-radius:6px;}
+        .lifetime-bar-capped{background:linear-gradient(135deg,var(--gold2),var(--gold));border-right:3px dashed var(--gold);}
+        .lifetime-bar-value{font-size:0.8rem;font-weight:700;color:var(--gray);min-width:40px;text-align:right;}
+        footer{text-align:center;padding:2rem;color:var(--gray);font-size:0.88rem;font-style:italic;}
+        footer strong{color:var(--dark);font-style:normal;}
+
+        /* ── Nav ── */
+        .dash-nav{background:#fff;border-bottom:1px solid #E8E4DF;padding:0 3rem;}
+        .dash-nav-inner{max-width:1200px;margin:0 auto;display:flex;}
+        .dash-nav a{display:inline-block;padding:0.75rem 1.4rem;font-size:0.85rem;font-weight:700;color:#666;text-decoration:none;border-bottom:3px solid transparent;}
+        .dash-nav a:hover{color:#1d70b8;}
+        .dash-nav a.active{color:#1d70b8;border-bottom-color:#1d70b8;}
+
+        /* ── Usage Patterns Tab ── */
+        .pt-tab-btn {
+            display: inline-block;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.75rem 1.4rem;
+            color: #666;
+            text-decoration: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            transition: color 0.15s;
+        }
+        .pt-tab-btn:hover { color: #1d70b8; }
+        .pt-tab-btn.active { color: #1d70b8; border-bottom-color: #1d70b8; }
+
+        /* hide/show main content vs patterns panel */
+        #pt-panel { display: none; }
+        #pt-panel.visible { display: block; }
+        #main-content.hidden { display: none; }
+
+        .pt-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:2rem;}
+        .pt-summary-card{background:var(--white);border-radius:14px;padding:1.25rem 1rem;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+        .pt-card-top{position:absolute;top:0;left:0;right:0;height:4px;border-radius:14px 14px 0 0;}
+        .pt-card-num{font-family:'Quicksand',sans-serif;font-size:2.2rem;font-weight:700;color:var(--dark);line-height:1;margin-bottom:0.25rem;}
+        .pt-card-label{font-size:0.75rem;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+
+        .pt-filters{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem;}
+        .pt-filter-btn{font-family:'Lato',sans-serif;font-size:0.78rem;font-weight:700;padding:0.35rem 0.9rem;border-radius:20px;border:2px solid transparent;cursor:pointer;transition:all 0.15s;background:var(--cream);color:var(--gray);}
+        .pt-filter-btn.active{border-color:currentColor;background:var(--white);}
+
+        .pt-desc-box{background:var(--cream);border-left:4px solid var(--sky);border-radius:0 10px 10px 0;padding:0.9rem 1.1rem;margin-bottom:1.25rem;font-size:0.86rem;color:var(--dark);line-height:1.6;display:none;}
+
+        .pt-table-header{display:grid;grid-template-columns:1fr 220px 110px;gap:1rem;padding:0.5rem 0.75rem 0.6rem;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;color:var(--gray);border-bottom:2px solid var(--lgray);margin-bottom:0.2rem;}
+        .pt-school-list{display:flex;flex-direction:column;}
+        .pt-school-row{display:grid;grid-template-columns:1fr 220px 110px;align-items:center;padding:0.8rem 0.75rem;border-radius:10px;gap:1rem;}
+        .pt-school-row:hover{background:var(--cream);}
+        .pt-school-row+.pt-school-row{border-top:1px solid var(--lgray);}
+        .pt-school-name{font-weight:700;color:var(--dark);font-size:0.88rem;}
+        .pt-school-meta{font-size:0.76rem;color:var(--gray);margin-top:0.15rem;}
+        .pt-quiet-tag{display:inline-block;background:#fde8e8;color:#b91c1c;font-size:0.6rem;font-weight:700;padding:0.1rem 0.4rem;border-radius:4px;margin-left:0.4rem;text-transform:uppercase;letter-spacing:0.3px;vertical-align:middle;}
+        .pt-heat-row{display:flex;gap:3px;align-items:center;}
+        .pt-heat-cell{width:19px;height:19px;border-radius:3px;flex-shrink:0;}
+        .pt-badge{display:inline-block;padding:0.28rem 0.65rem;border-radius:20px;font-size:0.7rem;font-weight:700;text-align:center;white-space:nowrap;}
+
+        @media(max-width:900px){
+            .container{padding:1.5rem;gap:2rem;}
+            header{padding:1.5rem;}
+            .dashboard-section{padding:1.5rem;}
+            h1{font-size:1.35rem;}
+            .snapshot-grid-top{grid-template-columns:1fr 1fr;}
+            .snapshot-grid-quiet{grid-template-columns:1fr 1fr;}
+            .patterns-grid{grid-template-columns:1fr;}
+            .patterns-grid-2col{grid-template-columns:1fr;}
+            .pt-school-row{grid-template-columns:1fr;}
+            .pt-table-header{display:none;}
+        }
+        @media(max-width:600px){
+            .snapshot-grid-top{grid-template-columns:1fr;}
+            .snapshot-grid-quiet{grid-template-columns:1fr;}
+            .pulse-row{gap:1.2rem;}
+            .pulse-value{font-size:2.4rem;}
+            .snap-value{font-size:2.2rem;}
+            .lifetime-bar-item{grid-template-columns:120px 1fr;}
+            .lifetime-school-name{font-size:0.72rem;}
         }
     </style>
 </head>
 <body>
+
 <header>
     <div class="bouncies">
         <div class="bouncy bouncy-1"></div><div class="bouncy bouncy-2"></div>
@@ -160,278 +245,349 @@
             </svg>
         </div>
         <h1>Usage Analytics Dashboard</h1>
-        <p class="subtitle">Month 1 Performance &bull; January 19 – April 29, 2026</p>
+        <p class="subtitle">Live data · Updated <span id="lastUpdated">8 May 2026</span></p>
     </div>
 </header>
 
-<div class="container">
-
-    <nav class="tab-nav" role="tablist">
-        <button class="tab-btn active" data-tab="overview">📊 Overview</button>
-        <button class="tab-btn" data-tab="patterns">🔍 Usage Patterns</button>
-    </nav>
-
-    <!-- ── OVERVIEW TAB ── -->
-    <div class="tab-panel active" id="tab-overview">
-
-        <div class="stats-grid">
-            <div class="stat-card pacific">
-                <div class="stat-label">Schools Activated</div>
-                <div class="stat-value" id="stat-schools">44</div>
-                <div class="stat-subtext">of 53 customers (84.9%)</div>
-            </div>
-            <div class="stat-card turkish">
-                <div class="stat-label">Total Logins</div>
-                <div class="stat-value" id="stat-logins">197</div>
-                <div class="stat-subtext">across 4 weeks</div>
-            </div>
-            <div class="stat-card forest">
-                <div class="stat-label">Active This Month</div>
-                <div class="stat-value" id="stat-active-month">44</div>
-                <div class="stat-subtext" id="stat-month-name">schools logged in Feb</div>
-            </div>
-            <div class="stat-card lilac">
-                <div class="stat-label">Week Peak</div>
-                <div class="stat-value" id="stat-week4">33</div>
-                <div class="stat-subtext">schools (strongest week!)</div>
-            </div>
-        </div>
-
-        <div class="chart-section">
-            <h2 class="section-title pacific">📈 Recent Trends</h2>
-            <p style="color:var(--gray);margin-bottom:1.5rem;font-style:italic;">Last 6 weeks performance</p>
-            <div class="trend-summary">
-                <div class="trend-highlight">
-                    <div class="trend-label">This Week</div>
-                    <div class="trend-value" id="thisWeekSchools">33 schools</div>
-                    <div class="trend-change" id="weekGrowth">↗️ +73% vs Week 1</div>
-                </div>
-            </div>
-            <div class="weeks-container">
-                <div class="week-bar-item">
-                    <div class="week-info"><span class="week-label">Week 4</span><span class="week-stats">33 schools &bull; 73 logins</span></div>
-                    <div class="bar-container"><div class="bar bar-schools" style="width:100%" data-value="33"></div></div>
-                </div>
-                <div class="week-bar-item">
-                    <div class="week-info"><span class="week-label">Week 3</span><span class="week-stats">20 schools &bull; 35 logins</span></div>
-                    <div class="bar-container"><div class="bar bar-schools" style="width:60%" data-value="20"></div></div>
-                </div>
-                <div class="week-bar-item">
-                    <div class="week-info"><span class="week-label">Week 2</span><span class="week-stats">20 schools &bull; 49 logins</span></div>
-                    <div class="bar-container"><div class="bar bar-schools" style="width:60%" data-value="20"></div></div>
-                </div>
-                <div class="week-bar-item">
-                    <div class="week-info"><span class="week-label">Week 1</span><span class="week-stats">19 schools &bull; 40 logins</span></div>
-                    <div class="bar-container"><div class="bar bar-schools" style="width:57%" data-value="19"></div></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="chart-section">
-            <h2 class="section-title forest">🎯 Engagement Metrics</h2>
-            <p style="color:var(--gray);margin-bottom:1.5rem;font-style:italic;">Key indicators of school engagement and platform health</p>
-            <div class="pattern-cards-grid">
-                <div class="pattern-card gold-pattern">
-                    <div class="pattern-icon">✅</div>
-                    <div class="pattern-count" id="pattern-active-recent">44</div>
-                    <div class="pattern-name">Active Last 30 Days</div>
-                    <div class="pattern-desc">Used recently</div>
-                </div>
-                <div class="pattern-card pacific-pattern">
-                    <div class="pattern-icon">🔥</div>
-                    <div class="pattern-count" id="pattern-regular">17</div>
-                    <div class="pattern-name">Regular Users</div>
-                    <div class="pattern-desc">3+ weeks/month</div>
-                </div>
-                <div class="pattern-card forest-pattern">
-                    <div class="pattern-icon">🆕</div>
-                    <div class="pattern-count" id="pattern-new-month">8</div>
-                    <div class="pattern-name">New This Month</div>
-                    <div class="pattern-desc">Just started</div>
-                </div>
-                <div class="pattern-card lilac-pattern">
-                    <div class="pattern-icon">💤</div>
-                    <div class="pattern-count" id="pattern-inactive">0</div>
-                    <div class="pattern-name">Inactive 30+ Days</div>
-                    <div class="pattern-desc">Need attention</div>
-                </div>
-                <div class="pattern-card turkish-pattern">
-                    <div class="pattern-icon">👥</div>
-                    <div class="pattern-count" id="pattern-multi-teacher">17</div>
-                    <div class="pattern-name">Multi-Teacher</div>
-                    <div class="pattern-desc">2+ teachers engaged</div>
-                </div>
-                <div class="pattern-card wheat-pattern">
-                    <div class="pattern-icon">📊</div>
-                    <div class="pattern-count" id="pattern-total-active">44</div>
-                    <div class="pattern-name">Total Active (Ever)</div>
-                    <div class="pattern-desc">All time</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="chart-section">
-            <h2 class="section-title turkish">🏆 Top 10 Schools</h2>
-            <p style="color:var(--gray);margin-bottom:1.5rem;font-style:italic;">Ranked by total engagement (consistency + frequency + teachers)</p>
-            <ul class="top-schools-list">
-                <li class="top-school-item"><div class="rank-number">1</div><div class="school-info"><div class="school-name">Kammaland Primary</div><div class="school-stats">26 logins &bull; 11 teachers &bull; All 4 weeks</div></div><span class="pattern-badge core5">🏆 Core 5</span></li>
-                <li class="top-school-item"><div class="rank-number">2</div><div class="school-info"><div class="school-name">Generation Schools Hermanus</div><div class="school-stats">19 logins &bull; 9 teachers &bull; All 4 weeks</div></div><span class="pattern-badge core5">🏆 Core 5</span></li>
-                <li class="top-school-item"><div class="rank-number">3</div><div class="school-info"><div class="school-name">Soofia International</div><div class="school-stats">14 logins &bull; 7 teachers &bull; All 4 weeks</div></div><span class="pattern-badge core5">🏆 Core 5</span></li>
-                <li class="top-school-item"><div class="rank-number">4</div><div class="school-info"><div class="school-name">Hazyview Private Primary</div><div class="school-stats">11 logins &bull; 16 teachers &bull; Weeks 1-2</div></div><span class="pattern-badge active">Active</span></li>
-                <li class="top-school-item"><div class="rank-number">5</div><div class="school-info"><div class="school-name">Trinity House</div><div class="school-stats">10 logins &bull; 5 teachers &bull; Weeks 2-4</div></div><span class="pattern-badge active">Active</span></li>
-                <li class="top-school-item"><div class="rank-number">6</div><div class="school-info"><div class="school-name">St Martin Preparatory</div><div class="school-stats">9 logins &bull; 5 teachers &bull; All 4 weeks</div></div><span class="pattern-badge core5">🏆 Core 5</span></li>
-                <li class="top-school-item"><div class="rank-number">7</div><div class="school-info"><div class="school-name">Acudeo Thornview</div><div class="school-stats">7 logins &bull; 7 teachers &bull; Bi-weekly pattern</div></div><span class="pattern-badge biweekly">🔄 Bi-weekly</span></li>
-                <li class="top-school-item"><div class="rank-number">8</div><div class="school-info"><div class="school-name">Koa Academy</div><div class="school-stats">7 logins &bull; 6 teachers &bull; Weeks 2-3</div></div><span class="pattern-badge active">Active</span></li>
-                <li class="top-school-item"><div class="rank-number">9</div><div class="school-info"><div class="school-name">Prescient Primary</div><div class="school-stats">6 logins &bull; 3 teachers &bull; Weeks 2-4</div></div><span class="pattern-badge active">Active</span></li>
-                <li class="top-school-item"><div class="rank-number">10</div><div class="school-info"><div class="school-name">Applewood Preparatory</div><div class="school-stats">6 logins &bull; 4 teachers &bull; Weeks 2-4</div></div><span class="pattern-badge active">Active</span></li>
-            </ul>
-        </div>
-
+<nav class="dash-nav">
+    <div class="dash-nav-inner">
+        <a href="index.html" class="active">📊 Usage Analytics</a>
+        <a href="investor.html">💼 Sales Activity</a>
+        <button class="pt-tab-btn" id="pt-tab-toggle" onclick="togglePatterns()">🔍 Usage Patterns</button>
     </div>
-    <!-- END OVERVIEW TAB -->
+</nav>
 
-    <!-- ── PATTERNS TAB ── -->
-    <div class="tab-panel" id="tab-patterns">
+<!-- ══ USAGE PATTERNS PANEL ══ -->
+<div id="pt-panel">
+<div class="container">
+    <div class="dashboard-section">
+        <h2 class="section-title pacific">🔍 Usage Patterns — Jan to Apr 2026</h2>
+        <p class="section-desc">23 snapshots · 46 schools · Jan 19 – Apr 29, 2026 · Click a filter to explore</p>
 
         <div class="pt-summary-grid">
-            <div class="pt-summary-card"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:#289B38;border-radius:16px 16px 0 0;"></div><div class="pt-card-num">46</div><div class="pt-card-label">Schools tracked</div></div>
-            <div class="pt-summary-card"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:#77C2D6;border-radius:16px 16px 0 0;"></div><div class="pt-card-num">660</div><div class="pt-card-label">Total logins</div></div>
-            <div class="pt-summary-card"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:#8871B1;border-radius:16px 16px 0 0;"></div><div class="pt-card-num">10</div><div class="pt-card-label">Weeks of data</div></div>
-            <div class="pt-summary-card"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:#ED6EA1;border-radius:16px 16px 0 0;"></div><div class="pt-card-num" style="color:#c0392b;">11</div><div class="pt-card-label">Gone quiet (6+ wks)</div></div>
-            <div class="pt-summary-card"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:#A88F5E;border-radius:16px 16px 0 0;"></div><div class="pt-card-num">15</div><div class="pt-card-label">Consistent users</div></div>
-            <div class="pt-summary-card"><div style="position:absolute;top:0;left:0;right:0;height:4px;background:#F6B1A6;border-radius:16px 16px 0 0;"></div><div class="pt-card-num">12</div><div class="pt-card-label">Bi-weekly users</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">46</div><div class="pt-card-label">Schools tracked</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">660</div><div class="pt-card-label">Total logins</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">10</div><div class="pt-card-label">Weeks of data</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">11</div><div class="pt-card-label">Gone quiet 6+ wks</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--gold2)"></div><div class="pt-card-num">15</div><div class="pt-card-label">Consistent users</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--shale)"></div><div class="pt-card-num">12</div><div class="pt-card-label">Bi-weekly users</div></div>
         </div>
 
-        <div class="chart-section">
-            <h2 class="section-title pacific">🔍 School Usage Patterns</h2>
-            <p style="color:var(--gray);margin-bottom:1.5rem;font-style:italic;">Jan 19 – Apr 29, 2026 &bull; 23 snapshots &bull; 46 schools &bull; Click a filter to explore</p>
+        <div class="pt-filters" id="pt-filters">
+            <button class="pt-filter-btn active" data-pattern="all" style="color:var(--dark)">All schools (46)</button>
+            <button class="pt-filter-btn" data-pattern="Power User" style="color:#085041">⚡ Power user (1)</button>
+            <button class="pt-filter-btn" data-pattern="High Frequency" style="color:var(--green)">🔥 High frequency (2)</button>
+            <button class="pt-filter-btn" data-pattern="Consistent Weekly" style="color:var(--lapis)">📅 Consistent weekly (7)</button>
+            <button class="pt-filter-btn" data-pattern="Consistent Low-Volume" style="color:#534AB7">📆 Low-vol consistent (6)</button>
+            <button class="pt-filter-btn" data-pattern="Bi-weekly" style="color:var(--sky)">〰 Bi-weekly (12)</button>
+            <button class="pt-filter-btn" data-pattern="Early Stage" style="color:var(--gray)">🌱 Early stage (14)</button>
+            <button class="pt-filter-btn" data-pattern="One-time" style="color:#B4B2A9">👋 One-time (4)</button>
+            <button class="pt-filter-btn" data-pattern="quiet" style="color:#b91c1c">🔴 Gone quiet (11)</button>
+        </div>
 
-            <div class="pt-filters" id="pt-filters">
-                <button class="pt-filter-btn active" data-pattern="all" style="color:#2C2C2C;">All schools (46)</button>
-                <button class="pt-filter-btn" data-pattern="Power User" style="color:#085041;">⚡ Power user (1)</button>
-                <button class="pt-filter-btn" data-pattern="High Frequency" style="color:#0F6E56;">🔥 High frequency (2)</button>
-                <button class="pt-filter-btn" data-pattern="Consistent Weekly" style="color:#185FA5;">📅 Consistent weekly (7)</button>
-                <button class="pt-filter-btn" data-pattern="Consistent Low-Volume" style="color:#534AB7;">📆 Low-volume consistent (6)</button>
-                <button class="pt-filter-btn" data-pattern="Bi-weekly" style="color:#2a8fa3;">〰 Bi-weekly (12)</button>
-                <button class="pt-filter-btn" data-pattern="Early Stage" style="color:#888780;">🌱 Early stage (14)</button>
-                <button class="pt-filter-btn" data-pattern="One-time" style="color:#B4B2A9;">👋 One-time (4)</button>
-                <button class="pt-filter-btn" data-pattern="quiet" style="color:#c0392b;">🔴 Gone quiet (11)</button>
+        <div class="pt-desc-box" id="pt-desc-box"></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong id="pt-count">46</strong> schools &nbsp;·&nbsp; Heatmap: Jan 19 → Apr 27</div>
+            <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#c8eed9;vertical-align:middle;margin-right:3px;"></span>Low</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#E8E4DF;vertical-align:middle;margin-right:3px;"></span>None</span>
             </div>
+        </div>
 
-            <div class="pt-desc-box" id="pt-desc-box"></div>
+        <div class="pt-table-header">
+            <div>School</div>
+            <div id="pt-week-headers" style="display:flex;gap:3px;"></div>
+            <div>Pattern</div>
+        </div>
+        <div class="pt-school-list" id="pt-school-list"></div>
+    </div>
+</div>
+</div>
 
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
-                <div style="font-size:0.8rem;color:var(--gray);">Showing <strong id="pt-count">46</strong> schools &nbsp;&bull;&nbsp; Heatmap: Jan 19 → Apr 27</div>
-                <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
-                    <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
-                    <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
-                    <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#c8eed9;vertical-align:middle;margin-right:3px;"></span>Low</span>
-                    <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#E8E4DF;vertical-align:middle;margin-right:3px;"></span>None</span>
+<!-- ══ MAIN DASHBOARD CONTENT ══ -->
+<div id="main-content">
+<div class="container">
+
+    <div style="background:linear-gradient(135deg,#c5b08c,#d6c8b0);padding:1.5rem;border-radius:12px;border-left:4px solid #c5b08c;">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;">
+            <span style="font-size:1.5rem;">💡</span>
+            <h3 style="margin:0;font-family:'Quicksand',sans-serif;color:#1d70b8;font-size:1.1rem;">DASHBOARD GUIDE</h3>
+        </div>
+        <p style="margin:0;color:#2C2C2C;font-size:0.95rem;line-height:1.6;">This dashboard updates daily/weekly with detailed operational metrics. We're in observation mode (6 months) learning customer patterns and usage behaviors before making strategic decisions or optimizations.</p>
+    </div>
+
+    <!-- DASHBOARD_START -->
+    <section class="dashboard-section" id="section-daily-pulse">
+        <h2 class="section-title turkish">⚡ Daily Pulse</h2>
+        <p class="section-desc">Yesterday · paying customers only</p>
+        <div class="pulse-grid">
+            <div class="pulse-card">
+                <div class="pulse-date">Friday, 8 May 2026</div>
+                <div class="pulse-row">
+                    <div class="pulse-metric">
+                        <div class="pulse-value" id="pulse-logins">19</div>
+                        <div class="pulse-label">Logins <span class="delta up">▲ +6%</span></div>
+                        <div class="pulse-split"><span class="split-cls">🏫 16 classroom</span><span class="split-sep">·</span><span class="split-ins">🎵 11 instrumental</span></div>
+                    </div>
+                    <div class="pulse-divider"></div>
+                    <div class="pulse-metric">
+                        <div class="pulse-value" id="pulse-schools">14</div>
+                        <div class="pulse-label">Schools <span class="delta up">▲ +8%</span></div>
+                        <div class="pulse-split">paying customers</div>
+                    </div>
+                </div>
+                <div class="pulse-prev">vs Thursday, 7 May: 18 logins · 13 schools</div>
+                <div class="pulse-new-schools">
+                    <div class="pulse-new-label">🆕 New today vs yesterday</div>
+                    <div class="badge-row"><span class="school-badge new-badge">Acudeo Crystal Park</span><span class="school-badge new-badge">Acudeo Thornview</span><span class="school-badge new-badge">Brescia House</span><span class="school-badge new-badge">Queens Private School</span><span class="school-badge new-badge">Trinity House</span></div>
                 </div>
             </div>
-
-            <div class="pt-table-header">
-                <div>School</div>
-                <div id="pt-week-headers" style="display:flex;gap:3px;"></div>
-                <div>Pattern</div>
-            </div>
-
-            <div class="pt-school-list" id="pt-school-list"></div>
         </div>
+    </section>
 
-    </div>
-    <!-- END PATTERNS TAB -->
+    <section class="dashboard-section" id="section-weekly-snapshot">
+        <h2 class="section-title pacific">📋 Weekly Snapshot — Week 16</h2>
+        <p class="section-desc">Paying customers only · Week 16 vs Week 15</p>
+        <div class="snapshot-grid-top">
+            <div class="snap-card accent-pacific">
+                <div class="snap-label">Week 16 vs Week 15</div>
+                <div class="snap-body">
+                    <div class="snap-segment-row"><span class="seg-icon">🏫</span><span class="seg-label">Classroom</span><span class="seg-value">92</span><span class="seg-sub">logins · 27 schools</span></div>
+                    <div class="snap-segment-row"><span class="seg-icon">🎵</span><span class="seg-label">Instrumental</span><span class="seg-value">78</span><span class="seg-sub">logins · 16 schools</span></div>
+                    <div class="snap-total-row"><span class="snap-value" id="snap-cw-logins">118</span><span class="snap-unit">total logins <span class="delta up">▲ +337%</span></span><span class="snap-unit">28 schools <span class="delta up">▲ +180%</span></span></div>
+                </div>
+                <div class="snap-prev">Last week: 27 logins · 10 schools</div>
+            </div>
+            <div class="snap-card accent-forest">
+                <div class="snap-label">Schools Activated</div>
+                <div class="snap-body">
+                    <div class="snap-segment-row"><span class="seg-label">Lifetime</span><span class="seg-value" id="snap-activated">46</span><span class="seg-sub">of 46 (100%)</span></div>
+                    <div class="snap-segment-row"><span class="seg-label">This week</span><span class="seg-value">28</span><span class="seg-sub">of 46 (61%)</span></div>
+                </div>
+                <div class="snap-prev"><span class="delta up">↗ +1 new activations</span></div>
+            </div>
+            <div class="snap-card accent-lilac">
+                <div class="snap-label">Consistent This Week</div>
+                <div class="snap-body"><div class="snap-metric"><span class="snap-value" id="snap-consistent">12</span><span class="snap-unit">schools 3+ days <span class="delta up">▲ +300%</span></span></div></div>
+                <div class="snap-badges"><span class="school-badge cons-badge">Acudeo College Kirkney</span><span class="school-badge cons-badge">Acudeo Protea Glen</span><span class="school-badge cons-badge">Acudeo Thornview</span><span class="school-badge cons-badge">Bay Primary</span><span class="school-badge cons-badge">Generation Schools Hermanus</span><span class="school-badge cons-badge">Hazyview Private Primary School</span><span class="school-badge cons-badge">Kammaland Primary School</span><span class="school-badge cons-badge">Koa Academy</span><span class="school-badge cons-badge">Princess Park College</span><span class="school-badge cons-badge">Reddam House Helderfontein</span><span class="school-badge cons-badge">Royal Schools Alberton</span><span class="school-badge cons-badge">Trinity House</span></div>
+            </div>
+        </div>
+        <div class="snapshot-grid-quiet">
+            <div class="snap-card accent-salmon">
+                <div class="snap-label">Quiet 7–13 Days</div>
+                <div class="snap-body"><div class="snap-metric"><span class="snap-value" id="snap-quiet-7">2</span><span class="snap-unit">schools · last login 1–2 weeks ago</span></div></div>
+                <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Curro Langebaan Primary School</span><span class="school-badge quiet-badge">Holy Cross RC Primary</span></div>
+            </div>
+            <div class="snap-card accent-salmon">
+                <div class="snap-label">Quiet 14+ Days</div>
+                <div class="snap-body"><div class="snap-metric"><span class="snap-value" id="snap-quiet">16</span><span class="snap-unit">schools · last login 2+ weeks ago</span></div></div>
+                <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Applewood Preparatory</span><span class="school-badge quiet-badge">Calling Academy</span><span class="school-badge quiet-badge">Danie Ackermann Primary</span><span class="school-badge quiet-badge">Early Learning Centre</span><span class="school-badge quiet-badge">Hermannsburg School</span><span class="school-badge quiet-badge">Herzlia High School</span><span class="school-badge quiet-badge">Herzlia Highlands</span><span class="school-badge quiet-badge">Herzlia Weitzman Primary School</span><span class="school-badge quiet-badge">Lebone II College</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Plettenberg Bay Christian Primary School</span><span class="school-badge quiet-badge">Royal Schools Starlight Academy</span><span class="school-badge quiet-badge">St Catherines</span><span class="school-badge quiet-badge">St Martin Preparatory School</span><span class="school-badge quiet-badge">St Martins Preparatory School</span><span class="school-badge quiet-badge">Sunvalley Primary School</span></div>
+            </div>
+        </div>
+    </section>
 
+    <section class="dashboard-section" id="section-patterns">
+        <h2 class="section-title forest">🔍 Patterns This Week</h2>
+        <p class="section-desc">Paying customers only · Week 16</p>
+        <div class="patterns-grid patterns-grid-2col">
+            <div class="pattern-block">
+                <div class="pattern-block-title">🆕 New Activations</div>
+                <div class="pattern-block-desc">First-ever login this week (paying)</div>
+                <div class="pattern-count-badge">1</div>
+                <div class="badge-row"><span class="school-badge new-badge">Redwood College</span></div>
+            </div>
+            <div class="pattern-block pattern-notes">
+                <div class="pattern-block-title">📝 Notes</div>
+                <div class="pattern-block-desc">Contextual insights for this week</div>
+                <textarea class="notes-field" id="weekly-notes" placeholder="Add your observations here…&#10;e.g. Koa Academy instrumental signups spiked&#10;Reached out to School X re: inactivity…"></textarea>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-section" id="section-trends">
+        <h2 class="section-title pacific">📈 Weekly Trends</h2>
+        <p class="section-desc">Last 6 weeks · paying customers · classroom vs instrumental</p>
+        <div class="trend-summary">
+            <div class="trend-label">Latest Week</div>
+            <div class="trend-value" id="thisWeekSchools">28 schools</div>
+            <div class="trend-change" id="weekGrowth">↗ +211% vs Week 11 (30 Mar–3 Apr)</div>
+        </div>
+        <div class="bar-legend">
+            <span class="legend-item"><span class="legend-swatch swatch-cls"></span> Classroom</span>
+            <span class="legend-item"><span class="legend-swatch swatch-ins"></span> Instrumental</span>
+            <span class="legend-item" style="color:#aaa;font-style:italic;">Single-colour = no product data yet</span>
+        </div>
+        <div class="weeks-container" id="weeks-container">
+            <div class="week-bar-item"><div class="week-info"><span class="week-label">Week 16 (4–8 May)</span><span class="week-stats">28 schools · 118 logins (92 cls / 78 ins)</span></div><div class="bar-container"><div class="stacked-bar bar-latest"><div class="bar-segment bar-cls" style="width:63%"></div><div class="bar-segment bar-ins" style="width:19%"></div><span class="bar-total-label">118</span></div></div></div>
+            <div class="week-bar-item"><div class="week-info"><span class="week-label">Week 15 (27 Apr–1 May)</span><span class="week-stats">10 schools · 27 logins (19 cls / 11 ins)</span></div><div class="bar-container"><div class="stacked-bar"><div class="bar-segment bar-cls" style="width:12%"></div><div class="bar-segment bar-ins" style="width:6%"></div><span class="bar-total-label">27</span></div></div></div>
+            <div class="week-bar-item"><div class="week-info"><span class="week-label">Week 14 (20–24 Apr)</span><span class="week-stats">33 schools · 143 logins (113 cls / 92 ins)</span></div><div class="bar-container"><div class="stacked-bar"><div class="bar-segment bar-cls" style="width:79%"></div><div class="bar-segment bar-ins" style="width:21%"></div><span class="bar-total-label">143</span></div></div></div>
+            <div class="week-bar-item"><div class="week-info"><span class="week-label">Week 13 (13–17 Apr)</span><span class="week-stats">31 schools · 122 logins (102 cls / 82 ins)</span></div><div class="bar-container"><div class="stacked-bar"><div class="bar-segment bar-cls" style="width:71%"></div><div class="bar-segment bar-ins" style="width:14%"></div><span class="bar-total-label">122</span></div></div></div>
+            <div class="week-bar-item"><div class="week-info"><span class="week-label">Week 12 (6–10 Apr)</span><span class="week-stats">22 schools · 106 logins (86 cls / 89 ins)</span></div><div class="bar-container"><div class="stacked-bar"><div class="bar-segment bar-cls" style="width:60%"></div><div class="bar-segment bar-ins" style="width:14%"></div><span class="bar-total-label">106</span></div></div></div>
+            <div class="week-bar-item"><div class="week-info"><span class="week-label">Week 11 (30 Mar–3 Apr)</span><span class="week-stats">9 schools · 16 logins (11 cls / 14 ins)</span></div><div class="bar-container"><div class="stacked-bar"><div class="bar-segment bar-cls" style="width:7%"></div><div class="bar-segment bar-ins" style="width:4%"></div><span class="bar-total-label">16</span></div></div></div>
+        </div>
+    </section>
+
+    <section class="dashboard-section" id="section-top10">
+        <h2 class="section-title turkish">🏆 Top 10 Schools</h2>
+        <p class="section-desc">Paying customers · ranked by consistency × teachers × frequency</p>
+        <ul class="top-schools-list">
+            <li class="top-school-item"><div class="rank-number">1</div><div class="school-info"><div class="school-name">Koa Academy</div><div class="school-stats">611 logins · 5 teachers • 304 students · W2–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">2</div><div class="school-info"><div class="school-name">Acudeo Thornview</div><div class="school-stats">779 logins · 23 teachers • 273 students · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">3</div><div class="school-info"><div class="school-name">Brescia House</div><div class="school-stats">337 logins · 2 teachers • 76 students · W4–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">4</div><div class="school-info"><div class="school-name">Amberfield College</div><div class="school-stats">70 logins · 2 teachers • 26 students · W2–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">5</div><div class="school-info"><div class="school-name">Acudeo College Kirkney</div><div class="school-stats">61 logins · 11 teachers • 18 students · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">6</div><div class="school-info"><div class="school-name">Princess Park College</div><div class="school-stats">69 logins · 11 teachers • 12 students · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">7</div><div class="school-info"><div class="school-name">Queens Private School</div><div class="school-stats">36 logins · 12 teachers • 9 students · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">8</div><div class="school-info"><div class="school-name">Sky City Primary School</div><div class="school-stats">44 logins · 18 teachers • 3 students · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">9</div><div class="school-info"><div class="school-name">Acudeo Protea Glen</div><div class="school-stats">57 logins · 11 teachers · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+            <li class="top-school-item"><div class="rank-number">10</div><div class="school-info"><div class="school-name">Hazyview Private Primary School</div><div class="school-stats">52 logins · 15 teachers • 2 students · W1–W16 · 🏫 cls / 🎵 ins</div></div><span class="pattern-badge badge-core">🏆 Core</span></li>
+        </ul>
+    </section>
+
+    <section class="dashboard-section" id="section-lifetime">
+        <h2 class="section-title pacific">📊 All Schools Lifetime Activity</h2>
+        <p class="section-desc">Total logins across all weeks · helps identify top performers and at-risk schools · 46 paying schools shown</p>
+        <div class="lifetime-grid">
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Acudeo Thornview</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:100%"></div></div><span class="lifetime-bar-value">779</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Koa Academy</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill lifetime-bar-capped" style="width:100%"></div></div><span class="lifetime-bar-value">611 ↗</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Brescia House</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:100%"></div></div><span class="lifetime-bar-value">337</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Amberfield College</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:35%"></div></div><span class="lifetime-bar-value">70</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Princess Park College</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:34%"></div></div><span class="lifetime-bar-value">69</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Kammaland Primary School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:31%"></div></div><span class="lifetime-bar-value">63</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Acudeo College Kirkney</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:30%"></div></div><span class="lifetime-bar-value">61</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Acudeo Protea Glen</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:28%"></div></div><span class="lifetime-bar-value">57</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Hazyview Private Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:26%"></div></div><span class="lifetime-bar-value">52</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Sky City Primary School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:22%"></div></div><span class="lifetime-bar-value">44</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Generation Schools Hermanus</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:21%"></div></div><span class="lifetime-bar-value">42</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Royal Schools Alberton</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:20%"></div></div><span class="lifetime-bar-value">41</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Soofia International School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:19%"></div></div><span class="lifetime-bar-value">39</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Etham College</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:18%"></div></div><span class="lifetime-bar-value">37</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Reddam House Helderfontein</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:18%"></div></div><span class="lifetime-bar-value">37</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Bay Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:18%"></div></div><span class="lifetime-bar-value">37</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Queens Private School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:18%"></div></div><span class="lifetime-bar-value">36</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Harriston Primary School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:14%"></div></div><span class="lifetime-bar-value">29</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Acudeo Crystal Park</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:13%"></div></div><span class="lifetime-bar-value">26</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Applewood Preparatory</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:12%"></div></div><span class="lifetime-bar-value">24</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">CBC Mount Edmund</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:10%"></div></div><span class="lifetime-bar-value">21</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Trinity House</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:10%"></div></div><span class="lifetime-bar-value">21</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Eastside Primary School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:9%"></div></div><span class="lifetime-bar-value">19</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Royal Schools Starlight Academy</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:9%"></div></div><span class="lifetime-bar-value">18</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">St Martin Preparatory School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:7%"></div></div><span class="lifetime-bar-value">15</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Welwitschia - C5</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:7%"></div></div><span class="lifetime-bar-value">14</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">dr.vanderross</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:7%"></div></div><span class="lifetime-bar-value">14</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Herzlia High School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:7%"></div></div><span class="lifetime-bar-value">14</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Canaan College</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:7%"></div></div><span class="lifetime-bar-value">14</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Prescient Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:6%"></div></div><span class="lifetime-bar-value">13</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Lebone II College</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:5%"></div></div><span class="lifetime-bar-value">11</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Calling Academy</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:5%"></div></div><span class="lifetime-bar-value">11</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Pinelands High School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:5%"></div></div><span class="lifetime-bar-value">10</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Plettenberg Bay Christian</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:4%"></div></div><span class="lifetime-bar-value">9</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Danie Ackermann Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:4%"></div></div><span class="lifetime-bar-value">8</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Herzlia Weitzman Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:3%"></div></div><span class="lifetime-bar-value">7</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">St Catherines</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:3%"></div></div><span class="lifetime-bar-value">6</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Curro Langebaan Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:3%"></div></div><span class="lifetime-bar-value">6</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Vergenoegd - C5</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">5</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Herzlia Highlands</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">4</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Sunvalley Primary School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">3</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Holy Cross RC Primary</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">3</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Hermannsburg School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">3</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Redwood College</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">2</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">Early Learning Centre</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">2</span></div></div>
+            <div class="lifetime-bar-item"><div class="lifetime-school-name">St Martins Preparatory School</div><div class="lifetime-bar-wrap"><div class="lifetime-bar-track"><div class="lifetime-bar-fill" style="width:2%"></div></div><span class="lifetime-bar-value">1</span></div></div>
+        </div>
+    </section>
+    <!-- DASHBOARD_END -->
+
+</div>
 </div>
 
 <footer>
     <div style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.5rem;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="80" height="auto">
-            <defs><style>.cls-1{fill:#9e824c;}</style></defs>
-            <path class="cls-1" d="M382.7,5.84c-49.42,0-85.14,8.32-118,20.9a9.83,9.83,0,0,0-5.91,11.93l17,58.57a9.8,9.8,0,0,0,12.74,6.47C312.65,95,335.81,90.1,364.81,90.1c42.13,0,62.33,18.47,62.33,50.79v5.2c-17.9-6.35-46.17-12.12-75-12.12-57.7,0-100.36,20.75-115.91,61.12-6.19-59.31-42.92-107.2-115-107.2C53.31,87.89,5.33,141,5.33,208.05v.85c0,71.33,51,119.3,123.13,119.3,37.95,0,66.3-12.79,87.47-33.09a16.45,16.45,0,0,0-.89-24.54l-20.63-17.1A16.32,16.32,0,0,0,174,253c-13.06,10.21-25.95,14.87-41.31,14.87-11.37,0-21.34-2.62-29.44-7.83-13.55-8.73-6.81-29.95,9.31-29.95H220.73a16.28,16.28,0,0,0,9.14-2.79c-.06,1.57-.11,3.13-.11,4.74v1.15c0,62.33,45.59,96.38,105,96.38,31.67,0,56.44-9.31,75.92-24.46a9.8,9.8,0,0,1,15.84,7.72,9.81,9.81,0,0,0,9.81,9.81h88.87a9.81,9.81,0,0,0,9.82-9.81V143.2c0-43.86-9.81-76.18-33.47-99.27C476.77,19.12,438.68,5.84,382.7,5.84Z"/>
-            <path class="cls-1" d="M695,89.1c-24.38.68-41.27,11.08-53.44,27.84a6.78,6.78,0,0,1-12.24-4V99.78A6.79,6.79,0,0,0,622.52,93H555.43a6.79,6.79,0,0,0-6.79,6.79V315.89a6.79,6.79,0,0,0,6.79,6.79h67.09a6.79,6.79,0,0,0,6.79-6.79V251.36c0-53.08,23.77-77.28,65.81-77.28a6.79,6.79,0,0,0,6.79-6.79V95.91A6.8,6.8,0,0,0,695,89.1Z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 745.05 406.64" width="72" height="auto">
+            <defs><style>.f1{fill:#9e824c;}</style></defs>
+            <path class="f1" d="M382.7,5.84c-49.42,0-85.14,8.32-118,20.9a9.83,9.83,0,0,0-5.91,11.93l17,58.57a9.8,9.8,0,0,0,12.74,6.47C312.65,95,335.81,90.1,364.81,90.1c42.13,0,62.33,18.47,62.33,50.79v5.2c-17.9-6.35-46.17-12.12-75-12.12-57.7,0-100.36,20.75-115.91,61.12-6.19-59.31-42.92-107.2-115-107.2C53.31,87.89,5.33,141,5.33,208.05v.85c0,71.33,51,119.3,123.13,119.3,37.95,0,66.3-12.79,87.47-33.09a16.45,16.45,0,0,0-.89-24.54l-20.63-17.1A16.32,16.32,0,0,0,174,253c-13.06,10.21-25.95,14.87-41.31,14.87-11.37,0-21.34-2.62-29.44-7.83-13.55-8.73-6.81-29.95,9.31-29.95H220.73a16.28,16.28,0,0,0,9.14-2.79c-.06,1.57-.11,3.13-.11,4.74v1.15c0,62.33,45.59,96.38,105,96.38,31.67,0,56.44-9.31,75.92-24.46a9.8,9.8,0,0,1,15.84,7.72,9.81,9.81,0,0,0,9.81,9.81h88.87a9.81,9.81,0,0,0,9.82-9.81V143.2c0-43.86-9.81-76.18-33.47-99.27C476.77,19.12,438.68,5.84,382.7,5.84Z"/>
+            <path class="f1" d="M695,89.1c-24.38.68-41.27,11.08-53.44,27.84a6.78,6.78,0,0,1-12.24-4V99.78A6.79,6.79,0,0,0,622.52,93H555.43a6.79,6.79,0,0,0-6.79,6.79V315.89a6.79,6.79,0,0,0,6.79,6.79h67.09a6.79,6.79,0,0,0,6.79-6.79V251.36c0-53.08,23.77-77.28,65.81-77.28a6.79,6.79,0,0,0,6.79-6.79V95.91A6.8,6.8,0,0,0,695,89.1Z"/>
         </svg>
     </div>
-    Usage Analytics Dashboard &bull; Updated <span id="lastUpdated">8 May 2026</span>
+    Ear Academy Usage Analytics · Updated <span id="lastUpdated">8 May 2026</span>
 </footer>
 
 <script>
-document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+// Notes
+var notesKey='ear-academy-weekly-notes';
+function initNotes(){var ta=document.getElementById('weekly-notes');if(!ta)return;var saved=localStorage.getItem(notesKey);if(saved)ta.value=saved;ta.addEventListener('input',function(){localStorage.setItem(notesKey,ta.value);});}
+initNotes();
 
-// Tab switching
-document.querySelectorAll('.tab-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-        document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-        document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
-        btn.classList.add('active');
-        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
-    });
+// Footer date
+document.querySelectorAll('#lastUpdated').forEach(function(s){
+    if(s.textContent==='—')s.textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 });
 
-// Patterns data
+// ── Toggle patterns panel ──
+function togglePatterns(){
+    var btn=document.getElementById('pt-tab-toggle');
+    var panel=document.getElementById('pt-panel');
+    var main=document.getElementById('main-content');
+    var showing=panel.classList.contains('visible');
+    if(showing){
+        panel.classList.remove('visible');
+        main.classList.remove('hidden');
+        btn.classList.remove('active');
+    } else {
+        panel.classList.add('visible');
+        main.classList.add('hidden');
+        btn.classList.add('active');
+        if(!window._ptRendered){renderPatterns('all');window._ptRendered=true;}
+    }
+}
+
+// ── Patterns data ──
 var WEEKS=["2026-01-19","2026-02-02","2026-02-09","2026-02-16","2026-02-23","2026-03-09","2026-04-06","2026-04-13","2026-04-20","2026-04-27"];
 var SCHOOLS=[{s:"Koa Academy",tl:202,uw:8,ut:141,p:"Power User",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":1,"2026-02-16":73,"2026-02-23":45,"2026-03-09":27,"2026-04-06":12,"2026-04-13":19,"2026-04-20":23,"2026-04-27":2}},{s:"Acudeo Thornview Primary",tl:88,uw:4,ut:74,p:"High Frequency",q:true,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":0,"2026-02-16":4,"2026-02-23":10,"2026-03-09":73,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Princess Park College",tl:30,uw:8,ut:18,p:"Consistent Weekly",q:false,d:{"2026-01-19":1,"2026-02-02":4,"2026-02-09":0,"2026-02-16":2,"2026-02-23":9,"2026-03-09":2,"2026-04-06":3,"2026-04-13":8,"2026-04-20":1,"2026-04-27":0}},{s:"Hazyview Private Primary",tl:25,uw:5,ut:14,p:"High Frequency",q:false,d:{"2026-01-19":3,"2026-02-02":0,"2026-02-09":0,"2026-02-16":8,"2026-02-23":0,"2026-03-09":0,"2026-04-06":3,"2026-04-13":9,"2026-04-20":2,"2026-04-27":0}},{s:"Acudeo Thornview",tl:23,uw:3,ut:15,p:"Consistent Weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":5,"2026-04-13":13,"2026-04-20":5,"2026-04-27":0}},{s:"Kammaland Primary",tl:20,uw:9,ut:6,p:"Consistent Weekly",q:false,d:{"2026-01-19":1,"2026-02-02":5,"2026-02-09":3,"2026-02-16":2,"2026-02-23":2,"2026-03-09":2,"2026-04-06":0,"2026-04-13":2,"2026-04-20":2,"2026-04-27":1}},{s:"Royal Schools Alberton",tl:19,uw:4,ut:9,p:"Bi-weekly",q:false,d:{"2026-01-19":1,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":2,"2026-04-13":12,"2026-04-20":4,"2026-04-27":0}},{s:"Acudeo College Kirkney",tl:18,uw:4,ut:12,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":5,"2026-02-23":7,"2026-03-09":2,"2026-04-06":0,"2026-04-13":4,"2026-04-20":0,"2026-04-27":0}},{s:"Amberfield College",tl:17,uw:7,ut:6,p:"Consistent Weekly",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":1,"2026-02-16":4,"2026-02-23":3,"2026-03-09":1,"2026-04-06":0,"2026-04-13":6,"2026-04-20":1,"2026-04-27":0}},{s:"Generation Schools Hermanus",tl:14,uw:6,ut:7,p:"Bi-weekly",q:false,d:{"2026-01-19":1,"2026-02-02":7,"2026-02-09":2,"2026-02-16":1,"2026-02-23":0,"2026-03-09":0,"2026-04-06":1,"2026-04-13":2,"2026-04-20":0,"2026-04-27":0}},{s:"Acudeo Protea Glen",tl:14,uw:3,ut:8,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":2,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":7,"2026-04-20":5,"2026-04-27":0}},{s:"Harriston Primary School",tl:13,uw:8,ut:1,p:"Consistent Low-Volume",q:false,d:{"2026-01-19":0,"2026-02-02":2,"2026-02-09":2,"2026-02-16":2,"2026-02-23":2,"2026-03-09":1,"2026-04-06":1,"2026-04-13":2,"2026-04-20":1,"2026-04-27":0}},{s:"Sky City Primary School",tl:13,uw:5,ut:7,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":0,"2026-02-16":1,"2026-02-23":0,"2026-03-09":0,"2026-04-06":1,"2026-04-13":7,"2026-04-20":3,"2026-04-27":0}},{s:"Brescia House",tl:12,uw:1,ut:12,p:"Early Stage",q:true,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":12,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Queens Private School",tl:12,uw:6,ut:7,p:"Consistent Weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":1,"2026-02-16":3,"2026-02-23":1,"2026-03-09":1,"2026-04-06":0,"2026-04-13":1,"2026-04-20":5,"2026-04-27":0}},{s:"Reddam House Helderfontein",tl:12,uw:7,ut:1,p:"Consistent Low-Volume",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":2,"2026-02-16":1,"2026-02-23":2,"2026-03-09":1,"2026-04-06":0,"2026-04-13":3,"2026-04-20":2,"2026-04-27":0}},{s:"Etham College",tl:11,uw:4,ut:2,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":5,"2026-02-23":3,"2026-03-09":0,"2026-04-06":0,"2026-04-13":2,"2026-04-20":1,"2026-04-27":0}},{s:"CBC Mount Edmund",tl:9,uw:5,ut:2,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":1,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":2,"2026-04-20":3,"2026-04-27":2}},{s:"Acudeo Crystal Park",tl:9,uw:4,ut:7,p:"Consistent Weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":1,"2026-04-06":6,"2026-04-13":1,"2026-04-20":1,"2026-04-27":0}},{s:"Soofia International School",tl:8,uw:4,ut:5,p:"Bi-weekly",q:true,d:{"2026-01-19":0,"2026-02-02":3,"2026-02-09":1,"2026-02-16":2,"2026-02-23":2,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Trinity House",tl:7,uw:3,ut:1,p:"Early Stage",q:false,d:{"2026-01-19":0,"2026-02-02":2,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":3,"2026-04-20":2,"2026-04-27":0}},{s:"Applewood Preparatory",tl:7,uw:6,ut:1,p:"Consistent Low-Volume",q:false,d:{"2026-01-19":0,"2026-02-02":2,"2026-02-09":1,"2026-02-16":1,"2026-02-23":1,"2026-03-09":0,"2026-04-06":0,"2026-04-13":1,"2026-04-20":1,"2026-04-27":0}},{s:"Canaan College",tl:6,uw:2,ut:4,p:"Early Stage",q:true,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":2,"2026-02-23":4,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Prescient Primary",tl:6,uw:3,ut:1,p:"Early Stage",q:false,d:{"2026-01-19":0,"2026-02-02":2,"2026-02-09":1,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":3,"2026-04-20":0,"2026-04-27":0}},{s:"Eastside Primary School",tl:6,uw:5,ut:1,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":2,"2026-02-16":1,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":1,"2026-04-20":1,"2026-04-27":0}},{s:"Bay Primary",tl:6,uw:3,ut:2,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":1,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":3,"2026-04-20":0,"2026-04-27":2}},{s:"Royal Schools Starlight Academy",tl:5,uw:3,ut:2,p:"Early Stage",q:false,d:{"2026-01-19":0,"2026-02-02":2,"2026-02-09":0,"2026-02-16":2,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":1,"2026-04-20":0,"2026-04-27":0}},{s:"Welwitschia - C5",tl:5,uw:4,ut:3,p:"Consistent Low-Volume",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":1,"2026-04-13":2,"2026-04-20":1,"2026-04-27":1}},{s:"Calling Academy",tl:4,uw:2,ut:2,p:"Early Stage",q:true,d:{"2026-01-19":0,"2026-02-02":3,"2026-02-09":0,"2026-02-16":1,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Danie Ackermann Primary",tl:4,uw:3,ut:1,p:"Consistent Low-Volume",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":2,"2026-04-13":1,"2026-04-20":1,"2026-04-27":0}},{s:"dr.vanderross",tl:4,uw:3,ut:2,p:"Consistent Low-Volume",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":1,"2026-04-13":1,"2026-04-20":2,"2026-04-27":0}},{s:"Vergenoegd - C5",tl:4,uw:2,ut:4,p:"Consistent Weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":1,"2026-04-20":3,"2026-04-27":0}},{s:"St Catherines",tl:3,uw:3,ut:1,p:"Early Stage",q:false,d:{"2026-01-19":1,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":1,"2026-04-20":1,"2026-04-27":0}},{s:"Plettenberg Bay Christian Primary",tl:3,uw:3,ut:1,p:"Early Stage",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":1,"2026-04-20":1,"2026-04-27":0}},{s:"Herzlia Weitzman Primary School",tl:3,uw:2,ut:1,p:"Early Stage",q:false,d:{"2026-01-19":0,"2026-02-02":1,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":2,"2026-04-20":0,"2026-04-27":0}},{s:"Acudeo Thornview P&S School",tl:2,uw:2,ut:2,p:"Early Stage",q:true,d:{"2026-01-19":1,"2026-02-02":0,"2026-02-09":0,"2026-02-16":1,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Early Learning Centre",tl:2,uw:1,ut:2,p:"Early Stage",q:true,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":2,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Curro Langebaan Primary School",tl:2,uw:2,ut:1,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":1,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":1,"2026-04-27":0}},{s:"St Martin Preparatory School",tl:2,uw:2,ut:2,p:"Early Stage",q:true,d:{"2026-01-19":1,"2026-02-02":1,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Pinelands High School",tl:2,uw:1,ut:2,p:"Bi-weekly",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":2,"2026-04-20":0,"2026-04-27":0}},{s:"Herzlia Highlands",tl:2,uw:2,ut:1,p:"Early Stage",q:true,d:{"2026-01-19":1,"2026-02-02":1,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Lebone II College",tl:2,uw:1,ut:2,p:"Early Stage",q:true,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":2,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Academie Orfeus",tl:1,uw:1,ut:1,p:"One-time",q:true,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":1,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Holy Cross RC Primary",tl:1,uw:1,ut:1,p:"One-time",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":1,"2026-04-27":0}},{s:"Salford Community Leisure",tl:1,uw:1,ut:1,p:"One-time",q:true,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":1,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":0,"2026-04-27":0}},{s:"Sunvalley Primary School",tl:1,uw:1,ut:1,p:"One-time",q:false,d:{"2026-01-19":0,"2026-02-02":0,"2026-02-09":0,"2026-02-16":0,"2026-02-23":0,"2026-03-09":0,"2026-04-06":0,"2026-04-13":0,"2026-04-20":1,"2026-04-27":0}}];
 
 var PC={
     'Power User':           {bg:'#0F6E5618',text:'#085041',border:'#0F6E56'},
-    'High Frequency':       {bg:'#1D9E7518',text:'#0F6E56',border:'#1D9E75'},
-    'Consistent Weekly':    {bg:'#185FA518',text:'#0C447C',border:'#185FA5'},
+    'High Frequency':       {bg:'#00a19a18',text:'#006b66',border:'#00a19a'},
+    'Consistent Weekly':    {bg:'#1d70b818',text:'#0C447C',border:'#1d70b8'},
     'Consistent Low-Volume':{bg:'#534AB718',text:'#3C3489',border:'#534AB7'},
-    'Bi-weekly':            {bg:'#77C2D618',text:'#115F71',border:'#2a8fa3'},
-    'Early Stage':          {bg:'#88878018',text:'#5F5E5A',border:'#888780'},
-    'One-time':             {bg:'#B4B2A918',text:'#888780',border:'#B4B2A9'}
+    'Bi-weekly':            {bg:'#38aae118',text:'#1a6a9a',border:'#38aae1'},
+    'Early Stage':          {bg:'#d8d3cb40',text:'#666',border:'#d8d3cb'},
+    'One-time':             {bg:'#E8E4DF50',text:'#888',border:'#d8d3cb'}
 };
-
 var DESC={
-    'Power User':'Extremely high login volume with many unique teachers. Koa Academy has deeply embedded Ear Academy into their program — worth understanding what they are doing differently and using as a case study.',
+    'Power User':'Extremely high login volume with many unique teachers. Koa Academy has deeply embedded Ear Academy into their program — worth understanding what they do differently and using as a case study.',
     'High Frequency':'Multiple logins per week when active. These schools use the platform intensively in bursts. Note: Acudeo Thornview Primary had 73 logins in one week in March then went silent — worth a gentle check-in.',
     'Consistent Weekly':'Present in 75%+ of weeks since joining. Reliable, habitual usage — your most stable accounts. Low churn risk.',
-    'Consistent Low-Volume':'1–2 logins per week, every week, often a single teacher. Do not confuse low volume with low commitment — these schools are quietly but reliably engaged.',
+    'Consistent Low-Volume':'1–2 logins per week every week, often a single teacher. Do not confuse low volume with low commitment — these schools are quietly but reliably engaged.',
     'Bi-weekly':'Active roughly every other week, likely matching a fortnightly class schedule. This is a natural pattern, not a warning sign.',
     'Early Stage':'Fewer than 4 active weeks with inconsistent gaps. Too early to classify. Some in this group have been silent 6+ weeks and may warrant a soft check-in.',
-    'One-time':'Only appeared in one snapshot. No pattern established yet — worth monitoring over the next few weeks.',
+    'One-time':'Only appeared in one snapshot. No pattern established yet — monitor over the next few weeks before drawing conclusions.',
     'quiet':'Schools with no login activity for 6+ weeks. Some may have natural seasonal gaps — check their history before reaching out. Those with only 1–2 total logins may never have properly onboarded.'
 };
 
-function heatColor(v,max){
-    if(v===0)return '#E8E4DF';
-    var p=v/max;
-    if(p>0.6)return '#0F6E56';
-    if(p>0.25)return '#5DCAA5';
-    return '#c8eed9';
-}
-function sw(w){var pts=w.split('-');return parseInt(pts[1])+'/'+parseInt(pts[2]);}
+function heatColor(v,max){if(v===0)return '#E8E4DF';var p=v/max;if(p>0.6)return '#0F6E56';if(p>0.25)return '#5DCAA5';return '#c8eed9';}
+function sw(w){var p=w.split('-');return parseInt(p[1])+'/'+parseInt(p[2]);}
 
 function renderPatterns(f){
     var list=SCHOOLS;
     if(f==='quiet')list=SCHOOLS.filter(function(s){return s.q;});
     else if(f!=='all')list=SCHOOLS.filter(function(s){return s.p===f;});
     document.getElementById('pt-count').textContent=list.length;
-
     var db=document.getElementById('pt-desc-box');
     if(DESC[f]){db.style.display='block';db.innerHTML='<strong>'+(f==='quiet'?'Gone quiet':f)+':</strong> '+DESC[f];}
-    else{db.style.display='none';}
-
-    document.getElementById('pt-week-headers').innerHTML=WEEKS.map(function(w){
-        return '<div style="width:19px;font-size:0.6rem;color:var(--gray);text-align:center;">'+sw(w)+'</div>';
-    }).join('');
-
+    else db.style.display='none';
+    document.getElementById('pt-week-headers').innerHTML=WEEKS.map(function(w){return '<div style="width:19px;font-size:0.58rem;color:var(--gray);text-align:center;">'+sw(w)+'</div>';}).join('');
     document.getElementById('pt-school-list').innerHTML=list.map(function(sch){
         var maxV=Math.max.apply(null,WEEKS.map(function(w){return sch.d[w]||0;}));
         maxV=Math.max(maxV,1);
-        var cells=WEEKS.map(function(w){
-            var v=sch.d[w]||0;
-            return '<div class="pt-heat-cell" style="background:'+heatColor(v,maxV)+'" title="'+sw(w)+': '+v+' login'+(v!==1?'s':'')+'"></div>';
-        }).join('');
+        var cells=WEEKS.map(function(w){var v=sch.d[w]||0;return '<div class="pt-heat-cell" style="background:'+heatColor(v,maxV)+'" title="'+sw(w)+': '+v+' login'+(v!==1?'s':'')+'"></div>';}).join('');
         var pc=PC[sch.p]||PC['One-time'];
         var shortP=sch.p==='Consistent Low-Volume'?'Low-volume':sch.p==='Consistent Weekly'?'Weekly':sch.p==='High Frequency'?'Hi-freq':sch.p;
         var qt=sch.q?'<span class="pt-quiet-tag">quiet</span>':'';
-        return '<div class="pt-school-row">'+
-            '<div><div class="pt-school-name">'+sch.s+qt+'</div>'+
-            '<div class="pt-school-meta">'+sch.tl+' logins &bull; '+sch.ut+' teachers &bull; '+sch.uw+' active weeks</div></div>'+
-            '<div class="pt-heat-row">'+cells+'</div>'+
-            '<div><span class="pt-badge" style="background:'+pc.bg+';color:'+pc.text+';border:1.5px solid '+pc.border+'">'+shortP+'</span></div>'+
-        '</div>';
+        return '<div class="pt-school-row"><div><div class="pt-school-name">'+sch.s+qt+'</div><div class="pt-school-meta">'+sch.tl+' logins &bull; '+sch.ut+' teachers &bull; '+sch.uw+' active weeks</div></div><div class="pt-heat-row">'+cells+'</div><div><span class="pt-badge" style="background:'+pc.bg+';color:'+pc.text+';border:1.5px solid '+pc.border+'">'+shortP+'</span></div></div>';
     }).join('');
 }
 
@@ -442,8 +598,6 @@ document.getElementById('pt-filters').addEventListener('click',function(e){
     btn.classList.add('active');
     renderPatterns(btn.dataset.pattern);
 });
-
-renderPatterns('all');
 </script>
 </body>
 </html>

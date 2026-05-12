@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAM Depletion Dashboard - Ear Academy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .card.healthy { border-left-color: #10b981; }
+        .card.warning { border-left-color: #f59e0b; }
+        .card.critical { border-left-color: #ef4444; }
+        
+        .card-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-value {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .card-subtitle {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        th {
+            background: #f9f9f9;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-healthy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        /* Progress Bars */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.healthy { background: #10b981; }
+        .progress-fill.warning { background: #f59e0b; }
+        .progress-fill.critical { background: #ef4444; }
+        
+        /* Number formatting */
+        .metric-good { color: #10b981; font-weight: 600; }
+        .metric-warning { color: #f59e0b; font-weight: 600; }
+        .metric-bad { color: #ef4444; font-weight: 600; }
+        
+        .small-text {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+        
+        .alert.info {
+            background: #dbeafe;
+            border-left-color: #3b82f6;
+            color: #1e40af;
+        }
+        
+        .alert.warning {
+            background: #fef3c7;
+            border-left-color: #f59e0b;
+            color: #92400e;
+        }
+        
+        .alert.critical {
+            background: #fee2e2;
+            border-left-color: #ef4444;
+            color: #991b1b;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .alert-list {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .alert-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TAM Depletion Dashboard</h1>
+        <p class="subtitle">Independent Schools Market - South Africa | Updated: February 17, 2026</p>
+        
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="card">
+                <div class="card-label">Total TAM</div>
+                <div class="card-value" id="total-tam">2,469</div>
+                <div class="card-subtitle">Independent schools across SA</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-label">20% Target</div>
+                <div class="card-value" id="total-target">494</div>
+                <div class="card-subtitle">Schools needed to succeed</div>
+            </div>
+            
+            <div class="card" id="customers-card">
+                <div class="card-label">Current Customers</div>
+                <div class="card-value" id="total-customers">42</div>
+                <div class="card-subtitle"><span id="customer-percentage">8.5%</span> of target achieved</div>
+            </div>
+            
+            <div class="card" id="runway-card">
+                <div class="card-label">National Runway</div>
+                <div class="card-value" id="national-runway">+24%</div>
+                <div class="card-subtitle">Available opportunities vs target (after expected NOs)</div>
+            </div>
+        </div>
+        
+        <!-- Province Table -->
+        <h2 style="margin-bottom: 15px; font-size: 20px;">Provincial Breakdown</h2>
+        
+        <div class="table-container">
+            <table id="tam-table">
+                <thead>
+                    <tr>
+                        <th>Province</th>
+                        <th>TAM</th>
+                        <th>Target (20%)</th>
+                        <th>Won</th>
+                        <th>Still Need</th>
+                        <th>Contacted</th>
+                        <th>% Contacted</th>
+                        <th>Hard NOs</th>
+                        <th>NO Rate</th>
+                        <th>Convertible Pool</th>
+                        <th>Runway</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="province-data">
+                    <!-- Data populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Alerts (moved below table) -->
+        <div id="alerts-container" style="margin-top: 30px;"></div>
+        
+        <!-- Calculation Explanation -->
+        <div style="background: #f9f9f9; padding: 20px; margin-top: 30px;">
+            <h3 style="font-size: 16px; margin-bottom: 10px;">How Metrics Are Calculated</h3>
+            <ul style="padding-left: 20px; line-height: 1.8; font-size: 14px; color: #666;">
+                <li><strong>% Contacted:</strong> (All contacted schools / TAM) × 100 | ⚠️ Warning at 80%</li>
+                <li><strong>Hard NO Rate:</strong> (Schools who said NO / Total contacted) × 100 | 🚨 Critical at 60%</li>
+                <li><strong>Convertible Pool:</strong> Uncontacted + Replied + In Pipeline (excludes Hard NOs and Customers)</li>
+                <li><strong>National Runway:</strong> Can we hit the 494-school target with what's left?
+                    <ul style="margin-top: 5px; padding-left: 20px;">
+                        <li><strong>Convertible Pool</strong> = All schools we haven't lost or won yet</li>
+                        <li><strong>Expected NOs</strong> = Pool × Current Hard NO Rate (realistic projection)</li>
+                        <li><strong>Net Available</strong> = Pool - Expected NOs (what we can actually convert)</li>
+                        <li><strong>Still Need</strong> = 494 target - Current customers</li>
+                        <li><strong>Runway</strong> = (Net Available - Still Need) / Still Need × 100%</li>
+                        <li><strong>Example:</strong> +24% = We have 24% MORE opportunities than needed (comfortable margin)</li>
+                        <li><strong>Example:</strong> -15% = We're SHORT by 15% (can't hit target even with perfect conversion)</li>
+                    </ul>
+                </li>
+                <li><strong>Provincial Runway:</strong> Same calculation per province
+                    <ul style="margin-top: 5px; padding-left: 20px;">
+                        <li>🟢 >50% = Healthy runway, plenty of margin</li>
+                        <li>🟡 0-50% = Tight but achievable</li>
+                        <li>🚨 <0% = Mathematically underwater, can't hit 20% target for this province</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Province data with realistic test scenarios
+        const provinceData = [
+            {
+                name: 'Gauteng',
+                tam: 937,
+                target: 187,
+                won: 18,
+                uncontacted: 320,
+                contacted: 617,
+                replied: 180,
+                hardNos: 340,
+                inPipeline: 79
+            },
+            {
+                name: 'Western Cape',
+                tam: 331,
+                target: 66,
+                won: 8,
+                uncontacted: 45,
+                contacted: 286,
+                replied: 95,
+                hardNos: 152,
+                inPipeline: 39
+            },
+            {
+                name: 'Eastern Cape',
+                tam: 305,
+                target: 61,
+                won: 3,
+                uncontacted: 75,
+                contacted: 230,
+                replied: 68,
+                hardNos: 145,
+                inPipeline: 17
+            },
+            {
+                name: 'KwaZulu-Natal',
+                tam: 277,
+                target: 55,
+                won: 5,
+                uncontacted: 120,
+                contacted: 157,
+                replied: 52,
+                hardNos: 85,
+                inPipeline: 20
+            },
+            {
+                name: 'Limpopo',
+                tam: 233,
+                target: 47,
+                won: 2,
+                uncontacted: 140,
+                contacted: 93,
+                replied: 28,
+                hardNos: 55,
+                inPipeline: 10
+            },
+            {
+                name: 'Mpumalanga',
+                tam: 137,
+                target: 27,
+                won: 3,
+                uncontacted: 65,
+                contacted: 72,
+                replied: 22,
+                hardNos: 38,
+                inPipeline: 12
+            },
+            {
+                name: 'North West',
+                tam: 121,
+                target: 24,
+                won: 2,
+                uncontacted: 55,
+                contacted: 66,
+                replied: 18,
+                hardNos: 40,
+                inPipeline: 8
+            },
+            {
+                name: 'Free State',
+                tam: 83,
+                target: 17,
+                won: 1,
+                uncontacted: 40,
+                contacted: 43,
+                replied: 12,
+                hardNos: 28,
+                inPipeline: 3
+            },
+            {
+                name: 'Northern Cape',
+                tam: 46,
+                target: 9,
+                won: 0,
+                uncontacted: 25,
+                contacted: 21,
+                replied: 6,
+                hardNos: 13,
+                inPipeline: 2
+            }
+        ];
+
+        function calculateMetrics(province) {
+            const stillNeed = province.target - province.won;
+            const contactedPercent = (province.contacted / province.tam * 100).toFixed(1);
+            const noRate = province.contacted > 0 ? (province.hardNos / province.contacted * 100).toFixed(1) : 0;
+            
+            // Convertible Pool = Uncontacted + Replied + In Pipeline
+            const convertiblePool = province.uncontacted + province.replied + province.inPipeline;
+            
+            // Expected NOs from pool based on current NO rate
+            const currentNoRate = province.contacted > 0 ? province.hardNos / province.contacted : 0;
+            const expectedNos = Math.round(convertiblePool * currentNoRate);
+            
+            // Net available after expected NOs
+            const netAvailable = convertiblePool - expectedNos;
+            
+            // Runway calculation
+            const runway = stillNeed > 0 ? ((netAvailable - stillNeed) / stillNeed * 100).toFixed(0) : 100;
+            
+            // Status determination
+            let status = 'healthy';
+            let statusText = '🟢 Healthy';
+            
+            const contactedWarning = parseFloat(contactedPercent) >= 80;
+            const noRateWarning = parseFloat(noRate) >= 60;
+            const runwayWarning = parseFloat(runway) < 0;
+            
+            if ((contactedWarning && noRateWarning) || runwayWarning) {
+                status = 'critical';
+                statusText = '🚨 Critical';
+            } else if (contactedWarning || noRateWarning || parseFloat(runway) < 50) {
+                status = 'warning';
+                statusText = '⚠️ Warning';
+            }
+            
+            return {
+                stillNeed,
+                contactedPercent,
+                noRate,
+                convertiblePool,
+                netAvailable,
+                runway,
+                status,
+                statusText,
+                contactedWarning,
+                noRateWarning,
+                runwayWarning
+            };
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('province-data');
+            tbody.innerHTML = '';
+            
+            let totalCustomers = 0;
+            let totalTarget = 0;
+            let alerts = { critical: [], warning: [] };
+            
+            provinceData.forEach(province => {
+                const metrics = calculateMetrics(province);
+                totalCustomers += province.won;
+                totalTarget += province.target;
+                
+                // Collect alerts
+                if (metrics.status === 'critical') {
+                    let reasons = [];
+                    if (metrics.contactedWarning) reasons.push(`${metrics.contactedPercent}% contacted`);
+                    if (metrics.noRateWarning) reasons.push(`${metrics.noRate}% Hard NO rate`);
+                    if (metrics.runwayWarning) reasons.push(`${metrics.runway}% runway`);
+                    alerts.critical.push(`${province.name}: ${reasons.join(', ')}`);
+                } else if (metrics.status === 'warning') {
+                    let reasons = [];
+                    if (metrics.contactedWarning) reasons.push(`${metrics.contactedPercent}% contacted`);
+                    if (metrics.noRateWarning) reasons.push(`${metrics.noRate}% Hard NO rate`);
+                    if (parseFloat(metrics.runway) < 50 && parseFloat(metrics.runway) >= 0) reasons.push(`${metrics.runway}% runway`);
+                    alerts.warning.push(`${province.name}: ${reasons.join(', ')}`);
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${province.name}</strong></td>
+                    <td>${province.tam}</td>
+                    <td>${province.target}</td>
+                    <td>${province.won}</td>
+                    <td>${metrics.stillNeed}</td>
+                    <td>${province.contacted}</td>
+                    <td>
+                        <span class="${metrics.contactedWarning ? 'metric-bad' : 'metric-good'}">
+                            ${metrics.contactedPercent}%
+                        </span>
+                        <div class="progress-bar" style="margin-top: 4px;">
+                            <div class="progress-fill ${metrics.contactedWarning ? 'critical' : 'healthy'}" 
+                                 style="width: ${Math.min(metrics.contactedPercent, 100)}%"></div>
+                        </div>
+                    </td>
+                    <td>${province.hardNos}</td>
+                    <td>
+                        <span class="${metrics.noRateWarning ? 'metric-bad' : metrics.noRate > 40 ? 'metric-warning' : 'metric-good'}">
+                            ${metrics.noRate}%
+                        </span>
+                    </td>
+                    <td>
+                        <strong>${metrics.convertiblePool}</strong>
+                        <div class="small-text">Net: ${metrics.netAvailable}</div>
+                    </td>
+                    <td>
+                        <span class="${metrics.runwayWarning ? 'metric-bad' : parseFloat(metrics.runway) < 50 ? 'metric-warning' : 'metric-good'}">
+                            ${metrics.runway > 0 ? '+' : ''}${metrics.runway}%
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${metrics.status}">
+                            ${metrics.statusText}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Update summary cards
+            document.getElementById('total-customers').textContent = totalCustomers;
+            document.getElementById('customer-percentage').textContent = 
+                ((totalCustomers / totalTarget) * 100).toFixed(1) + '%';
+            
+            // Calculate national runway
+            const totalTAM = provinceData.reduce((sum, p) => sum + p.tam, 0);
+            const totalContacted = provinceData.reduce((sum, p) => sum + p.contacted, 0);
+            const totalHardNos = provinceData.reduce((sum, p) => sum + p.hardNos, 0);
+            const totalUncontacted = provinceData.reduce((sum, p) => sum + p.uncontacted, 0);
+            const totalReplied = provinceData.reduce((sum, p) => sum + p.replied, 0);
+            const totalPipeline = provinceData.reduce((sum, p) => sum + p.inPipeline, 0);
+            
+            const nationalConvertiblePool = totalUncontacted + totalReplied + totalPipeline;
+            const nationalNoRate = totalContacted > 0 ? totalHardNos / totalContacted : 0;
+            const nationalExpectedNos = Math.round(nationalConvertiblePool * nationalNoRate);
+            const nationalNetAvailable = nationalConvertiblePool - nationalExpectedNos;
+            const nationalStillNeed = totalTarget - totalCustomers;
+            const nationalRunway = ((nationalNetAvailable - nationalStillNeed) / nationalStillNeed * 100).toFixed(0);
+            
+            document.getElementById('national-runway').textContent = 
+                (nationalRunway > 0 ? '+' : '') + nationalRunway + '%';
+            
+            const runwayCard = document.getElementById('runway-card');
+            runwayCard.className = 'card';
+            if (nationalRunway < 0) {
+                runwayCard.classList.add('critical');
+            } else if (nationalRunway < 50) {
+                runwayCard.classList.add('warning');
+            } else {
+                runwayCard.classList.add('healthy');
+            }
+            
+            // Render alerts
+            renderAlerts(alerts);
+        }
+        
+        function renderAlerts(alerts) {
+            const container = document.getElementById('alerts-container');
+            container.innerHTML = '';
+            
+            if (alerts.critical.length > 0) {
+                const criticalAlert = document.createElement('div');
+                criticalAlert.className = 'alert critical';
+                criticalAlert.innerHTML = `
+                    <div class="alert-title">🚨 Critical Alerts (${alerts.critical.length} provinces)</div>
+                    <ul class="alert-list">
+                        ${alerts.critical.map(a => `<li>${a}</li>`).join('')}
+                    </ul>
+                `;
+                container.appendChild(criticalAlert);
+            }
+            
+            if (alerts.warning.length > 0) {
+                const warningAlert = document.createElement('div');
+                warningAlert.className = 'alert warning';
+                warningAlert.innerHTML = `
+                    <div class="alert-title">⚠️ Warnings (${alerts.warning.length} provinces)</div>
+                    <ul class="alert-list">
+                        ${alerts.warning.map(a => `<li>${a}</li>`).join('')}
+                    </ul>
+                `;
+                container.appendChild(warningAlert);
+            }
+            
+            if (alerts.critical.length === 0 && alerts.warning.length === 0) {
+                const healthyAlert = document.createElement('div');
+                healthyAlert.className = 'alert info';
+                healthyAlert.innerHTML = `
+                    <div class="alert-title">✅ All provinces in healthy position</div>
+                    No critical alerts or warnings at this time.
+                `;
+                container.appendChild(healthyAlert);
+            }
+        }
+
+        // Initialize on page load
+        renderTable();
+    </script>
+</body>
+</html>
