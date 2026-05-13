@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-13T14:08:01Z",
-  "generated_label": "13 May 2026 at 14:08",
+  "generated_at": "2026-05-13T14:20:43Z",
+  "generated_label": "13 May 2026 at 14:20",
   "pipeline4": {
     "total": 286,
     "avg_days_in_stage": 188,
@@ -865,7 +865,7 @@
         "id": "1549",
         "title": "Canterbury Prep",
         "days_in_stage": 233,
-        "total_age_days": 281,
+        "total_age_days": 282,
         "value_zar": 8050,
         "cdate": "2025-08-04"
       },
