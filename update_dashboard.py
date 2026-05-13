@@ -1221,6 +1221,290 @@ def build_lifetime_logins_html(lifetime_data):
         </section>'''
 
 
+# ── Usage Patterns tab ───────────────────────────────────────────────────────
+# Classifies every AC-roster school into a usage pattern based on snapshot
+# activity. Rules are intentionally simple and reproducible — tune the
+# constants below if the categories need adjustment.
+
+PATTERN_RULES = {
+    'power_min_tl':         100,    # Power User: ≥100 lifetime logins
+    'power_min_teachers':   50,     # Power User: ≥50 distinct teachers
+    'highfreq_min_tl':      20,     # High Frequency: ≥20 lifetime logins
+    'highfreq_min_per_wk':  4.5,    # High Frequency: ≥4.5 logins per active week
+    'consistent_min_ratio': 0.6,    # Consistent: active in ≥60% of weeks since first login
+    'consistent_lowvol_max_per_wk': 2,  # Low-Vol Consistent: ≤2 logins per active week
+    'early_stage_max_uw':   3,      # Early Stage: <4 active weeks
+    'quiet_min_weeks':      6,      # Gone Quiet overlay: ≥6 weeks since last login
+}
+
+PATTERN_DESCRIPTIONS = {
+    'Power User':            'Extremely high login volume with many unique teachers. These schools have deeply embedded Ear Academy into their program — worth understanding what they do differently and using as case studies.',
+    'High Frequency':        'Multiple logins per active week. These schools use the platform intensively in bursts. Watch for big spikes followed by silence — worth a gentle check-in.',
+    'Consistent Weekly':     'Present in 60%+ of weeks since joining. Reliable, habitual usage — your most stable accounts. Low churn risk.',
+    'Consistent Low-Volume': '1–2 logins per active week, often a single teacher. Do not confuse low volume with low commitment — quietly but reliably engaged.',
+    'Bi-weekly':             'Active roughly every other week, likely matching a fortnightly class schedule. Natural pattern, not a warning sign.',
+    'Early Stage':           'Fewer than 4 active weeks. Too early to classify — monitor over the next few weeks.',
+    'One-time':              'Only appeared in one snapshot. No pattern established yet.',
+    'Not Yet Active':        'A paying school per ActiveCampaign, but no snapshot logins yet. Onboarding follow-up may be needed.',
+    'quiet':                 'No login activity for 6+ weeks. Some may have natural seasonal gaps — check their history before reaching out.',
+}
+
+# Display colours per pattern (used by the heatmap legend / badge styles)
+PATTERN_COLORS = {
+    'Power User':            {'bg': '#0F6E5618', 'text': '#085041', 'border': '#0F6E56'},
+    'High Frequency':        {'bg': '#00a19a18', 'text': '#006b66', 'border': '#00a19a'},
+    'Consistent Weekly':     {'bg': '#1d70b818', 'text': '#0C447C', 'border': '#1d70b8'},
+    'Consistent Low-Volume': {'bg': '#534AB718', 'text': '#3C3489', 'border': '#534AB7'},
+    'Bi-weekly':             {'bg': '#38aae118', 'text': '#1a6a9a', 'border': '#38aae1'},
+    'Early Stage':           {'bg': '#d8d3cb40', 'text': '#666',    'border': '#d8d3cb'},
+    'One-time':              {'bg': '#E8E4DF50', 'text': '#888',    'border': '#d8d3cb'},
+    'Not Yet Active':        {'bg': '#F8E7D5',   'text': '#8a4a1f', 'border': '#d49a55'},
+}
+
+# Display order for the filter pills (and matches the heatmap sort priority)
+PATTERN_ORDER = [
+    'Power User', 'High Frequency', 'Consistent Weekly',
+    'Consistent Low-Volume', 'Bi-weekly', 'Early Stage',
+    'One-time', 'Not Yet Active',
+]
+
+
+def _classify_pattern(tl, uw, ut, weeks_span, weeks_since_last):
+    """Return (pattern_name, is_quiet) for a single school."""
+    r = PATTERN_RULES
+    if tl == 0:
+        return 'Not Yet Active', False
+    quiet = weeks_since_last >= r['quiet_min_weeks']
+
+    if tl >= r['power_min_tl'] and ut >= r['power_min_teachers']:
+        return 'Power User', quiet
+    if uw == 1:
+        return 'One-time', quiet
+    if uw <= r['early_stage_max_uw']:
+        return 'Early Stage', quiet
+    per_week = tl / max(uw, 1)
+    if tl >= r['highfreq_min_tl'] and per_week >= r['highfreq_min_per_wk']:
+        return 'High Frequency', quiet
+    consistency = uw / max(weeks_span, 1)
+    if consistency >= r['consistent_min_ratio']:
+        if per_week <= r['consistent_lowvol_max_per_wk']:
+            return 'Consistent Low-Volume', quiet
+        return 'Consistent Weekly', quiet
+    return 'Bi-weekly', quiet
+
+
+def calc_usage_patterns(combined):
+    """Build the data feeding the Usage Patterns tab.
+
+    Output schema:
+      {
+        'weeks': [iso-date strings, one per snapshot week, ascending],
+        'schools': [ {'s', 'tl', 'uw', 'ut', 'p', 'q', 'd': {iso: count}} ],
+        'pattern_counts': { pattern_name: count },
+        'totals': {
+            'schools_tracked': int,    # = len(roster) when roster present
+            'total_logins': int,
+            'weeks_of_data': int,
+            'gone_quiet': int,
+            'consistent_users': int,   # Consistent Weekly + Low-Volume
+            'bi_weekly_users': int,
+            'not_yet_active': int,
+        },
+        'date_range_label': 'Jan 19 – May 12, 2026',
+      }
+    """
+    pay = paying(combined)
+    if pay.empty:
+        return None
+
+    # Determine the snapshot week-anchor for each row: Monday of the snapshot date.
+    pay = pay.copy()
+    pay['WeekStart'] = (pay['Date'] - pd.to_timedelta(pay['Date'].dt.weekday, unit='D')).dt.normalize()
+
+    weeks_sorted = sorted(pay['WeekStart'].unique())
+    weeks_iso    = [pd.Timestamp(w).strftime('%Y-%m-%d') for w in weeks_sorted]
+    latest_week  = pd.Timestamp(weeks_sorted[-1])
+
+    # Resolve each row to its roster entry so the school list matches the roster.
+    if _ROSTER_LOOKUP is not None:
+        pay['DealId'] = pay['School'].apply(
+            lambda n: (resolve_to_roster(n) or {}).get('deal_id'))
+        pay = pay.dropna(subset=['DealId'])
+    else:
+        pay['DealId'] = pay['School']  # legacy fallback: use snapshot name as key
+
+    # Pick the most-common snapshot name per deal_id as the display name.
+    name_counter = {}
+    for sname, did in pay[['School', 'DealId']].itertuples(index=False):
+        name_counter.setdefault(did, Counter())[sname] += 1
+    display_name_for = {did: ctr.most_common(1)[0][0]
+                        for did, ctr in name_counter.items()}
+
+    # Per-school per-week login counts (deduplicated by School+Email+Date).
+    base = total_logins(pay)
+    base = base[['DealId', 'WeekStart', 'Email', 'UserRole', 'Date']]
+    per_school_week = (base.groupby(['DealId', 'WeekStart'])['Email']
+                            .count()
+                            .reset_index()
+                            .rename(columns={'Email': 'logins'}))
+
+    schools_out = []
+    # First, every active roster school (or every snapshot deal_id in legacy mode)
+    active_ids = set(per_school_week['DealId'].unique())
+    for did in active_ids:
+        rows = per_school_week[per_school_week['DealId'] == did]
+        d_map = {pd.Timestamp(w).strftime('%Y-%m-%d'): int(n)
+                 for w, n in zip(rows['WeekStart'], rows['logins'])}
+        tl = sum(d_map.values())
+        uw = len(d_map)
+
+        sub = base[base['DealId'] == did]
+        ut = sub['Email'].nunique()
+
+        first_week = pd.Timestamp(sub['WeekStart'].min())
+        weeks_span = max(int((latest_week - first_week).days // 7) + 1, 1)
+
+        last_week  = pd.Timestamp(sub['WeekStart'].max())
+        weeks_since_last = int((latest_week - last_week).days // 7)
+
+        pattern, quiet = _classify_pattern(tl, uw, ut, weeks_span, weeks_since_last)
+        schools_out.append({
+            's':  display_name_for.get(did, str(did)),
+            'tl': tl, 'uw': uw, 'ut': ut,
+            'p':  pattern, 'q': quiet, 'd': d_map,
+        })
+
+    # Then, silent roster schools — they get 'Not Yet Active' and empty d_map.
+    if _ROSTER:
+        for entry in _ROSTER:
+            if entry['deal_id'] in active_ids:
+                continue
+            schools_out.append({
+                's':  clean_roster_display_name(entry),
+                'tl': 0, 'uw': 0, 'ut': 0,
+                'p':  'Not Yet Active', 'q': False,
+                'd':  {w: 0 for w in weeks_iso},
+            })
+
+    schools_out.sort(key=lambda x: (-x['tl'], x['s'].lower()))
+
+    pattern_counts = Counter(s['p'] for s in schools_out)
+    gone_quiet     = sum(1 for s in schools_out if s['q'])
+    consistent     = pattern_counts.get('Consistent Weekly', 0) + pattern_counts.get('Consistent Low-Volume', 0)
+    bi_weekly      = pattern_counts.get('Bi-weekly', 0)
+    not_yet_active = pattern_counts.get('Not Yet Active', 0)
+
+    schools_tracked = len(_ROSTER) if _ROSTER else len(schools_out)
+    total_logins_v  = sum(s['tl'] for s in schools_out)
+
+    first_str = pd.Timestamp(weeks_sorted[0]).strftime('%-d %b')
+    last_str  = pd.Timestamp(weeks_sorted[-1]).strftime('%-d %b %Y')
+    date_range_label = f'{first_str} – {last_str}'
+
+    return {
+        'weeks':        weeks_iso,
+        'schools':      schools_out,
+        'pattern_counts': dict(pattern_counts),
+        'totals': {
+            'schools_tracked': schools_tracked,
+            'total_logins':    total_logins_v,
+            'weeks_of_data':   len(weeks_iso),
+            'gone_quiet':      gone_quiet,
+            'consistent_users': consistent,
+            'bi_weekly_users':  bi_weekly,
+            'not_yet_active':   not_yet_active,
+        },
+        'date_range_label': date_range_label,
+    }
+
+
+def build_usage_patterns_html(p):
+    """Build the visible HTML block (summary tiles + filter pills) for the tab.
+    Returns the HTML string to drop between PATTERNS_BLOCK_START/END markers.
+    """
+    if not p:
+        return '<p>No usage-pattern data available.</p>'
+
+    t   = p['totals']
+    pc  = p['pattern_counts']
+    n_schools = t['schools_tracked']
+    n_snapshots = sum(1 for _ in p['weeks'])
+
+    def pill(pattern_key, label, color_text):
+        count = pc.get(pattern_key, 0)
+        return (f'<button class="pt-filter-btn" data-pattern="{pattern_key}" '
+                f'style="color:{color_text}">{label} ({count})</button>')
+
+    pills_html = (
+        f'<button class="pt-filter-btn active" data-pattern="all" '
+        f'style="color:var(--dark)">All schools ({n_schools})</button>'
+        + pill('Power User',            '⚡ Power user',          '#085041')
+        + pill('High Frequency',        '🔥 High frequency',      'var(--green)')
+        + pill('Consistent Weekly',     '📅 Consistent weekly',   'var(--lapis)')
+        + pill('Consistent Low-Volume', '📆 Low-vol consistent',  '#534AB7')
+        + pill('Bi-weekly',             '〰 Bi-weekly',           'var(--sky)')
+        + pill('Early Stage',           '🌱 Early stage',         'var(--gray)')
+        + pill('One-time',              '👋 One-time',            '#B4B2A9')
+        + pill('Not Yet Active',        '🆕 Not yet active',      '#8a4a1f')
+        + f'<button class="pt-filter-btn" data-pattern="quiet" '
+          f'style="color:#b91c1c">🔴 Gone quiet ({t["gone_quiet"]})</button>'
+    )
+
+    return f'''<h2 class="section-title pacific">🔍 Usage Patterns — {p["date_range_label"]}</h2>
+        <p class="section-desc">{n_snapshots} weekly snapshots · {n_schools} paying schools · {p["date_range_label"]} · Click a filter to explore</p>
+
+        <div class="pt-summary-grid">
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">{n_schools}</div><div class="pt-card-label">Paying schools (AC)</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">{t["total_logins"]}</div><div class="pt-card-label">Total logins</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{t["weeks_of_data"]}</div><div class="pt-card-label">Weeks of data</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">{t["gone_quiet"]}</div><div class="pt-card-label">Gone quiet 6+ wks</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--gold2)"></div><div class="pt-card-num">{t["consistent_users"]}</div><div class="pt-card-label">Consistent users</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--shale)"></div><div class="pt-card-num">{t["bi_weekly_users"]}</div><div class="pt-card-label">Bi-weekly users</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:#d49a55"></div><div class="pt-card-num" style="color:#8a4a1f">{t["not_yet_active"]}</div><div class="pt-card-label">Not yet active</div></div>
+        </div>
+
+        <div class="pt-filters" id="pt-filters">
+            {pills_html}
+        </div>
+
+        <div class="pt-desc-box" id="pt-desc-box"></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong id="pt-count">{n_schools}</strong> schools &nbsp;·&nbsp; Heatmap: {p["date_range_label"]}</div>
+            <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#c8eed9;vertical-align:middle;margin-right:3px;"></span>Low</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#E8E4DF;vertical-align:middle;margin-right:3px;"></span>None</span>
+            </div>
+        </div>
+
+        <div class="pt-table-header">
+            <div>School</div>
+            <div id="pt-week-headers" style="display:flex;gap:3px;"></div>
+            <div>Pattern</div>
+        </div>
+        <div class="pt-school-list" id="pt-school-list"></div>'''
+
+
+def build_usage_patterns_js(p):
+    """Build the JS data block (WEEKS, SCHOOLS, PC, DESC) for the heatmap.
+    Returns the JS source to drop between PATTERNS_DATA_START/END markers.
+    """
+    if not p:
+        return 'var WEEKS=[];var SCHOOLS=[];var PC={};var DESC={};'
+
+    weeks_js   = json.dumps(p['weeks'])
+    schools_js = json.dumps(p['schools'], ensure_ascii=False)
+    pc_js      = json.dumps(PATTERN_COLORS, ensure_ascii=False)
+    desc_js    = json.dumps(PATTERN_DESCRIPTIONS, ensure_ascii=False)
+
+    return (f'var WEEKS={weeks_js};\n'
+            f'var SCHOOLS={schools_js};\n'
+            f'var PC={pc_js};\n'
+            f'var DESC={desc_js};')
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -1279,6 +1563,7 @@ def main():
     w_stats, last6 = calc_weekly_trends(combined)
     top10         = calc_top10(combined)
     lifetime_data = calc_lifetime_logins(combined)
+    usage_patterns = calc_usage_patterns(combined)
 
     # Build HTML sections
     daily_pulse_html  = build_daily_pulse_html(dp)
@@ -1287,6 +1572,8 @@ def main():
     trends_html       = build_trends_html(w_stats, last6)
     top10_html        = build_top10_html(top10)
     lifetime_html     = build_lifetime_logins_html(lifetime_data)
+    pt_block_html     = build_usage_patterns_html(usage_patterns)
+    pt_data_js        = build_usage_patterns_js(usage_patterns)
 
     updated_date = combined['Date'].max().strftime('%-d %B %Y')
 
@@ -1311,6 +1598,21 @@ def main():
         f'<!-- DASHBOARD_START -->{new_content}\n        <!-- DASHBOARD_END -->',
         html, flags=re.DOTALL,
     )
+    # Usage Patterns: visible HTML block (summary tiles + filter pills + heatmap shell)
+    html = re.sub(
+        r'<!-- PATTERNS_BLOCK_START -->.*?<!-- PATTERNS_BLOCK_END -->',
+        ('<!-- PATTERNS_BLOCK_START -->\n        '
+         '<!-- Auto-generated by update_dashboard.py — do not edit by hand. -->\n'
+         f'{pt_block_html}\n'
+         '        <!-- PATTERNS_BLOCK_END -->'),
+        html, flags=re.DOTALL,
+    )
+    # Usage Patterns: JS data (WEEKS, SCHOOLS, PC, DESC arrays)
+    html = re.sub(
+        r'// PATTERNS_DATA_START.*?// PATTERNS_DATA_END',
+        f'// PATTERNS_DATA_START\n{pt_data_js}\n// PATTERNS_DATA_END',
+        html, flags=re.DOTALL,
+    )
     html = re.sub(
         r'Updated <span id="lastUpdated">[^<]*</span>',
         f'Updated <span id="lastUpdated">{updated_date}</span>',
@@ -1331,6 +1633,15 @@ def main():
     print(f"   Quiet 14+ days: {snap['quiet_14_count']} schools")
     print(f"   New this week : {len(patterns['new_this_week'])}")
     print(f"   Lifetime graph: {len(lifetime_data)} schools ranked")
+    if usage_patterns:
+        ut = usage_patterns['totals']
+        pcnt = usage_patterns['pattern_counts']
+        print(f"   Usage Patterns: {ut['schools_tracked']} schools · "
+              f"{ut['total_logins']} logins · {ut['weeks_of_data']} weeks")
+        for name in PATTERN_ORDER:
+            if name in pcnt:
+                print(f"      · {name:<24}{pcnt[name]}")
+        print(f"      · Gone Quiet (overlay)   {ut['gone_quiet']}")
     print(f"\n✅ Dashboard written → {OUTPUT_FILE}")
     print("=" * 60)
 

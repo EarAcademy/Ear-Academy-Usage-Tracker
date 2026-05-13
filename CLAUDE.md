@@ -2,7 +2,7 @@
 
 **Single source of truth for the Ear Academy public dashboards.** This document covers system architecture, data flows, scripts, operations, security, and handover procedures. Written to survive due-diligence review and onboard a new operator without external context.
 
-- **Last reviewed:** 12 May 2026
+- **Last reviewed:** 13 May 2026
 - **System owner:** Rus Nerwich (rus@the-ear.com)
 - **Repository:** `git@github.com:EarAcademy/Ear-Academy-Usage-Tracker.git`
 - **Public site:** https://earacademy.github.io/Ear-Academy-Usage-Tracker/
@@ -26,20 +26,35 @@ The system is intentionally simple: static HTML + JSON + a few Python scripts. T
 │  (CRM — live data)      │        │ (login data from EarAc) │
 └───────────┬─────────────┘        └───────────┬─────────────┘
             │                                  │
-            ▼                                  ▼
-   update_sales_dashboard.py            update_dashboard.py
-   update_velocity.py                          │
+            ▼                                  │
+   ┌─────────────────────────────┐             │
+   │ 1. update_sales_dashboard   │             │
+   │    — writes pipeline_data   │             │
+   │    — writes paying_schools  │             │
+   │      (canonical AC roster)  │             │
+   └─────────────────────────────┘             │
             │                                  │
             ▼                                  ▼
-   pipeline_data.json              ┌──→ index.html (rebuilt)
-   velocity_data.json              │   (Usage Analytics +
-            │                      │    Usage Patterns tabs)
-            ▼                      │
-   investor.html (reads JSON) ─────┘
+   pipeline_data.json          ┌────► 2. update_dashboard.py
+   paying_schools.json ────────┘      (reads roster as the universe
+            │                          of paying schools, then
+            ▼                          gates snapshot rows against it)
+   investor.html (reads JSON)                  │
+                                               ▼
+   ┌─────────────────────────────┐    index.html (rebuilt:
+   │ 3. update_velocity.py       │    Usage Analytics + Usage
+   │    — reads AC API           │    Patterns tabs both auto-
+   │    — writes velocity JSON   │    generated each run)
+   └─────────────────────────────┘
+            │
+            ▼
+   velocity_data.json
+            │
+            ▼
    pipeline_velocity.html (reads JSON)
             │
             ▼
-   git add + commit + push
+   git add + commit + push  (from update_all_dashboards.sh)
             │
             ▼
    GitHub repo (origin/main)
@@ -51,7 +66,9 @@ The system is intentionally simple: static HTML + JSON + a few Python scripts. T
    https://earacademy.github.io/Ear-Academy-Usage-Tracker/
 ```
 
-**Three update paths, one site.** The Sales and Velocity dashboards are JSON-driven (Python writes JSON, HTML reads it on page load). The Usage dashboard is HTML-driven (Python rebuilds the entire index.html each run from the snapshot folder).
+**Three scripts, four outputs, one site.** The Sales script (1) writes both `pipeline_data.json` (for the sales dashboard) and `paying_schools.json` (the canonical AC roster of paying customers). The Usage script (2) loads that roster as the authoritative list of paying schools — every snapshot row is gated against it. The Velocity script (3) writes its own JSON. The wrapper runs them in this order (sales → usage → velocity) so the roster is fresh before the usage rebuild reads it.
+
+The Sales and Velocity dashboards are JSON-driven (Python writes JSON, HTML reads it on page load). The Usage dashboard is HTML-driven (Python rebuilds the entire `index.html` each run — both the Usage Analytics tab AND the Usage Patterns tab, the latter using marker comments `<!-- PATTERNS_BLOCK_START/END -->` and `// PATTERNS_DATA_START/END` for in-place substitution).
 
 ---
 
@@ -73,11 +90,13 @@ All files live in `~/Desktop/ear-academy-analytics/`.
 
 | File | Purpose | Writes to | Reads from |
 |---|---|---|---|
-| `update_dashboard.py` | Builds the Usage Analytics + Usage Patterns dashboard | `index.html` | `daily_snapshots/*.xlsx` |
-| `update_sales_dashboard.py` | Pulls pipeline + email data from ActiveCampaign | `pipeline_data.json` | ActiveCampaign API |
+| `update_dashboard.py` | Builds both tabs of the Usage dashboard (Usage Analytics + Usage Patterns); uses the AC roster as the universe of paying schools | `index.html` | `daily_snapshots/*.xlsx`, `paying_schools.json` |
+| `update_sales_dashboard.py` | Pulls pipeline + email data from ActiveCampaign AND writes the canonical paying-schools roster | `pipeline_data.json`, `paying_schools.json` | ActiveCampaign API |
 | `update_velocity.py` | Pulls deal-stage data from ActiveCampaign | `velocity_data.json` | ActiveCampaign API |
 | `add_nav.py` | One-off helper that injected the nav bar into `investor.html` (kept for reference) | `investor.html` | — |
 | `config.py` | Holds `AC_API_KEY` and `AC_BASE_URL`. **Never commit real values.** | — | — |
+
+`update_sales_dashboard.py` supports a `--no-push` flag for testing — it writes the JSON files locally but skips the git commit + push. Useful when verifying changes before publishing.
 
 ### Scripts (shell)
 
@@ -90,7 +109,7 @@ All files live in `~/Desktop/ear-academy-analytics/`.
 
 | File | What it shows | How it gets data |
 |---|---|---|
-| `index.html` | Usage Analytics tab (Daily Pulse, Weekly Snapshot, Patterns This Week, Weekly Trends) AND Usage Patterns tab (heatmap of school engagement Jan–Apr 2026) | Rebuilt in full by `update_dashboard.py` |
+| `index.html` | **Usage Analytics tab** (Daily Pulse, Weekly Snapshot, Patterns This Week, Weekly Trends, Top 10, Lifetime Activity for all 49 paying schools) AND **Usage Patterns tab** (rolling heatmap of school engagement, classifications, 8 pattern buckets including "Not Yet Active") | Both tabs auto-generated by `update_dashboard.py`. Tabs are wrapped in marker comments (`DASHBOARD_START/END`, `PATTERNS_BLOCK_START/END`, `PATTERNS_DATA_START/END`) for in-place substitution. **Never edit content between these markers by hand.** |
 | `investor.html` | Sales Activity dashboard — pipeline funnel, monthly sales activity, email outreach metrics, ARR tiers | Fetches `pipeline_data.json` on load (client-side JavaScript) |
 | `pipeline_velocity.html` | Pipeline Velocity — time-in-stage distribution, deals needing attention, sales funnel | Fetches `velocity_data.json` on load |
 | `tam-depletion-prototype.html` | Static prototype of a TAM-depletion dashboard. Not currently maintained. |
@@ -101,6 +120,7 @@ All files live in `~/Desktop/ear-academy-analytics/`.
 |---|---|---|
 | `daily_snapshots/` | 80+ Excel files, one per day, exported manually from the Ear Academy platform. Naming: `Daily Usage Snapshot - DD-MM-YYYY.xlsx` (prefixes `B2C - `, `UK - ` allowed) | Operator drops new file in each day |
 | `pipeline_data.json` | Current sales pipeline state — qualification/demo/negotiation counts, monthly leads, email outreach, ARR tiers | `update_sales_dashboard.py` |
+| `paying_schools.json` | **Canonical list of paying schools (AC roster).** Pipeline 6, stages Onboarding (50) + Activated (51), ZAR only, B2C excluded. The Usage dashboard uses this as the source of truth for which schools are "paying" — replaces the old fragile EXCLUDED_SCHOOLS / billing-status approach. | `update_sales_dashboard.py` |
 | `velocity_data.json` | Pipeline 4 & 5 stage data — totals, average days in stage, time-in-stage buckets, stale deals | `update_velocity.py` |
 | `archive/` | Older snapshots kept for historical reference | Manual |
 
@@ -164,13 +184,32 @@ Sections:
 - **Weekly Trends:** 6-week chart of classroom vs instrumental usage
 
 Data source: parsed from all `*.xlsx` files in `daily_snapshots/`. The script segments by:
+- **AC roster (primary gate):** `paying_schools.json` defines the universe of paying schools. Any snapshot row whose School name resolves to a roster entry is counted; any row that does not is dropped. This means the dashboard's "paying schools" count exactly matches what is in ActiveCampaign Pipeline 6.
 - **Product Type:** "Classroom", "Classroom & Instrumental", "Instrumental"
-- **Billing Status:** Pilot/Demo schools excluded from primary metrics
-- **Exclusion list:** Specific schools (Academie Orpheus, C5, Bolton Music Services, etc.) hardcoded in the script
+- **Billing Status:** Pilot/Demo rows from the snapshots feed the UK Pilot tile (not main metrics)
+- **`SCHOOL_NAME_ALIASES` map** in the script reconciles snapshot names against AC roster names where they differ (e.g., snapshot says `dr.vanderross`, AC roster says `Dr. V.D.Ross - C5`). Add an entry here whenever the operator notices a new mismatched school name.
+- **`EXCLUDED_SCHOOLS` list** is a legacy fallback used only when `paying_schools.json` is missing.
 
 ### Usage Patterns (index.html — second tab)
 
-Same HTML file, separate tab. Shows the Jan–Apr 2026 engagement heatmap with school classifications (Power User, High-frequency, Consistent, Bi-weekly, Early stage, One-time, Gone quiet).
+Same HTML file, separate tab. Auto-generated by `update_dashboard.py` every run (since 13 May 2026 — was hand-maintained before).
+
+Shows a heatmap of school engagement across all available snapshot weeks (rolling window — starts at Week 1 = 19 Jan 2026, grows as new snapshots are added). Each school is classified into one of 8 buckets:
+
+| Pattern | Rule |
+|---|---|
+| **Power User** | ≥100 lifetime logins AND ≥50 unique users |
+| **High Frequency** | ≥20 lifetime logins AND ≥4.5 logins per active week |
+| **Consistent Weekly** | Active in ≥60% of weeks since first login (and >2 logins/active week) |
+| **Consistent Low-Volume** | Active in ≥60% of weeks since first login (and ≤2 logins/active week) |
+| **Bi-weekly** | 4+ active weeks but below the consistency threshold |
+| **Early Stage** | 2–3 active weeks |
+| **One-time** | 1 active week ever |
+| **Not Yet Active** *(new)* | In the AC roster but zero snapshot logins — these are recently-onboarded paying schools that haven't started using the platform yet |
+
+A **Gone Quiet** overlay flag applies to any school with ≥6 weeks since last login (independent of the pattern).
+
+Tuning these rules: edit the `PATTERN_RULES` dict near the top of the Usage Patterns section in `update_dashboard.py`. The classifications recompute on the next run.
 
 Both tabs update simultaneously every time `update_dashboard.py` runs — there is no separate "usage patterns" script.
 
@@ -206,31 +245,35 @@ Data source: ActiveCampaign API. Pipelines 4 & 5 only (Pipeline 6 customer-manag
 
 ### update_dashboard.py
 
-- **Inputs:** All `.xlsx` files in `daily_snapshots/`
-- **Outputs:** `index.html` (full rebuild)
-- **Frequency:** Daily (after a new snapshot is added)
-- **Side effects:** None — pure read of snapshots, pure write of HTML
+- **Inputs:** All `.xlsx` files in `daily_snapshots/`, plus `paying_schools.json` (AC roster)
+- **Outputs:** `index.html` — both tabs (Usage Analytics + Usage Patterns) regenerated in place via marker comments
+- **Frequency:** Daily (after a new snapshot is added, and after the sales script has refreshed the roster)
+- **Side effects:** None — pure read of snapshots + roster, pure write of HTML
 
 Key behaviours:
 - Filename parsing regex: `(\d{1,2})\s*-\s*(\d{1,2})\s*-\s*(\d{4})` — tolerates variants like `DD-MM-YYYY`, `DD - MM - YYYY`, prefixes `B2C - `, `UK - `, suffixes `(1)`
+- **Paying-school gate:** the `paying()` function uses `paying_schools.json` as the authoritative list. A snapshot row counts only if its school name resolves to an AC roster entry. The legacy `EXCLUDED_SCHOOLS` list is only used as a fallback when the roster JSON is missing.
+- **`SCHOOL_NAME_ALIASES`** near the top of the script maps snapshot names that don't auto-match the roster (e.g., `dr.vanderross → Dr. V.D.Ross - C5`). This is the single place to fix new mismatched names.
+- **`PATTERN_RULES`** near the top of the Usage Patterns section controls the engagement-classification thresholds.
 - Default segment when older snapshots lack Product Type / Billing Status columns: assumes "Paying + Classroom & Instrumental"
-- Excludes schools defined in `EXCLUDED_SCHOOLS` list and any with Billing Status of "Pilot" or "Demo"
-- Hardcoded constants: `WEEK1_START = 2026-01-19`, `TOTAL_CUSTOMERS = 53` (auto-updated in main)
+- Hardcoded constants: `WEEK1_START = 2026-01-19`, `TOTAL_CUSTOMERS = 49` (overwritten in `main()` from roster length)
 
 ### update_sales_dashboard.py
 
 - **Inputs:** ActiveCampaign API
-- **Outputs:** `pipeline_data.json`
-- **Frequency:** Weekly (or anytime a fresh sales snapshot is wanted)
+- **Outputs:** `pipeline_data.json` AND `paying_schools.json`
+- **Frequency:** Daily, ahead of the usage script (so the roster is fresh)
 - **Side effects:** Reads from AC; no writes to AC
+- **CLI flags:** `--no-push` — write JSON locally but skip the git commit + push (testing mode)
 
 Pipeline IDs queried:
 - `P_QUAL = "4"` — Sales Qualification
 - `P_CONV = "5"` — Sales Conversion
 - `P_CAM = "6"` — Customer Account Management
 - `S_NEW_LEAD = "36"` — Stage in Pipeline 4
+- `S_ONBOARDING = "50"`, `S_ACTIVATED = "51"` — Pipeline 6 stages used for the paying-schools roster
 
-ZAR deals only (USD/GBP deals are filtered out).
+ZAR deals only (USD/GBP deals are filtered out). The roster excludes any deal whose title or account name contains "B2C" (case-insensitive), so individual subscriptions like `Lilly Posthumus - B2C` are filtered out.
 
 ### update_velocity.py
 
