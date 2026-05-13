@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-13T13:32:09Z",
-  "generated_label": "13 May 2026 at 13:32",
+  "generated_at": "2026-05-13T14:08:01Z",
+  "generated_label": "13 May 2026 at 14:08",
   "pipeline4": {
     "total": 286,
     "avg_days_in_stage": 188,
@@ -926,6 +926,22 @@
         "cdate": "2025-09-09"
       },
       {
+        "id": "1423",
+        "title": "Hillcrest Collegiate",
+        "days_in_stage": 203,
+        "total_age_days": 348,
+        "value_zar": 12000,
+        "cdate": "2025-05-30"
+      },
+      {
+        "id": "1423",
+        "title": "Hillcrest Collegiate",
+        "days_in_stage": 203,
+        "total_age_days": 348,
+        "value_zar": 12000,
+        "cdate": "2025-05-30"
+      },
+      {
         "id": "1610",
         "title": "Mikfield",
         "days_in_stage": 203,
@@ -956,22 +972,6 @@
         "total_age_days": 617,
         "value_zar": 20000,
         "cdate": "2024-09-03"
-      },
-      {
-        "id": "1423",
-        "title": "Hillcrest Collegiate",
-        "days_in_stage": 202,
-        "total_age_days": 348,
-        "value_zar": 12000,
-        "cdate": "2025-05-30"
-      },
-      {
-        "id": "1423",
-        "title": "Hillcrest Collegiate",
-        "days_in_stage": 202,
-        "total_age_days": 348,
-        "value_zar": 12000,
-        "cdate": "2025-05-30"
       },
       {
         "id": "30",
@@ -1663,7 +1663,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2025-08-04",
-              "days": 281
+              "days": 282
             }
           ]
         },
