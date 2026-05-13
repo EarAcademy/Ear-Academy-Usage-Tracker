@@ -1,0 +1,457 @@
+{
+  "generated_at": "2026-05-13T15:12:09",
+  "generated_label": "13 May 2026 at 15:12",
+  "filter": {
+    "pipeline": "6",
+    "stages": [
+      "50 (Onboarding)",
+      "51 (Activated)"
+    ],
+    "currency": "zar",
+    "exclude": "B2C accounts (deal title or account name contains 'B2C')"
+  },
+  "count": 49,
+  "schools": [
+    {
+      "deal_id": "1586",
+      "title": "Acudeo College Kirkney - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "10329",
+      "account_name": "Acudeo College Kirkney"
+    },
+    {
+      "deal_id": "1223",
+      "title": "Acudeo College Protea Glen - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "8783",
+      "account_name": "Acudeo College Protea Glen"
+    },
+    {
+      "deal_id": "1587",
+      "title": "Acudeo Crystal Park - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "10330",
+      "account_name": "Acudeo Crystal Park"
+    },
+    {
+      "deal_id": "1588",
+      "title": "Acudeo Thornview - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "10331",
+      "account_name": "Acudeo Thornview"
+    },
+    {
+      "deal_id": "1581",
+      "title": "Amberfield College-Core Education",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "362",
+      "account_name": "Amberfield College"
+    },
+    {
+      "deal_id": "1209",
+      "title": "Applewood Preparatory School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4830,
+      "account_id": "8773",
+      "account_name": "APPLEWOOD PREPARATORY SCHOOL"
+    },
+    {
+      "deal_id": "1557",
+      "title": "Bay Primary",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9981",
+      "account_name": "Bay Primary"
+    },
+    {
+      "deal_id": "143",
+      "title": "Brescia House",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "276",
+      "account_name": "Brescia House School"
+    },
+    {
+      "deal_id": "1539",
+      "title": "Calling Academy",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "3450",
+      "account_name": "Calling Academy"
+    },
+    {
+      "deal_id": "1590",
+      "title": "Canaan College - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "9591",
+      "account_name": "Canaan College"
+    },
+    {
+      "deal_id": "1506",
+      "title": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4750,
+      "account_id": "9592",
+      "account_name": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)"
+    },
+    {
+      "deal_id": "1526",
+      "title": "Cheré Botha School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9735",
+      "account_name": "Cheré Botha School"
+    },
+    {
+      "deal_id": "1487",
+      "title": "Curro Langebaan",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9570",
+      "account_name": "Curro Langebaan Primary School"
+    },
+    {
+      "deal_id": "255",
+      "title": "Danie Ackermann Primary",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4750,
+      "account_id": "422",
+      "account_name": "Danie Ackermann Primary"
+    },
+    {
+      "deal_id": "1537",
+      "title": "Dr. V.D.Ross - C5",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4750,
+      "account_id": "9887",
+      "account_name": "DR. Van Der Ross - C5"
+    },
+    {
+      "deal_id": "824",
+      "title": "Early Learning Centre",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4750,
+      "account_id": "9927",
+      "account_name": "Early Learning Centre"
+    },
+    {
+      "deal_id": "1577",
+      "title": "East Side",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9854",
+      "account_name": "Eastside Primary School"
+    },
+    {
+      "deal_id": "1589",
+      "title": "Etham College - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "10332",
+      "account_name": "Etham College"
+    },
+    {
+      "deal_id": "1555",
+      "title": "Generation Schools Hermanus",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "2392",
+      "account_name": "Generation Schools Hermanus"
+    },
+    {
+      "deal_id": "1413",
+      "title": "Harriston School (Primary)",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9627",
+      "account_name": "Harriston School (Primary)"
+    },
+    {
+      "deal_id": "1559",
+      "title": "Hazyview Primary School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9936",
+      "account_name": "Hazyview Private Primary School"
+    },
+    {
+      "deal_id": "1412",
+      "title": "Hermannsburg School (Primary)",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "11178",
+      "account_name": "DEUTSCHE SCHULE HERMANNSBURG - SA"
+    },
+    {
+      "deal_id": "1595",
+      "title": "Herzlia Primary",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9630",
+      "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL"
+    },
+    {
+      "deal_id": "778",
+      "title": "Herzlia Renewal 2025",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 24000,
+      "account_id": "218",
+      "account_name": "United Herzlia Schools"
+    },
+    {
+      "deal_id": "1647",
+      "title": "Herzlia Weitzman",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9631",
+      "account_name": "Herzlia Weizman Primary School"
+    },
+    {
+      "deal_id": "1191",
+      "title": "Holy Cross R C Primary",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "8728",
+      "account_name": "Holy Cross R C Primary"
+    },
+    {
+      "deal_id": "1498",
+      "title": "Kammaland Primary School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9654",
+      "account_name": "Kammaland Primary School"
+    },
+    {
+      "deal_id": "513",
+      "title": "Koa Academy",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "1626",
+      "account_name": "Koa Academy"
+    },
+    {
+      "deal_id": "1478",
+      "title": "Lebone II College (Primary)",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9665",
+      "account_name": "Lebone II College (Primary)"
+    },
+    {
+      "deal_id": "1561",
+      "title": "PBC",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9964",
+      "account_name": "Plettenberg Bay Christian Primary School"
+    },
+    {
+      "deal_id": "1183",
+      "title": "Pinelands High School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "509",
+      "account_name": "PINELANDS HIGH SCHOOL"
+    },
+    {
+      "deal_id": "359",
+      "title": "Pinelands North Primary School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "8752",
+      "account_name": "Pinelands North Primary"
+    },
+    {
+      "deal_id": "1298",
+      "title": "Prescient Primary",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "8807",
+      "account_name": "Prescient Primary"
+    },
+    {
+      "deal_id": "1583",
+      "title": "Queens Private School - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "9833",
+      "account_name": "Queens Private School"
+    },
+    {
+      "deal_id": "1562",
+      "title": "Raff Home School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9982",
+      "account_name": "Raff Home School"
+    },
+    {
+      "deal_id": "584",
+      "title": "Reddam House Helderfontein",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "244",
+      "account_name": "Reddam House Helderfontein"
+    },
+    {
+      "deal_id": "1707",
+      "title": "Redwood College La Lucia",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "11668",
+      "account_name": "Redwood College"
+    },
+    {
+      "deal_id": "1585",
+      "title": "Royal Schools Alberton-Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "10328",
+      "account_name": "Royal Schools Alberton"
+    },
+    {
+      "deal_id": "1582",
+      "title": "Royal Schools Princess Park - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "9992",
+      "account_name": "Royal Schools Princess Park"
+    },
+    {
+      "deal_id": "1584",
+      "title": "Royal Schools Sky City - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "9862",
+      "account_name": "Royal Schools Sky City"
+    },
+    {
+      "deal_id": "1222",
+      "title": "Royal Schools Starlight Academy - Core Education Group",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "8782",
+      "account_name": "Royal Schools Starlight Academy"
+    },
+    {
+      "deal_id": "1220",
+      "title": "Soofia International School",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 20050,
+      "account_id": "8781",
+      "account_name": "Soofia International School"
+    },
+    {
+      "deal_id": "1626",
+      "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "10960",
+      "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA"
+    },
+    {
+      "deal_id": "1543",
+      "title": "St Martin's Prep",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "9829",
+      "account_name": "St Martin's Preparatory School"
+    },
+    {
+      "deal_id": "1616",
+      "title": "Sun Valley",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 8050,
+      "account_id": "427",
+      "account_name": "SUN VALLEY PRIMARY SCHOOL"
+    },
+    {
+      "deal_id": "1550",
+      "title": "TrinityHouse",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 20050,
+      "account_id": "11408",
+      "account_name": "TRINITYHOUSE GLENVISTA"
+    },
+    {
+      "deal_id": "1536",
+      "title": "Vergenoegd PS - C5",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4750,
+      "account_id": "9888",
+      "account_name": "Vergenoegd - C5"
+    },
+    {
+      "deal_id": "1535",
+      "title": "Welwitschia PS - C5",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 4750,
+      "account_id": "9889",
+      "account_name": "Welwitschia - C5"
+    },
+    {
+      "deal_id": "1592",
+      "title": "Windemere Primary",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 8050,
+      "account_id": "10214",
+      "account_name": "WINDERMERE PRIMARY SCHOOL"
+    }
+  ]
+}
