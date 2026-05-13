@@ -9,22 +9,24 @@ Segments data by Product Type and Billing Status.
 Old files (no Product Type / Billing Status cols) default to Paying + Classroom & Instrumental.
 """
 
+import json
 import pandas as pd
 import re
 import unicodedata
+from collections import Counter
 from pathlib import Path
 from datetime import datetime, timedelta
 
 # ── Configuration ────────────────────────────────────────────────────────────
 DATA_FOLDER     = Path("daily_snapshots")
 OUTPUT_FILE     = Path("index.html")
+ROSTER_FILE     = Path("paying_schools.json")    # written by update_sales_dashboard.py
 WEEK1_START     = datetime(2026, 1, 19)
-TOTAL_CUSTOMERS = 53          # updated dynamically in main()
+TOTAL_CUSTOMERS = 49          # set from AC roster in main() — fallback to 49
 
 EXCLUDED_SCHOOLS = [
     'Academie Orpheus',
     'Academie Orfeus',
-    'C5',
     'Bolton Music Services',
     'Bradford Music and Arts Service',
     'Bury Music',
@@ -57,6 +59,98 @@ EXACT_OVERRIDES = {
     "St Martin's Preparatory School":                  'St Martin Preparatory School',
     "St Martin&#039;s Preparatory School":             'St Martin Preparatory School',
 }
+
+# ── Snapshot ↔ AC roster name aliases ────────────────────────────────────────
+# Maps snapshot school names that DON'T auto-match the AC roster
+# (paying_schools.json) to a string that DOES match an AC roster entry's
+# `title` or `account_name`. Everything else auto-matches and needs no entry
+# here. Keep this list as the single place to reconcile name mismatches.
+SCHOOL_NAME_ALIASES = {
+    # Snapshot name                       →  Matches in AC roster (title or account_name)
+    "Acudeo Protea Glen":                   "Acudeo College Protea Glen",
+    "Applewood Preparatory":                "Applewood Preparatory School",
+    "CBC Mount Edmund":                     "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
+    "dr.vanderross":                        "Dr. V.D.Ross - C5",
+    "Harriston Primary School":             "Harriston School (Primary)",
+    "Hermannsburg School":                  "Hermannsburg School (Primary)",
+    "Herzlia High School":                  "Herzlia Renewal 2025",
+    "Herzlia Highlands":                    "Herzlia Primary",
+    "Herzlia Weitzman Primary School":      "Herzlia Weitzman",
+    "Holy Cross RC Primary":                "Holy Cross R C Primary",
+    "Lebone II College":                    "Lebone II College (Primary)",
+    "Princess Park College":                "Royal Schools Princess Park",
+    "Sky City Primary School":              "Royal Schools Sky City",
+    "St Catherines":                        "ST CATHERINE'S DOMINICAN CONVENT- SA",
+    "St Martin Preparatory School":         "St Martin's Preparatory School",
+    "St Martins Preparatory School":        "St Martin's Preparatory School",
+    "Sunvalley Primary School":             "Sun Valley",
+    "Trinity House":                        "TrinityHouse",
+}
+
+
+# ── Paying-schools roster (loaded from paying_schools.json) ──────────────────
+# Populated by main() at startup. _ROSTER is the list, _ROSTER_LOOKUP is the
+# lowercased-name → roster-entry dict used by resolve_to_roster().
+_ROSTER         = None
+_ROSTER_LOOKUP  = None
+
+
+def load_paying_schools_roster():
+    """Load paying_schools.json. Returns (roster_list, lookup_dict).
+    Returns (None, None) if file is missing or invalid — caller should then
+    fall back to legacy (snapshot-only) mode.
+    """
+    if not ROSTER_FILE.exists():
+        return None, None
+    try:
+        with open(ROSTER_FILE) as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"  ⚠️  Could not load {ROSTER_FILE}: {e}")
+        return None, None
+
+    roster = data.get("schools", []) or []
+    if not roster:
+        return None, None
+
+    # Index every roster entry by its lowercased title AND account_name.
+    # First-wins on collisions so the title takes priority over account_name.
+    lookup = {}
+    for entry in roster:
+        for key_field in ("title", "account_name"):
+            key = (entry.get(key_field) or "").strip().lower()
+            if key and key not in lookup:
+                lookup[key] = entry
+
+    # Apply explicit aliases on top: snapshot_name → matching roster entry
+    for snap_name, target in SCHOOL_NAME_ALIASES.items():
+        target_low = (target or "").strip().lower()
+        snap_low   = (snap_name or "").strip().lower()
+        if target_low in lookup and snap_low:
+            lookup[snap_low] = lookup[target_low]
+
+    return roster, lookup
+
+
+def resolve_to_roster(name, lookup=None):
+    """Return the roster entry for a snapshot school name, or None."""
+    lookup = lookup if lookup is not None else _ROSTER_LOOKUP
+    if not lookup or not name:
+        return None
+    return lookup.get(str(name).strip().lower())
+
+
+def clean_roster_display_name(entry):
+    """Friendly display name for a roster entry — used for silent schools."""
+    title = (entry.get("title") or "").strip()
+    for suffix in (" - Core Education Group", "-Core Education Group",
+                   " - Core Education",       "-Core Education"):
+        if title.endswith(suffix):
+            title = title[:-len(suffix)].strip()
+            break
+    if title.isupper():
+        title = title.title()
+    return title
 
 MERGE_BLOCKLIST = {
     'Bay Primary',
@@ -339,11 +433,30 @@ def load_all_data():
 # ── Metric calculations ───────────────────────────────────────────────────────
 
 def paying(df):
-    pay = df[df['Billing'] == 'Paying']
-    return pay[~pay['School'].apply(should_exclude_school)]
+    """Snapshot rows for schools that appear in the AC paying-schools roster.
+
+    With roster (preferred): a row counts as 'paying' iff its School name
+    resolves to a roster entry — the AC pipeline is the single source of
+    truth, so EXCLUDED_SCHOOLS / billing-status filters become irrelevant.
+
+    Without roster (fallback for first-run / missing JSON): use the legacy
+    rules — Billing == 'Paying' and not in EXCLUDED_SCHOOLS.
+    """
+    if _ROSTER_LOOKUP is None:
+        pay = df[df['Billing'] == 'Paying']
+        return pay[~pay['School'].apply(should_exclude_school)]
+    return df[df['School'].apply(lambda n: resolve_to_roster(n) is not None)]
+
 
 def demo(df):
-    return df[df['Billing'] == 'Demo']
+    """Demo / Pilot rows used by the UK Pilot tile.
+    Excludes rows that resolve to the paying roster (those are real customers,
+    not pilots) when the roster is loaded.
+    """
+    if _ROSTER_LOOKUP is None:
+        return df[df['Billing'] == 'Demo']
+    not_roster = df['School'].apply(lambda n: resolve_to_roster(n) is None)
+    return df[not_roster & (df['Billing'] == 'Demo')]
 
 def classroom(df):
     return df[df['Product'] == 'classroom']
@@ -998,15 +1111,57 @@ def build_top10_html(top10):
 
 
 def calc_lifetime_logins(combined):
-    """Total logins per paying school across all weeks, sorted descending."""
+    """Total logins per paying school across all weeks, sorted descending.
+
+    Roster mode: returns ALL roster schools, including silent ones with 0
+    logins, so the dashboard reflects the full AC paying-customer list.
+    Display names prefer the most-frequent snapshot name observed (operator-
+    familiar); silent schools fall back to a cleaned roster title.
+    """
     pay  = paying(combined)
     base = total_logins(pay)
-    grp  = (base.groupby('School')['Email']
-                .count()
-                .reset_index()
-                .rename(columns={'Email': 'total_logins'}))
-    grp  = grp.sort_values('total_logins', ascending=False).reset_index(drop=True)
-    return grp.to_dict('records')
+
+    if _ROSTER_LOOKUP is None or not _ROSTER:
+        # Legacy: snapshot-only path
+        grp = (base.groupby('School')['Email']
+                    .count()
+                    .reset_index()
+                    .rename(columns={'Email': 'total_logins'}))
+        grp = grp.sort_values('total_logins', ascending=False).reset_index(drop=True)
+        return grp.to_dict('records')
+
+    # Roster mode: tag every snapshot row with its roster deal_id, then group.
+    base = base.copy()
+    base['roster_deal_id'] = base['School'].apply(
+        lambda n: (resolve_to_roster(n) or {}).get('deal_id'))
+
+    counted = (base.dropna(subset=['roster_deal_id'])
+                    .groupby('roster_deal_id')['Email']
+                    .count()
+                    .to_dict())
+
+    # Best display name per deal_id = the most-common snapshot name we saw.
+    name_counter = {}
+    for sname, did in base[['School', 'roster_deal_id']].dropna().itertuples(index=False):
+        name_counter.setdefault(did, Counter())[sname] += 1
+
+    records = []
+    for entry in _ROSTER:
+        did     = entry['deal_id']
+        n       = int(counted.get(did, 0))
+        display = (name_counter[did].most_common(1)[0][0]
+                   if did in name_counter and name_counter[did]
+                   else clean_roster_display_name(entry))
+        records.append({
+            'School':       display,
+            'total_logins': n,
+            'stage':        entry.get('stage', ''),
+            'silent':       n == 0,
+        })
+
+    # Sort: active schools first by logins desc, silent at the bottom alphabetically.
+    records.sort(key=lambda r: (r['silent'], -r['total_logins'], r['School'].lower()))
+    return records
 
 
 CAP_SCHOOL = 'Koa Academy'
@@ -1021,20 +1176,29 @@ def build_lifetime_logins_html(lifetime_data):
     # and every other school is proportional to that reference.
     scale_max = CAP_AT
 
+    silent_count = sum(1 for s in lifetime_data if s.get('silent') or s['total_logins'] == 0)
+    active_count = len(lifetime_data) - silent_count
+
     bars_html = ''
     for s in lifetime_data:
         actual    = s['total_logins']
+        is_silent = bool(s.get('silent')) or actual == 0
         is_capped = (s['School'] == CAP_SCHOOL and actual > CAP_AT)
         bar_val   = CAP_AT if is_capped else actual
         pct       = min(max(int((bar_val / scale_max) * 100), 2), 100) if actual else 0
 
-        label     = f'{actual} ↗' if is_capped else str(actual)
-        cap_attr  = (' title="Bar capped at 200 for readability — actual total shown"'
-                     if is_capped else '')
-        fill_cls  = 'lifetime-bar-fill lifetime-bar-capped' if is_capped else 'lifetime-bar-fill'
+        if is_silent:
+            label    = '<em class="lifetime-silent-label">Not yet active</em>'
+            cap_attr = ''
+            fill_cls = 'lifetime-bar-fill lifetime-bar-silent'
+        else:
+            label    = f'{actual} ↗' if is_capped else str(actual)
+            cap_attr = (' title="Bar capped at 200 for readability — actual total shown"'
+                        if is_capped else '')
+            fill_cls = 'lifetime-bar-fill lifetime-bar-capped' if is_capped else 'lifetime-bar-fill'
 
         bars_html += f'''
-                <div class="lifetime-bar-item">
+                <div class="lifetime-bar-item{' lifetime-bar-item-silent' if is_silent else ''}">
                     <div class="lifetime-school-name">{s['School']}</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track"{cap_attr}>
@@ -1048,8 +1212,8 @@ def build_lifetime_logins_html(lifetime_data):
     return f'''
         <!-- ════════════════════ ALL SCHOOLS LIFETIME LOGINS ════════════════════════ -->
         <section class="dashboard-section" id="section-lifetime">
-            <h2 class="section-title pacific">📊 All Schools Lifetime Activity</h2>
-            <p class="section-desc">Total logins across all weeks · helps identify top performers and at-risk schools · {school_count} paying schools shown</p>
+            <h2 class="section-title pacific">📊 All Paying Schools — Lifetime Activity</h2>
+            <p class="section-desc">All {school_count} AC paying schools · {active_count} active · {silent_count} not yet active · sorted by total logins</p>
 
             <div class="lifetime-grid">
 {bars_html}
@@ -1068,6 +1232,19 @@ def main():
         print(f"Created {DATA_FOLDER}/ — add your Excel files there!")
         return
 
+    # Load the AC paying-schools roster first — this becomes the canonical
+    # list of who counts as a "paying school". If missing, we fall back to
+    # the legacy snapshot-only behaviour.
+    global _ROSTER, _ROSTER_LOOKUP, TOTAL_CUSTOMERS
+    _ROSTER, _ROSTER_LOOKUP = load_paying_schools_roster()
+    if _ROSTER:
+        TOTAL_CUSTOMERS = len(_ROSTER)
+        print(f"📋 AC roster loaded: {TOTAL_CUSTOMERS} paying schools "
+              f"(from {ROSTER_FILE})")
+    else:
+        print(f"⚠️  No AC roster at {ROSTER_FILE} — running in legacy mode.")
+        print("    Run update_sales_dashboard.py first to generate it.")
+
     print(f"\n📂 Loading files from {DATA_FOLDER}/...\n")
     combined = load_all_data()
 
@@ -1075,12 +1252,25 @@ def main():
         print("❌ No data loaded.")
         return
 
-    global TOTAL_CUSTOMERS
     pay = paying(combined)
-    TOTAL_CUSTOMERS = pay['School'].nunique()
-    print(f"\n✅ {total_logins(combined)['Email'].count()} unique login events loaded")
-    print(f"   Paying schools: {pay['School'].nunique()}")
-    print(f"   Weeks covered:  {sorted(combined['Week'].unique())}\n")
+    if _ROSTER:
+        active_count = pay['School'].nunique()
+        # Resolve to deal_ids to count unique roster schools observed
+        active_roster_ids = {(resolve_to_roster(s) or {}).get('deal_id')
+                              for s in pay['School'].unique()}
+        active_roster_ids.discard(None)
+        silent_count = TOTAL_CUSTOMERS - len(active_roster_ids)
+        print(f"\n✅ {total_logins(combined)['Email'].count()} unique login events loaded")
+        print(f"   Paying schools (AC roster):     {TOTAL_CUSTOMERS}")
+        print(f"   ├─ active in snapshots:         {len(active_roster_ids)}")
+        print(f"   └─ silent (no snapshot yet):    {silent_count}")
+        print(f"   Snapshot rows kept after gate:  {len(pay)}")
+        print(f"   Weeks covered:                  {sorted(combined['Week'].unique())}\n")
+    else:
+        TOTAL_CUSTOMERS = pay['School'].nunique()
+        print(f"\n✅ {total_logins(combined)['Email'].count()} unique login events loaded")
+        print(f"   Paying schools: {pay['School'].nunique()}")
+        print(f"   Weeks covered:  {sorted(combined['Week'].unique())}\n")
 
     # Compute all metrics
     dp       = calc_daily_pulse(combined)

@@ -38,26 +38,28 @@ echo "  Ear Academy — Updating all 3 dashboards"
 echo "  Started: $(date '+%Y-%m-%d %H:%M:%S')"
 echo "=========================================================="
 
-# ─── 1. Usage Dashboard ─────────────────────────────────────
+# ─── 1. Sales Dashboard (RUNS FIRST — writes paying_schools.json) ──
+# Usage dashboard now reads paying_schools.json as the canonical roster of
+# paying schools, so sales must run first so that JSON is fresh.
 echo ""
-echo "[1/3] 📊 Usage Dashboard (reads daily_snapshots/...)"
-echo "----------------------------------------------------------"
-if python3 update_dashboard.py; then
-  echo "✅ Usage dashboard updated"
-  usage_ok=1
-else
-  echo "❌ Usage dashboard FAILED — see error above"
-fi
-
-# ─── 2. Sales Dashboard ─────────────────────────────────────
-echo ""
-echo "[2/3] 💰 Sales Dashboard (pulls live data from ActiveCampaign)"
+echo "[1/3] 💰 Sales Dashboard (pulls live data from ActiveCampaign)"
 echo "----------------------------------------------------------"
 if python3 update_sales_dashboard.py; then
   echo "✅ Sales dashboard updated"
   sales_ok=1
 else
   echo "❌ Sales dashboard FAILED — see error above"
+fi
+
+# ─── 2. Usage Dashboard ─────────────────────────────────────
+echo ""
+echo "[2/3] 📊 Usage Dashboard (reads daily_snapshots/ + paying_schools.json)"
+echo "----------------------------------------------------------"
+if python3 update_dashboard.py; then
+  echo "✅ Usage dashboard updated"
+  usage_ok=1
+else
+  echo "❌ Usage dashboard FAILED — see error above"
 fi
 
 # ─── 3. Velocity Dashboard ──────────────────────────────────

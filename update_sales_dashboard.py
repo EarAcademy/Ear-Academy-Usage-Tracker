@@ -22,6 +22,7 @@ What it NEVER does:
     - Does not touch the schools list or Product Demos
 """
 
+import argparse
 import json
 import sys
 import subprocess
@@ -38,8 +39,9 @@ except ImportError:
     print("ERROR: config.py not found. Make sure you're running from ear-academy-analytics/")
     sys.exit(1)
 
-SCRIPT_DIR = Path(__file__).parent
-JSON_FILE  = SCRIPT_DIR / "pipeline_data.json"
+SCRIPT_DIR  = Path(__file__).parent
+JSON_FILE   = SCRIPT_DIR / "pipeline_data.json"
+ROSTER_FILE = SCRIPT_DIR / "paying_schools.json"   # canonical paying-schools roster
 
 # Pipeline IDs (confirmed from memory)
 P_QUAL = "4"   # Sales Qualification
@@ -290,12 +292,98 @@ def fetch_lost_deals_pipeline5():
     }
 
 
+# ── Paying-schools roster helpers ─────────────────────────────────────────────
+def fetch_account_names(account_ids):
+    """Look up account display names from AC for a set of account IDs.
+    Returns { account_id (str): account_name (str) }. Missing/failed → ''.
+    """
+    if not account_ids:
+        return {}
+    headers = {"Api-Token": AC_API_KEY}
+    names   = {}
+    for aid in account_ids:
+        if not aid:
+            continue
+        try:
+            r = requests.get(
+                f"{AC_BASE_URL}/api/3/accounts/{aid}",
+                headers=headers, timeout=30,
+            )
+            r.raise_for_status()
+            names[str(aid)] = (r.json().get("account") or {}).get("name", "").strip()
+        except requests.RequestException:
+            names[str(aid)] = ""
+    return names
+
+
+def build_paying_schools_roster(cam_deals):
+    """Build the canonical list of paying schools from Pipeline 6 deals.
+
+    Filters (per system policy):
+      • currency == ZAR
+      • stage in {Onboarding (50), Activated (51)}
+      • exclude B2C accounts (deal title or account name contains 'B2C',
+        case-insensitive) — these are individual subscribers, not schools.
+
+    Returns a list of dicts with deal + account info. Sorted by title.
+    """
+    matching = []
+    for d in cam_deals:
+        if (d.get("currency") or "").lower() != "zar":
+            continue
+        if str(d.get("stage")) not in (S_ONBOARDING, S_ACTIVATED):
+            continue
+        title = (d.get("title") or "").strip()
+        if "b2c" in title.lower():
+            continue
+        matching.append(d)
+
+    # Look up account names so the roster has both AC-side identifiers.
+    account_ids   = {str(d.get("account")) for d in matching if d.get("account")}
+    account_names = fetch_account_names(account_ids)
+
+    roster = []
+    for d in matching:
+        aid   = str(d.get("account")) if d.get("account") else None
+        aname = account_names.get(aid, "") if aid else ""
+        # Second B2C check — sometimes the account name carries the marker.
+        if aname and "b2c" in aname.lower():
+            continue
+
+        title = (d.get("title") or "").strip()
+        try:
+            value_zar = int(d.get("value", 0)) / 100   # cents → ZAR
+        except (ValueError, TypeError):
+            value_zar = 0
+
+        stage_id    = str(d.get("stage"))
+        stage_label = "Activated"   if stage_id == S_ACTIVATED  \
+                 else "Onboarding"  if stage_id == S_ONBOARDING \
+                 else stage_id
+
+        roster.append({
+            "deal_id":      str(d.get("id", "")),
+            "title":        title,
+            "stage":        stage_label,
+            "stage_id":     stage_id,
+            "value_zar":    int(value_zar),
+            "account_id":   aid,
+            "account_name": aname or None,
+        })
+
+    roster.sort(key=lambda r: r["title"].lower())
+    return roster
+
+
 # ── Main ───────────────────────────────────────────────────────────────────────
-def main():
+def main(no_push=False):
     print("\n🔄  Ear Academy — Updating Sales Dashboard")
     print("=" * 45)
-    print("  ✅  Will write to:    pipeline_data.json")
-    print("  🚫  Will NOT touch:   investor.html\n")
+    print("  ✅  Will write to:    pipeline_data.json + paying_schools.json")
+    print("  🚫  Will NOT touch:   investor.html")
+    if no_push:
+        print("  🛑  --no-push: skipping git commit + push (testing mode)")
+    print()
 
     now = datetime.now()
 
@@ -343,6 +431,11 @@ def main():
 
     print("\n❌  Lost deals (Pipeline 5 only):")
     lost_deals = fetch_lost_deals_pipeline5()
+
+    # ── 4b. Paying-schools roster (canonical list for usage dashboard) ───────
+    print("\n🏫  Building paying-schools roster (Pipeline 6, stages 50+51, ZAR, no B2C)…")
+    roster = build_paying_schools_roster(cam_all)
+    print(f"    → {len(roster)} paying schools in roster")
 
     # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
@@ -400,17 +493,39 @@ def main():
         json.dump(data, f, indent=2)
     print(f"\n✅  pipeline_data.json updated ({timestamp})")
 
+    # ── 6b. Write the paying-schools roster ──────────────────────────────────
+    roster_data = {
+        "generated_at":    now.isoformat(timespec="seconds"),
+        "generated_label": timestamp,
+        "filter": {
+            "pipeline":        P_CAM,
+            "stages":          [f"{S_ONBOARDING} (Onboarding)", f"{S_ACTIVATED} (Activated)"],
+            "currency":        "zar",
+            "exclude":         "B2C accounts (deal title or account name contains 'B2C')",
+        },
+        "count":   len(roster),
+        "schools": roster,
+    }
+    with open(ROSTER_FILE, "w") as f:
+        json.dump(roster_data, f, indent=2, ensure_ascii=False)
+    print(f"✅  paying_schools.json updated ({len(roster)} schools)")
+
     # ── 7. Git commit & push ─────────────────────────────────────────────────
-    print("\n🚀  Publishing to GitHub…")
-    try:
-        subprocess.run(["git", "-C", str(SCRIPT_DIR), "add", "pipeline_data.json", "investor.html"], check=True)
-        subprocess.run(["git", "-C", str(SCRIPT_DIR), "commit", "-m",
-                        f"Update sales dashboard — {timestamp}"], check=True)
-        subprocess.run(["git", "-C", str(SCRIPT_DIR), "push", "origin", "main"], check=True)
-        print("✅  Pushed! Live on GitHub Pages within ~60 seconds.")
-    except subprocess.CalledProcessError as e:
-        print(f"⚠️  Git error: {e}")
-        print("    JSON file was saved locally — push manually when ready.")
+    if no_push:
+        print("\n🛑  --no-push set — skipping git commit + push.")
+        print("    JSON files saved locally. Inspect them before pushing.")
+    else:
+        print("\n🚀  Publishing to GitHub…")
+        try:
+            subprocess.run(["git", "-C", str(SCRIPT_DIR), "add",
+                            "pipeline_data.json", "paying_schools.json", "investor.html"], check=True)
+            subprocess.run(["git", "-C", str(SCRIPT_DIR), "commit", "-m",
+                            f"Update sales dashboard — {timestamp}"], check=True)
+            subprocess.run(["git", "-C", str(SCRIPT_DIR), "push", "origin", "main"], check=True)
+            print("✅  Pushed! Live on GitHub Pages within ~60 seconds.")
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️  Git error: {e}")
+            print("    JSON files were saved locally — push manually when ready.")
 
     print("\n🎉  Done! Dashboard updated safely.")
     print("    Manual sections preserved: Product Demos, Schools list")
@@ -418,4 +533,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Update Ear Academy sales dashboard from ActiveCampaign.")
+    parser.add_argument("--no-push", action="store_true",
+                        help="Write JSON files locally but skip the git commit + push step (testing).")
+    args = parser.parse_args()
+    main(no_push=args.no_push)
