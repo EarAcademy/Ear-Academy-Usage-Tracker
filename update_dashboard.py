@@ -91,8 +91,12 @@ SCHOOL_NAME_ALIASES = {
 # ── Paying-schools roster (loaded from paying_schools.json) ──────────────────
 # Populated by main() at startup. _ROSTER is the list, _ROSTER_LOOKUP is the
 # lowercased-name → roster-entry dict used by resolve_to_roster().
-_ROSTER         = None
-_ROSTER_LOOKUP  = None
+# _DISPLAY_NAME_FOR_DEAL maps each AC deal_id to the canonical display name
+# (the most-common snapshot label observed). Used by paying() to normalise
+# the School column so groupby/nunique can't double-count name variants.
+_ROSTER                 = None
+_ROSTER_LOOKUP          = None
+_DISPLAY_NAME_FOR_DEAL  = None
 
 
 def load_paying_schools_roster():
@@ -151,6 +155,25 @@ def clean_roster_display_name(entry):
     if title.isupper():
         title = title.title()
     return title
+
+
+def build_display_name_for_deal(combined_df):
+    """For each roster deal_id, pick the most-common snapshot name seen for it.
+    This becomes the canonical display name used everywhere on the dashboard,
+    so a single school can't appear twice under spelling variants.
+    """
+    if _ROSTER_LOOKUP is None or combined_df is None or combined_df.empty:
+        return {}
+    rows = combined_df[['School']].dropna().copy()
+    rows['DealId'] = rows['School'].apply(
+        lambda n: (resolve_to_roster(n) or {}).get('deal_id'))
+    rows = rows.dropna(subset=['DealId'])
+    if rows.empty:
+        return {}
+    counts = (rows.groupby(['DealId', 'School']).size()
+                   .reset_index(name='c')
+                   .sort_values(['DealId', 'c'], ascending=[True, False]))
+    return counts.drop_duplicates('DealId').set_index('DealId')['School'].to_dict()
 
 MERGE_BLOCKLIST = {
     'Bay Primary',
@@ -439,13 +462,30 @@ def paying(df):
     resolves to a roster entry — the AC pipeline is the single source of
     truth, so EXCLUDED_SCHOOLS / billing-status filters become irrelevant.
 
+    Also normalises the School column to the canonical display name for that
+    roster entry (the most-common snapshot label observed). This means two
+    snapshot spellings of the same school — e.g. 'St Martins Preparatory
+    School' + 'St Martin Preparatory School' — collapse to a single entry
+    in every downstream groupby/nunique calculation.
+
     Without roster (fallback for first-run / missing JSON): use the legacy
     rules — Billing == 'Paying' and not in EXCLUDED_SCHOOLS.
     """
     if _ROSTER_LOOKUP is None:
         pay = df[df['Billing'] == 'Paying']
         return pay[~pay['School'].apply(should_exclude_school)]
-    return df[df['School'].apply(lambda n: resolve_to_roster(n) is not None)]
+
+    in_roster = df['School'].apply(lambda n: resolve_to_roster(n) is not None)
+    pay = df[in_roster].copy()
+
+    if _DISPLAY_NAME_FOR_DEAL:
+        def _canon(n):
+            entry = resolve_to_roster(n)
+            if not entry:
+                return n
+            return _DISPLAY_NAME_FOR_DEAL.get(entry['deal_id'], n)
+        pay['School'] = pay['School'].apply(_canon)
+    return pay
 
 
 def demo(df):
@@ -550,11 +590,12 @@ def calc_weekly_snapshot(combined):
     pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
     prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    # Quiet 7+ / 14+ days — rolling window from today's date
-    today         = pd.Timestamp(datetime.now().date())
-    ever          = set(pay['School'].unique())
-    last_login    = pay.groupby('School')['Date'].max()  # most recent login per school
-
+    # Quiet 7+ / 14+ days — rolling window from today's date.
+    # `pay['School']` is already canonicalised by paying() when the roster
+    # is loaded, so name variants of the same school can't double-count.
+    today      = pd.Timestamp(datetime.now().date())
+    ever       = set(pay['School'].unique())
+    last_login = pay.groupby('School')['Date'].max()
     quiet_7  = sorted(s for s in ever if 7 <= (today - last_login[s]).days < 14)
     quiet_14 = sorted(s for s in ever if (today - last_login[s]).days >= 14)
 
@@ -1519,7 +1560,7 @@ def main():
     # Load the AC paying-schools roster first — this becomes the canonical
     # list of who counts as a "paying school". If missing, we fall back to
     # the legacy snapshot-only behaviour.
-    global _ROSTER, _ROSTER_LOOKUP, TOTAL_CUSTOMERS
+    global _ROSTER, _ROSTER_LOOKUP, _DISPLAY_NAME_FOR_DEAL, TOTAL_CUSTOMERS
     _ROSTER, _ROSTER_LOOKUP = load_paying_schools_roster()
     if _ROSTER:
         TOTAL_CUSTOMERS = len(_ROSTER)
@@ -1535,6 +1576,11 @@ def main():
     if combined is None or combined.empty:
         print("❌ No data loaded.")
         return
+
+    # Build the deal-id → canonical-display-name map BEFORE the first
+    # paying() call. This is what de-duplicates name variants so a school
+    # appearing in snapshots under multiple spellings collapses to one row.
+    _DISPLAY_NAME_FOR_DEAL = build_display_name_for_deal(combined)
 
     pay = paying(combined)
     if _ROSTER:
