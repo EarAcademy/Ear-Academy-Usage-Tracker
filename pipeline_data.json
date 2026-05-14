@@ -21,8 +21,8 @@
   },
   "email": {
     "sent": "891",
-    "replied": "667",
-    "rate": "74.9%",
+    "replied": "668",
+    "rate": "75.0%",
     "new_contacts": "2"
   },
   "arr_tiers": {
@@ -51,7 +51,7 @@
     "count": 22,
     "total_value": 168195.0
   },
-  "last_updated": "13 May 2026 at 16:41",
+  "last_updated": "14 May 2026 at 15:50",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
