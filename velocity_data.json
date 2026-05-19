@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-05-19T11:22:40Z",
-  "generated_label": "19 May 2026 at 11:22",
+  "generated_at": "2026-05-19T14:05:17Z",
+  "generated_label": "19 May 2026 at 14:05",
   "pipeline4": {
     "total": 286,
-    "avg_days_in_stage": 191,
+    "avg_days_in_stage": 190,
     "total_value_zar": 2458137,
     "buckets": {
       "u30": 26,
@@ -417,7 +417,7 @@
         "id": "968",
         "title": "Nyikinya sihle - Ntsikayezwe - 14 DAY TRIAL",
         "days_in_stage": 301,
-        "total_age_days": 517,
+        "total_age_days": 518,
         "value_zar": 8050,
         "cdate": "2024-12-17"
       },
@@ -425,7 +425,7 @@
         "id": "1074",
         "title": "Marelet Moolman - Private - 14 DAY TRIAL",
         "days_in_stage": 301,
-        "total_age_days": 470,
+        "total_age_days": 471,
         "value_zar": 8050,
         "cdate": "2025-02-02"
       },
@@ -910,6 +910,14 @@
         "cdate": "2025-09-09"
       },
       {
+        "id": "1423",
+        "title": "Hillcrest Collegiate",
+        "days_in_stage": 209,
+        "total_age_days": 354,
+        "value_zar": 12000,
+        "cdate": "2025-05-30"
+      },
+      {
         "id": "1610",
         "title": "Mikfield",
         "days_in_stage": 209,
@@ -940,14 +948,6 @@
         "total_age_days": 623,
         "value_zar": 20000,
         "cdate": "2024-09-03"
-      },
-      {
-        "id": "1423",
-        "title": "Hillcrest Collegiate",
-        "days_in_stage": 208,
-        "total_age_days": 354,
-        "value_zar": 12000,
-        "cdate": "2025-05-30"
       },
       {
         "id": "30",
@@ -1193,7 +1193,7 @@
         "id": "1226",
         "title": "Winney Nkonyane - Basa Freedom School - Free trial",
         "days_in_stage": 120,
-        "total_age_days": 433,
+        "total_age_days": 434,
         "value_zar": 20000,
         "cdate": "2025-03-11"
       },
@@ -1353,11 +1353,11 @@
   },
   "pipeline5": {
     "demo": {
-      "count": 11,
+      "count": 10,
       "avg_days_in_stage": 23,
-      "total_value_zar": 124100,
+      "total_value_zar": 112100,
       "buckets": {
-        "u30": 9,
+        "u30": 8,
         "u60": 1,
         "u90": 1,
         "u180": 0,
@@ -1421,30 +1421,6 @@
               "stage_name": "Demo/Pilot",
               "entered": "2026-04-21",
               "days": 28
-            }
-          ]
-        },
-        {
-          "id": "254",
-          "title": "George Faneti",
-          "stage": "43",
-          "days_in_stage": 20,
-          "total_age_days": 796,
-          "value_zar": 12000,
-          "edate": "2026-04-29",
-          "cdate": "2024-03-14",
-          "stage_history": [
-            {
-              "stage_id": "36",
-              "stage_name": "New Lead",
-              "entered": "2026-03-03",
-              "days": 56
-            },
-            {
-              "stage_id": "43",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-04-29",
-              "days": 20
             }
           ]
         },
@@ -1606,11 +1582,11 @@
       ]
     },
     "nego": {
-      "count": 14,
-      "avg_days_in_stage": 39,
-      "total_value_zar": 192000,
+      "count": 15,
+      "avg_days_in_stage": 36,
+      "total_value_zar": 204000,
       "buckets": {
-        "u30": 9,
+        "u30": 10,
         "u60": 2,
         "u90": 2,
         "u180": 1,
@@ -1821,7 +1797,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
-              "days": 87
+              "days": 88
             }
           ]
         },
@@ -1869,7 +1845,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
-              "days": 87
+              "days": 88
             }
           ]
         },
@@ -1926,6 +1902,36 @@
               "days": 13
             }
           ]
+        },
+        {
+          "id": "254",
+          "title": "Gateway High",
+          "stage": "46",
+          "days_in_stage": 0,
+          "total_age_days": 796,
+          "value_zar": 12000,
+          "edate": "2026-05-19",
+          "cdate": "2024-03-14",
+          "stage_history": [
+            {
+              "stage_id": "36",
+              "stage_name": "New Lead",
+              "entered": "2026-03-03",
+              "days": 56
+            },
+            {
+              "stage_id": "43",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-04-29",
+              "days": 20
+            },
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-05-19",
+              "days": 0
+            }
+          ]
         }
       ]
     },
@@ -1933,7 +1939,7 @@
   },
   "conversion_rates": {
     "lead_to_demo_pct": 8.7,
-    "demo_to_nego_pct": 56
+    "demo_to_nego_pct": 60
   },
   "stuck_summary": {
     "conversion_over_60": 4,
@@ -1941,4 +1947,4 @@
     "new_leads_over_180": 142,
     "all_stages_over_90": 166
   }
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+}
