@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-19T09:54:19",
-  "generated_label": "19 May 2026 at 09:54",
+  "generated_at": "2026-05-19T13:20:01",
+  "generated_label": "19 May 2026 at 13:20",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -10,7 +10,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C')"
   },
-  "count": 49,
+  "count": 50,
   "schools": [
     {
       "deal_id": "1586",
@@ -272,6 +272,15 @@
       "value_zar": 8050,
       "account_id": "9665",
       "account_name": "Lebone II College (Primary)"
+    },
+    {
+      "deal_id": "1697",
+      "title": "Nguzo Saba School",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 8050,
+      "account_id": "11621",
+      "account_name": "Nguzo Saba School"
     },
     {
       "deal_id": "1561",
