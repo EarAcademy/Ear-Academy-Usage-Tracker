@@ -1,9 +1,9 @@
 {
   "pipeline": {
-    "qualification": 287,
-    "demo": 10,
-    "negotiation": 15,
-    "customers": 52
+    "qualification": 285,
+    "demo": 12,
+    "negotiation": 13,
+    "customers": 53
   },
   "monthly": {
     "jan": {
@@ -16,14 +16,14 @@
     },
     "mar": {
       "new_leads": "162",
-      "new_deals": "23"
+      "new_deals": "24"
     }
   },
   "email": {
-    "sent": "891",
-    "replied": "673",
-    "rate": "75.5%",
-    "new_contacts": "7"
+    "sent": "1052",
+    "replied": "719",
+    "rate": "68.3%",
+    "new_contacts": "8"
   },
   "arr_tiers": {
     "tier1": {
@@ -51,14 +51,14 @@
     "count": 22,
     "total_value": 168195.0
   },
-  "last_updated": "22 May 2026 at 15:23",
+  "last_updated": "25 May 2026 at 15:35",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (2) + Activated (50) in Pipeline 6",
+    "customers": "Onboarding (3) + Activated (50) in Pipeline 6",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100)",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }

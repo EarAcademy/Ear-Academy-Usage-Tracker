@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-22T15:23:51",
-  "generated_label": "22 May 2026 at 15:23",
+  "generated_at": "2026-05-25T15:35:09",
+  "generated_label": "25 May 2026 at 15:35",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -10,7 +10,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C')"
   },
-  "count": 50,
+  "count": 51,
   "schools": [
     {
       "deal_id": "1586",
@@ -164,6 +164,15 @@
       "value_zar": 8050,
       "account_id": "9854",
       "account_name": "Eastside Primary School"
+    },
+    {
+      "deal_id": "1708",
+      "title": "Eduplex Primary",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 12000,
+      "account_id": "379",
+      "account_name": "Eduplex"
     },
     {
       "deal_id": "1589",
