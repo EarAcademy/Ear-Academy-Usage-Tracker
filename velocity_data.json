@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-01T11:31:12Z",
-  "generated_label": "1 Jun 2026 at 11:31",
+  "generated_at": "2026-06-01T14:02:52Z",
+  "generated_label": "1 Jun 2026 at 14:02",
   "pipeline4": {
     "total": 282,
     "avg_days_in_stage": 194,
@@ -385,7 +385,7 @@
         "id": "968",
         "title": "Nyikinya sihle - Ntsikayezwe - 14 DAY TRIAL",
         "days_in_stage": 314,
-        "total_age_days": 530,
+        "total_age_days": 531,
         "value_zar": 8050,
         "cdate": "2024-12-17"
       },
@@ -393,7 +393,7 @@
         "id": "1074",
         "title": "Marelet Moolman - Private - 14 DAY TRIAL",
         "days_in_stage": 314,
-        "total_age_days": 483,
+        "total_age_days": 484,
         "value_zar": 8050,
         "cdate": "2025-02-02"
       },
@@ -862,6 +862,14 @@
         "cdate": "2025-09-09"
       },
       {
+        "id": "1423",
+        "title": "Hillcrest Collegiate",
+        "days_in_stage": 222,
+        "total_age_days": 367,
+        "value_zar": 12000,
+        "cdate": "2025-05-30"
+      },
+      {
         "id": "1610",
         "title": "Mikfield",
         "days_in_stage": 222,
@@ -892,14 +900,6 @@
         "total_age_days": 636,
         "value_zar": 20000,
         "cdate": "2024-09-03"
-      },
-      {
-        "id": "1423",
-        "title": "Hillcrest Collegiate",
-        "days_in_stage": 221,
-        "total_age_days": 367,
-        "value_zar": 12000,
-        "cdate": "2025-05-30"
       },
       {
         "id": "240",
@@ -1129,7 +1129,7 @@
         "id": "1226",
         "title": "Winney Nkonyane - Basa Freedom School - Free trial",
         "days_in_stage": 133,
-        "total_age_days": 446,
+        "total_age_days": 447,
         "value_zar": 20000,
         "cdate": "2025-03-11"
       },
@@ -1280,7 +1280,7 @@
       {
         "id": "604",
         "title": "Laerskool Vastrap  Jaco Boshoff - Schoolscape Event",
-        "days_in_stage": 101,
+        "days_in_stage": 102,
         "total_age_days": 636,
         "value_zar": 1,
         "cdate": "2024-09-03"
@@ -1704,7 +1704,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
-              "days": 100
+              "days": 101
             }
           ]
         },
@@ -1752,7 +1752,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
-              "days": 100
+              "days": 101
             }
           ]
         },
