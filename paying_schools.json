@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-01T13:28:35",
-  "generated_label": "01 Jun 2026 at 13:28",
+  "generated_at": "2026-06-01T15:53:38",
+  "generated_label": "01 Jun 2026 at 15:53",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -73,7 +73,7 @@
       "stage_id": "51",
       "value_zar": 8050,
       "account_id": "9981",
-      "account_name": "Bay Primary"
+      "account_name": null
     },
     {
       "deal_id": "143",
@@ -226,7 +226,7 @@
       "stage_id": "51",
       "value_zar": 8050,
       "account_id": "9630",
-      "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL"
+      "account_name": null
     },
     {
       "deal_id": "778",
@@ -397,7 +397,7 @@
       "stage_id": "51",
       "value_zar": 12000,
       "account_id": "8782",
-      "account_name": "Royal Schools Starlight Academy"
+      "account_name": null
     },
     {
       "deal_id": "1220",
@@ -433,7 +433,7 @@
       "stage_id": "51",
       "value_zar": 8050,
       "account_id": "427",
-      "account_name": "SUN VALLEY PRIMARY SCHOOL"
+      "account_name": null
     },
     {
       "deal_id": "1550",
@@ -451,7 +451,7 @@
       "stage_id": "51",
       "value_zar": 4750,
       "account_id": "9888",
-      "account_name": "Vergenoegd - C5"
+      "account_name": null
     },
     {
       "deal_id": "1535",
