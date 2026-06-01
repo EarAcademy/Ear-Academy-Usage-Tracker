@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-26T16:56:59",
-  "generated_label": "26 May 2026 at 16:56",
+  "generated_at": "2026-06-01T13:07:54",
+  "generated_label": "01 Jun 2026 at 13:07",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -285,8 +285,8 @@
     {
       "deal_id": "1697",
       "title": "Nguzo Saba School",
-      "stage": "Onboarding",
-      "stage_id": "50",
+      "stage": "Activated",
+      "stage_id": "51",
       "value_zar": 8050,
       "account_id": "11621",
       "account_name": "Nguzo Saba School"
