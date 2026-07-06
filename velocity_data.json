@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-06T10:13:54Z",
-  "generated_label": "6 Jul 2026 at 10:13",
+  "generated_at": "2026-07-06T10:19:42Z",
+  "generated_label": "6 Jul 2026 at 10:19",
   "pipeline4": {
     "total": 270,
     "avg_days_in_stage": 223,
@@ -1105,7 +1105,7 @@
         "id": "1189",
         "title": "Corne De Souza - Bosmansdam High School - Two Term Trial",
         "days_in_stage": 168,
-        "total_age_days": 488,
+        "total_age_days": 489,
         "value_zar": 12000,
         "cdate": "2025-03-04"
       },
@@ -1145,7 +1145,7 @@
         "id": "1255",
         "title": "Sam Parry - Durban Preparatory school - 2 term trial",
         "days_in_stage": 168,
-        "total_age_days": 475,
+        "total_age_days": 476,
         "value_zar": 8050,
         "cdate": "2025-03-17"
       },
@@ -2317,7 +2317,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-04-20",
-              "days": 76
+              "days": 77
             }
           ]
         },
