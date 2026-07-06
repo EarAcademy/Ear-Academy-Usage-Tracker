@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-06T10:19:42Z",
-  "generated_label": "6 Jul 2026 at 10:19",
+  "generated_at": "2026-07-06T10:36:20Z",
+  "generated_label": "6 Jul 2026 at 10:36",
   "pipeline4": {
     "total": 270,
     "avg_days_in_stage": 223,
@@ -614,20 +614,20 @@
         "cdate": "2025-04-24"
       },
       {
+        "id": "1429",
+        "title": "Durban Christian Centre School (DCCS)",
+        "days_in_stage": 313,
+        "total_age_days": 402,
+        "value_zar": 8050,
+        "cdate": "2025-05-30"
+      },
+      {
         "id": "1532",
         "title": "Wynberg Boys' High School",
         "days_in_stage": 312,
         "total_age_days": 347,
         "value_zar": 8050,
         "cdate": "2025-07-24"
-      },
-      {
-        "id": "1429",
-        "title": "Durban Christian Centre School (DCCS)",
-        "days_in_stage": 312,
-        "total_age_days": 402,
-        "value_zar": 8050,
-        "cdate": "2025-05-30"
       },
       {
         "id": "1428",
@@ -686,6 +686,14 @@
         "cdate": "2025-05-30"
       },
       {
+        "id": "1568",
+        "title": "Strand Private Academy",
+        "days_in_stage": 305,
+        "total_age_days": 305,
+        "value_zar": 8050,
+        "cdate": "2025-09-04"
+      },
+      {
         "id": "1263",
         "title": "Penny Winward - Pelham Senior Primary - Two term deal",
         "days_in_stage": 305,
@@ -716,14 +724,6 @@
         "total_age_days": 398,
         "value_zar": 12000,
         "cdate": "2025-06-03"
-      },
-      {
-        "id": "1568",
-        "title": "Strand Private Academy",
-        "days_in_stage": 304,
-        "total_age_days": 305,
-        "value_zar": 8050,
-        "cdate": "2025-09-04"
       },
       {
         "id": "1410",
@@ -1057,7 +1057,7 @@
         "id": "1235",
         "title": "Martinette Booyan Regio independent school - free trial",
         "days_in_stage": 168,
-        "total_age_days": 480,
+        "total_age_days": 481,
         "value_zar": 20000,
         "cdate": "2025-03-12"
       },
