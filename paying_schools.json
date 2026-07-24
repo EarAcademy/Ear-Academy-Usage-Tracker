@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-16T17:38:22",
-  "generated_label": "16 Jul 2026 at 17:38",
+  "generated_at": "2026-07-24T09:29:27",
+  "generated_label": "24 Jul 2026 at 09:29",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -168,8 +168,8 @@
     {
       "deal_id": "1708",
       "title": "Eduplex Primary",
-      "stage": "Onboarding",
-      "stage_id": "50",
+      "stage": "Activated",
+      "stage_id": "51",
       "value_zar": 12000,
       "account_id": "379",
       "account_name": "Eduplex"
