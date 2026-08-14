@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-14T13:57:38Z",
-  "generated_label": "14 Aug 2026 at 13:57",
+  "generated_at": "2026-08-14T13:58:47Z",
+  "generated_label": "14 Aug 2026 at 13:58",
   "pipeline4": {
     "total": 268,
     "avg_days_in_stage": 265,
@@ -2202,7 +2202,7 @@
     },
     "nego": {
       "count": 24,
-      "avg_days_in_stage": 28,
+      "avg_days_in_stage": 27,
       "total_value_zar": 291600,
       "buckets": {
         "u30": 15,
@@ -2395,42 +2395,6 @@
           "edate": "2026-06-24",
           "cdate": "2026-06-24",
           "stage_history": []
-        },
-        {
-          "id": "1525",
-          "title": "Camps Bay Primary",
-          "stage": "46",
-          "days_in_stage": 25,
-          "total_age_days": 389,
-          "value_zar": 12000,
-          "edate": "2026-07-20",
-          "cdate": "2025-07-21",
-          "stage_history": [
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2025-07-24",
-              "days": 284
-            },
-            {
-              "stage_id": "43",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-05-05",
-              "days": 0
-            },
-            {
-              "stage_id": "36",
-              "stage_name": "New Lead",
-              "entered": "2026-05-05",
-              "days": 0
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-05-05",
-              "days": 101
-            }
-          ]
         },
         {
           "id": "1724",
@@ -2708,6 +2672,42 @@
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
               "days": 175
+            }
+          ]
+        },
+        {
+          "id": "1525",
+          "title": "Camps Bay Primary",
+          "stage": "46",
+          "days_in_stage": 0,
+          "total_age_days": 389,
+          "value_zar": 12000,
+          "edate": "2026-08-14",
+          "cdate": "2025-07-21",
+          "stage_history": [
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2025-07-24",
+              "days": 284
+            },
+            {
+              "stage_id": "43",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-05-05",
+              "days": 0
+            },
+            {
+              "stage_id": "36",
+              "stage_name": "New Lead",
+              "entered": "2026-05-05",
+              "days": 0
+            },
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-05-05",
+              "days": 101
             }
           ]
         },
