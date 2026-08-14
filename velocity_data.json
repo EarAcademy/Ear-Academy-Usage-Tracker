@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-14T13:55:46Z",
-  "generated_label": "14 Aug 2026 at 13:55",
+  "generated_at": "2026-08-14T13:57:38Z",
+  "generated_label": "14 Aug 2026 at 13:57",
   "pipeline4": {
     "total": 268,
     "avg_days_in_stage": 265,
@@ -2202,7 +2202,7 @@
     },
     "nego": {
       "count": 24,
-      "avg_days_in_stage": 29,
+      "avg_days_in_stage": 28,
       "total_value_zar": 291600,
       "buckets": {
         "u30": 15,
@@ -2453,42 +2453,6 @@
               "stage_name": "Negotiation",
               "entered": "2026-07-20",
               "days": 25
-            }
-          ]
-        },
-        {
-          "id": "1698",
-          "title": "Cambridge Academy Ethiopia",
-          "stage": "46",
-          "days_in_stage": 24,
-          "total_age_days": 162,
-          "value_zar": 12000,
-          "edate": "2026-07-21",
-          "cdate": "2026-03-05",
-          "stage_history": [
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-03-10",
-              "days": 0
-            },
-            {
-              "stage_id": "36",
-              "stage_name": "New Lead",
-              "entered": "2026-03-10",
-              "days": 1
-            },
-            {
-              "stage_id": "43",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-03-11",
-              "days": 98
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-06-17",
-              "days": 58
             }
           ]
         },
@@ -2744,6 +2708,42 @@
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
               "days": 175
+            }
+          ]
+        },
+        {
+          "id": "1698",
+          "title": "Cambridge Academy Ethiopia",
+          "stage": "46",
+          "days_in_stage": 0,
+          "total_age_days": 162,
+          "value_zar": 12000,
+          "edate": "2026-08-14",
+          "cdate": "2026-03-05",
+          "stage_history": [
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-03-10",
+              "days": 0
+            },
+            {
+              "stage_id": "36",
+              "stage_name": "New Lead",
+              "entered": "2026-03-10",
+              "days": 1
+            },
+            {
+              "stage_id": "43",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-03-11",
+              "days": 98
+            },
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-06-17",
+              "days": 58
             }
           ]
         }
