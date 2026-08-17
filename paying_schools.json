@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-17T10:24:28",
-  "generated_label": "17 Aug 2026 at 10:24",
+  "generated_at": "2026-08-17T12:29:58",
+  "generated_label": "17 Aug 2026 at 12:29",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -470,3 +470,15 @@
       "value_zar": 4750,
       "account_id": "9889",
       "account_name": "Welwitschia - C5"
+    },
+    {
+      "deal_id": "1592",
+      "title": "Windemere Primary",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 8050,
+      "account_id": "10214",
+      "account_name": "WINDERMERE PRIMARY SCHOOL"
+    }
+  ]
+}
