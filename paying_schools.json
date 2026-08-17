@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-14T15:58:05",
-  "generated_label": "14 Aug 2026 at 15:58",
+  "generated_at": "2026-08-17T10:24:28",
+  "generated_label": "17 Aug 2026 at 10:24",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -10,7 +10,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C')"
   },
-  "count": 51,
+  "count": 52,
   "schools": [
     {
       "deal_id": "1586",
@@ -92,6 +92,15 @@
       "value_zar": 12000,
       "account_id": "3450",
       "account_name": "Calling Academy"
+    },
+    {
+      "deal_id": "1698",
+      "title": "Cambridge Academy Ethiopia",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 12000,
+      "account_id": "11622",
+      "account_name": "Cambridge Academy Ethiopia"
     },
     {
       "deal_id": "1590",
