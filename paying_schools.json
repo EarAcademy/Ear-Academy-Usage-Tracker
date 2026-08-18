@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-17T16:03:57",
-  "generated_label": "17 Aug 2026 at 16:03",
+  "generated_at": "2026-08-18T14:03:46",
+  "generated_label": "18 Aug 2026 at 14:03",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -10,7 +10,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C')"
   },
-  "count": 52,
+  "count": 53,
   "schools": [
     {
       "deal_id": "1586",
@@ -479,6 +479,15 @@
       "value_zar": 8050,
       "account_id": "10214",
       "account_name": "WINDERMERE PRIMARY SCHOOL"
+    },
+    {
+      "deal_id": "1827",
+      "title": "Xero Test",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 100,
+      "account_id": "11744",
+      "account_name": "Xero Test"
     }
   ]
 }
