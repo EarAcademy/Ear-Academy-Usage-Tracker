@@ -53,6 +53,7 @@ _LOAD_REPORT = {
     'skipped_missing_cols': [],   # filename — no School Name / Email column
     'errors':               [],   # (filename, error message)
     'header_typos':         [],   # (filename, canonical column name, actual header found)
+    'roster_error':         None, # reason paying_schools.json failed to load, or None if fine
 }
 
 # ── Tolerant column matching ──────────────────────────────────────────────────
@@ -184,16 +185,23 @@ def load_paying_schools_roster():
     fall back to legacy (snapshot-only) mode.
     """
     if not ROSTER_FILE.exists():
+        _LOAD_REPORT['roster_error'] = f"{ROSTER_FILE} does not exist"
         return None, None
     try:
         with open(ROSTER_FILE) as f:
             data = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
         print(f"  ⚠️  Could not load {ROSTER_FILE}: {e}")
+        _LOAD_REPORT['roster_error'] = (
+            f"{ROSTER_FILE} is corrupted/truncated and could not be parsed as JSON: {e}. "
+            f"Likely an interrupted write by update_sales_dashboard.py (network drop, "
+            f"laptop sleep, or crash mid-write). Re-run update_sales_dashboard.py, or "
+            f"restore the file from the last good git commit.")
         return None, None
 
     roster = data.get("schools", []) or []
     if not roster:
+        _LOAD_REPORT['roster_error'] = f"{ROSTER_FILE} parsed OK but contains zero schools"
         return None, None
 
     # Index every roster entry by its lowercased title AND account_name.
@@ -1733,6 +1741,26 @@ def build_daily_report(combined):
     """
     lines = []
     add = lines.append
+
+    # ── Roster status — the single most impactful failure mode ──
+    # If paying_schools.json failed to load, the whole pipeline silently drops
+    # to legacy mode (old EXCLUDED_SCHOOLS list instead of the real AC roster),
+    # which changes which schools count as "paying" without any error anywhere
+    # else. This banner is deliberately the first thing in the report.
+    if _LOAD_REPORT['roster_error']:
+        add("=" * 60)
+        add("🚨 AC ROSTER FAILED TO LOAD — RUNNING IN DEGRADED LEGACY MODE")
+        add("=" * 60)
+        add(f"  {_LOAD_REPORT['roster_error']}")
+        add("")
+        add("  Every number below is computed WITHOUT the ActiveCampaign roster —")
+        add("  using the old EXCLUDED_SCHOOLS list instead. School counts, 'paying'")
+        add("  status, and totals will NOT match ActiveCampaign until this is fixed.")
+        add("")
+        add("  FIX: re-run update_sales_dashboard.py, or restore paying_schools.json")
+        add("  from the last good git commit, then re-run this script.")
+        add("=" * 60)
+        add("")
 
     # ── Files ──
     loaded = _LOAD_REPORT['loaded']
