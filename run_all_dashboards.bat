@@ -36,6 +36,19 @@ echo   Ear Academy - Updating all 3 dashboards
 echo ==========================================================
 
 echo.
+echo [0/3] Pulling latest from GitHub...
+echo ----------------------------------------------------------
+git pull origin main
+if not %ERRORLEVEL%==0 (
+  echo.
+  echo   ^!^! git pull failed — resolve this before continuing, then re-run.
+  echo   ^   Nothing was published.
+  echo.
+  pause
+  exit /b 1
+)
+
+echo.
 echo [1/3] Sales dashboard (pulls live data from ActiveCampaign)
 echo ----------------------------------------------------------
 "%PY%" update_sales_dashboard.py --no-push
