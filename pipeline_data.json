@@ -1,8 +1,8 @@
 {
   "pipeline": {
-    "qualification": 248,
+    "qualification": 220,
     "demo": 14,
-    "negotiation": 18,
+    "negotiation": 19,
     "customers": 56
   },
   "monthly": {
@@ -21,9 +21,9 @@
   },
   "email": {
     "sent": "1644",
-    "replied": "1347",
-    "rate": "81.9%",
-    "new_contacts": "10"
+    "replied": "1349",
+    "rate": "82.1%",
+    "new_contacts": "17"
   },
   "arr_tiers": {
     "tier1": {
@@ -38,8 +38,8 @@
     },
     "tier3": {
       "label": "R10\u201320k",
-      "count": 19,
-      "revenue": 228000.0
+      "count": 20,
+      "revenue": 240000.0
     },
     "tier4": {
       "label": "R20k+",
@@ -51,7 +51,7 @@
     "count": 20,
     "total_value": 156194.0
   },
-  "last_updated": "18 Aug 2026 at 14:03",
+  "last_updated": "20 Aug 2026 at 12:16",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
@@ -62,3 +62,4 @@
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100)",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }
+}
