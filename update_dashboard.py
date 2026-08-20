@@ -42,6 +42,36 @@ REPORT_FILE     = Path("daily_report.txt")       # human-readable "what happened
 WEEK1_START     = datetime(2026, 1, 19)
 TOTAL_CUSTOMERS = 49          # set from AC roster in main() — fallback to 49
 
+# Schools to HIDE from the Usage dashboard even though they appear in the AC
+# roster (paying_schools.json). The roster is regenerated from ActiveCampaign
+# on every run, so removing a school here — not by editing the JSON — is what
+# makes the removal stick across runs. Matched case- and accent-insensitively
+# against each roster entry's title AND account_name.
+#
+# NOTE: this only affects the USAGE dashboard (index.html). These deals still
+# exist in ActiveCampaign and still count on the Sales dashboard. To remove a
+# school everywhere, its deal must be moved out of AC Pipeline 6 as well.
+ROSTER_EXCLUDE = {
+    "cheré botha school",
+    "raff home school",
+    "windemere primary",
+    "xero test",
+}
+
+
+def _norm_name(s):
+    """Lowercase + strip accents, for robust name comparison (so 'Cheré'
+    matches 'chere' and casing/accents can't cause a miss)."""
+    s = unicodedata.normalize('NFKD', str(s or '')).encode('ascii', 'ignore').decode('ascii')
+    return s.strip().lower()
+
+
+def _is_roster_excluded(entry):
+    """True if this roster entry's title or account_name is in ROSTER_EXCLUDE."""
+    norm_excl = {_norm_name(x) for x in ROSTER_EXCLUDE}
+    return (_norm_name(entry.get('title')) in norm_excl
+            or _norm_name(entry.get('account_name')) in norm_excl)
+
 # Structured record of what each run loaded / skipped, so the operator can see
 # exactly why a file did or didn't make it onto the dashboard. Populated by
 # load_all_data(), consumed by the end-of-run report in main().
@@ -203,6 +233,17 @@ def load_paying_schools_roster():
     if not roster:
         _LOAD_REPORT['roster_error'] = f"{ROSTER_FILE} parsed OK but contains zero schools"
         return None, None
+
+    # Drop any manually-excluded schools (ROSTER_EXCLUDE) — hidden from the
+    # usage dashboard even though AC still lists them. Done here so it survives
+    # every roster regeneration.
+    if ROSTER_EXCLUDE:
+        before = len(roster)
+        roster = [e for e in roster if not _is_roster_excluded(e)]
+        removed = before - len(roster)
+        if removed:
+            print(f"  🚫  ROSTER_EXCLUDE: hid {removed} school(s) from the dashboard "
+                  f"({before} → {len(roster)})")
 
     # Index every roster entry by its lowercased title AND account_name.
     # First-wins on collisions so the title takes priority over account_name.
