@@ -1496,7 +1496,7 @@ def build_lifetime_logins_html(lifetime_data):
 
 PATTERN_RULES = {
     'power_min_tl':         100,    # Power User: ≥100 lifetime logins
-    'power_min_teachers':   50,     # Power User: ≥50 distinct teachers
+    'power_min_users':      50,     # Power User: ≥50 distinct users (teachers + students)
     'highfreq_min_tl':      20,     # High Frequency: ≥20 lifetime logins
     'highfreq_min_per_wk':  4.5,    # High Frequency: ≥4.5 logins per active week
     'consistent_min_ratio': 0.6,    # Consistent: active in ≥60% of weeks since first login
@@ -1506,7 +1506,7 @@ PATTERN_RULES = {
 }
 
 PATTERN_DESCRIPTIONS = {
-    'Power User':            'Extremely high login volume with many unique teachers. These schools have deeply embedded Ear Academy into their program — worth understanding what they do differently and using as case studies.',
+    'Power User':            'Extremely high login volume with many active users (teachers and students). These schools have deeply embedded Ear Academy into their program — worth understanding what they do differently and using as case studies.',
     'High Frequency':        'Multiple logins per active week. These schools use the platform intensively in bursts. Watch for big spikes followed by silence — worth a gentle check-in.',
     'Consistent Weekly':     'Present in 60%+ of weeks since joining. Reliable, habitual usage — your most stable accounts. Low churn risk.',
     'Consistent Low-Volume': '1–2 logins per active week, often a single teacher. Do not confuse low volume with low commitment — quietly but reliably engaged.',
@@ -1544,7 +1544,7 @@ def _classify_pattern(tl, uw, ut, weeks_span, weeks_since_last):
         return 'Not Yet Active', False
     quiet = weeks_since_last >= r['quiet_min_weeks']
 
-    if tl >= r['power_min_tl'] and ut >= r['power_min_teachers']:
+    if tl >= r['power_min_tl'] and ut >= r['power_min_users']:
         return 'Power User', quiet
     if uw == 1:
         return 'One-time', quiet
@@ -1627,7 +1627,13 @@ def calc_usage_patterns(combined):
         uw = len(d_map)
 
         sub = base[base['DealId'] == did]
-        ut = sub['Email'].nunique()
+        ut = sub['Email'].nunique()                                   # total unique users
+        # One role per user (first seen), matching the Top 10 tab's method, so
+        # a user who appears under different roles on different dates isn't
+        # double-counted as both a teacher and a student.
+        sub_users = sub.drop_duplicates(subset=['Email'])
+        tc = sub_users[sub_users['UserRole'].isin(_TEACHER_ROLES)]['Email'].nunique()      # teachers/admins
+        sc = sub_users[sub_users['UserRole'].isin(_PARTICIPANT_ROLES)]['Email'].nunique()  # students
 
         first_week = pd.Timestamp(sub['WeekStart'].min())
         weeks_span = max(int((latest_week - first_week).days // 7) + 1, 1)
@@ -1635,10 +1641,11 @@ def calc_usage_patterns(combined):
         last_week  = pd.Timestamp(sub['WeekStart'].max())
         weeks_since_last = int((latest_week - last_week).days // 7)
 
+        # NOTE: Power User etc. use `ut` (total unique users), not teachers.
         pattern, quiet = _classify_pattern(tl, uw, ut, weeks_span, weeks_since_last)
         schools_out.append({
             's':  display_name_for.get(did, str(did)),
-            'tl': tl, 'uw': uw, 'ut': ut,
+            'tl': tl, 'uw': uw, 'ut': ut, 'tc': int(tc), 'sc': int(sc),
             'p':  pattern, 'q': quiet, 'd': d_map,
         })
 
@@ -1649,7 +1656,7 @@ def calc_usage_patterns(combined):
                 continue
             schools_out.append({
                 's':  clean_roster_display_name(entry),
-                'tl': 0, 'uw': 0, 'ut': 0,
+                'tl': 0, 'uw': 0, 'ut': 0, 'tc': 0, 'sc': 0,
                 'p':  'Not Yet Active', 'q': False,
                 'd':  {w: 0 for w in weeks_iso},
             })
