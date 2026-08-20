@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-20T12:16:59",
-  "generated_label": "20 Aug 2026 at 12:16",
+  "generated_at": "2026-08-20T15:07:08",
+  "generated_label": "20 Aug 2026 at 15:07",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -239,7 +239,7 @@
     },
     {
       "deal_id": "1595",
-      "title": "Herzlia Primary",
+      "title": "Herzlia Highlands Primary School",
       "stage": "Activated",
       "stage_id": "51",
       "value_zar": 8050,
@@ -257,7 +257,7 @@
     },
     {
       "deal_id": "1647",
-      "title": "Herzlia Weitzman",
+      "title": "Herzlia Weizmann",
       "stage": "Activated",
       "stage_id": "51",
       "value_zar": 8050,
@@ -490,3 +490,13 @@
       "account_name": "WINDERMERE PRIMARY SCHOOL"
     },
     {
+      "deal_id": "1827",
+      "title": "Xero Test",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 100,
+      "account_id": "11744",
+      "account_name": "Xero Test"
+    }
+  ]
+}
