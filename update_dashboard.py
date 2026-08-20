@@ -769,7 +769,7 @@ def calc_weekly_snapshot(combined):
     pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
     prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    # Quiet 7+ / 14+ days — rolling window anchored to the most recent
+    # Quiet 7–13 / 30+ days — rolling window anchored to the most recent
     # snapshot date, NOT wall-clock now(). If the operator adds Monday's
     # file but doesn't run the script until Wednesday, "quiet" must still
     # mean "quiet as of Monday's data" — otherwise every school's quiet
@@ -783,7 +783,7 @@ def calc_weekly_snapshot(combined):
     ever       = set(pay['School'].unique())
     last_login = pay.groupby('School')['Date'].max()
     quiet_7  = sorted(s for s in ever if 7 <= (today - last_login[s]).days < 14)
-    quiet_14 = sorted(s for s in ever if (today - last_login[s]).days >= 14)
+    quiet_30 = sorted(s for s in ever if (today - last_login[s]).days >= 30)
 
     return {
         'max_week': max_week, 'prev_week': prev_week,
@@ -797,7 +797,7 @@ def calc_weekly_snapshot(combined):
         'consistent_schools': consistent_schools, 'consistent_count': consistent_count,
         'prev_consistent': prev_consistent,
         'quiet_7_schools': quiet_7, 'quiet_7_count': len(quiet_7),
-        'quiet_14_schools': quiet_14, 'quiet_14_count': len(quiet_14),
+        'quiet_30_schools': quiet_30, 'quiet_30_count': len(quiet_30),
     }
 
 
@@ -901,37 +901,26 @@ def calc_top10(combined):
     grp['teacher_count']    = grp['teacher_count'].fillna(0).astype(int)
     grp['participant_count'] = grp['participant_count'].fillna(0).astype(int)
 
-    # Product breakdown per school.
-    # Use rows where the file actually had a Product Type column (ProductExplicit=True) to
-    # determine each school's real product type.  Then assign cls/ins from total_logins so
-    # that W1-W5 logins (files with no Product Type col) are classified correctly instead of
-    # being ghost-counted in both classroom AND instrumental via the 'both' fallback expansion.
+    # Product breakdown per school — REAL per-login counts.
+    # Only count rows where the file actually had a Product Type column
+    # (ProductExplicit=True). Files from W1–W5 had no Product Type column, so
+    # their rows were expanded into both classroom AND instrumental as a
+    # fallback; counting those would ghost-count a login in both buckets, so
+    # they're excluded here. A genuine "Classroom & Instrumental" user legitimately
+    # counts in both (that's a real dual-product login), which unique_logins handles.
+    #
+    # This replaces the old logic that dumped a school's FULL total into BOTH
+    # cls and ins whenever it was tagged "both" — which made an essentially
+    # instrumental-only school (e.g. Koa: 4 classroom vs 698 instrumental logins)
+    # display a wildly wrong "875 cls / 875 ins".
     explicit_pay = pay[pay['ProductExplicit'] == True]
-    school_product_type = {}
-    for school, grp_exp in explicit_pay.groupby('School'):
-        prods = set(grp_exp['Product'].unique())
-        if 'classroom' in prods and 'instrumental' in prods:
-            school_product_type[school] = 'both'
-        elif 'classroom' in prods:
-            school_product_type[school] = 'classroom'
-        elif 'instrumental' in prods:
-            school_product_type[school] = 'instrumental'
+    cls_by_school = (unique_logins(classroom(explicit_pay))
+                     .groupby('School')['Email'].count())
+    ins_by_school = (unique_logins(instrumental(explicit_pay))
+                     .groupby('School')['Email'].count())
 
-    def _cls_ins(row):
-        known = school_product_type.get(row['School'])
-        total = row['total_logins']
-        if known == 'instrumental':
-            return 0, total
-        if known == 'classroom':
-            return total, 0
-        if known == 'both':
-            return total, total
-        # None → no Product Type data at all; return 0s so values are inert
-        return 0, 0
-
-    grp[['cls', 'ins']] = grp.apply(lambda r: pd.Series(_cls_ins(r)), axis=1)
-    grp['cls'] = grp['cls'].astype(int)
-    grp['ins'] = grp['ins'].astype(int)
+    grp['cls'] = grp['School'].map(cls_by_school).fillna(0).astype(int)
+    grp['ins'] = grp['School'].map(ins_by_school).fillna(0).astype(int)
 
     grp['score'] = grp['weeks_active'] * grp['unique_users'] * 2 + grp['total_logins']
     grp = grp.sort_values('score', ascending=False).head(10).reset_index(drop=True)
@@ -940,14 +929,25 @@ def calc_top10(combined):
     for _, row in grp.iterrows():
         school_weeks = sorted(pay[pay['School'] == row['School']]['Week'].unique())
         weeks_str    = ', '.join(f"W{int(w)}" for w in school_weeks)
+        # Derive the display label from the real counts: both non-zero → 'both',
+        # one non-zero → that product, neither → None (no product data at all).
+        cls_n, ins_n = int(row['cls']), int(row['ins'])
+        if cls_n and ins_n:
+            known_product = 'both'
+        elif cls_n:
+            known_product = 'classroom'
+        elif ins_n:
+            known_product = 'instrumental'
+        else:
+            known_product = None
         result.append({
             'name':              row['School'],
             'logins':            int(row['total_logins']),
             'teacher_count':     int(row['teacher_count']),
             'participant_count': int(row['participant_count']),
-            'known_product':     school_product_type.get(row['School']),  # None if no data
-            'cls':               int(row['cls']),
-            'ins':               int(row['ins']),
+            'known_product':     known_product,
+            'cls':               cls_n,
+            'ins':               ins_n,
             'weeks':             weeks_str,
             'weeks_active':      int(row['weeks_active']),
             'in_latest':         max_week in [int(w) for w in school_weeks],
@@ -1024,7 +1024,7 @@ def build_weekly_snapshot_html(snap):
     quiet_7_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                              for s in snap['quiet_7_schools']) or '<em style="color:var(--gray)">All schools active this week!</em>'
     quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
-                           for s in snap['quiet_14_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
+                           for s in snap['quiet_30_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
 
     return f'''
         <!-- ═══════════════════════════════ WEEKLY SNAPSHOT ══════════════════════════════════ -->
@@ -1107,13 +1107,13 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-badges snap-badges-scroll">{quiet_7_badges}</div>
                 </div>
 
-                <!-- Card 5: Quiet 14+ Days -->
+                <!-- Card 5: Quiet 30+ Days -->
                 <div class="snap-card accent-salmon">
-                    <div class="snap-label">Quiet 14+ Days</div>
+                    <div class="snap-label">Quiet 30+ Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet">{snap['quiet_14_count']}</span>
-                            <span class="snap-unit">schools · last login 2+ weeks ago</span>
+                            <span class="snap-value" id="snap-quiet">{snap['quiet_30_count']}</span>
+                            <span class="snap-unit">schools · last login 30+ days ago</span>
                         </div>
                     </div>
                     <div class="snap-badges snap-badges-scroll">{quiet_badges}</div>
@@ -2012,8 +2012,8 @@ def main():
     print(f"   Classroom     : {snap['cw_cls_logins']} logins / {snap['cw_cls_schools']} schools")
     print(f"   Instrumental  : {snap['cw_ins_logins']} logins / {snap['cw_ins_schools']} schools")
     print(f"   Consistent    : {snap['consistent_count']} schools (3+ days)")
-    print(f"   Quiet 7+ days : {snap['quiet_7_count']} schools")
-    print(f"   Quiet 14+ days: {snap['quiet_14_count']} schools")
+    print(f"   Quiet 7-13 days: {snap['quiet_7_count']} schools")
+    print(f"   Quiet 30+ days : {snap['quiet_30_count']} schools")
     print(f"   New this week : {len(patterns['new_this_week'])}")
     print(f"   Lifetime graph: {len(lifetime_data)} schools ranked")
     if usage_patterns:
