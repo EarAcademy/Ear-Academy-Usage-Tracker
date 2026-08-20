@@ -1665,8 +1665,14 @@ def calc_usage_patterns(combined):
     schools_tracked = len(_ROSTER) if _ROSTER else len(schools_out)
     total_logins_v  = sum(s['tl'] for s in schools_out)
 
-    first_str = strf(pd.Timestamp(weeks_sorted[0]), '%-d %b')
-    last_str  = strf(pd.Timestamp(weeks_sorted[-1]), '%-d %b %Y')
+    # Label the range by the ACTUAL data span, not the week-start Monday of the
+    # last bucket. Using weeks_sorted[-1] (a Monday) made this tab read
+    # "… – 17 Aug" while the rest of the dashboard already showed 20 Aug —
+    # looking 3 days stale even though the latest logins are present (they're
+    # just aggregated into the current week's heatmap column). Anchor to
+    # combined's real min/max so it matches the "Updated" date everywhere else.
+    first_str = strf(pd.Timestamp(combined['Date'].min()), '%-d %b')
+    last_str  = strf(pd.Timestamp(combined['Date'].max()), '%-d %b %Y')
     date_range_label = f'{first_str} – {last_str}'
 
     return {
