@@ -199,6 +199,27 @@ SCHOOL_NAME_ALIASES = {
 }
 
 
+# ── Display-name overrides ────────────────────────────────────────────────────
+# Purely cosmetic: controls the label a school SHOWS UNDER on the dashboard.
+# By default a school displays under whatever name appears most often in the
+# daily snapshots — which is sometimes an ugly system string (e.g. "Educ8sa",
+# "dr.vanderross"). Map "what currently shows" → "what to show instead" here.
+#
+# This does NOT affect matching or which schools count — only the visible label.
+# To tidy a name: run the dashboard, see how it appears in the report / page,
+# and add that exact current label on the left with the desired label on the right.
+DISPLAY_NAME_OVERRIDES = {
+    # Currently shows as   →  Show as instead
+    "Educ8sa":               "Educ8 SA",
+    "dr.vanderross":         "Dr. V.D. Ross",
+}
+
+
+def apply_display_override(name):
+    """Return the preferred display label for a school name, if one is set."""
+    return DISPLAY_NAME_OVERRIDES.get(name, name)
+
+
 # ── Paying-schools roster (loaded from paying_schools.json) ──────────────────
 # Populated by main() at startup. _ROSTER is the list, _ROSTER_LOOKUP is the
 # lowercased-name → roster-entry dict used by resolve_to_roster().
@@ -368,7 +389,9 @@ def build_display_name_for_deal(combined_df):
     counts = (rows.groupby(['DealId', 'School']).size()
                    .reset_index(name='c')
                    .sort_values(['DealId', 'c'], ascending=[True, False]))
-    return counts.drop_duplicates('DealId').set_index('DealId')['School'].to_dict()
+    best = counts.drop_duplicates('DealId').set_index('DealId')['School'].to_dict()
+    # Apply cosmetic display-name overrides (e.g. "Educ8sa" → "Educ8 SA").
+    return {did: apply_display_override(name) for did, name in best.items()}
 
 MERGE_BLOCKLIST = {
     'Bay Primary',
@@ -1606,7 +1629,7 @@ def calc_usage_patterns(combined):
     name_counter = {}
     for sname, did in pay[['School', 'DealId']].itertuples(index=False):
         name_counter.setdefault(did, Counter())[sname] += 1
-    display_name_for = {did: ctr.most_common(1)[0][0]
+    display_name_for = {did: apply_display_override(ctr.most_common(1)[0][0])
                         for did, ctr in name_counter.items()}
 
     # Per-school per-week login counts (deduplicated by School+Email+Date).
@@ -1656,7 +1679,7 @@ def calc_usage_patterns(combined):
             if entry['deal_id'] in active_ids:
                 continue
             schools_out.append({
-                's':  clean_roster_display_name(entry),
+                's':  apply_display_override(clean_roster_display_name(entry)),
                 'tl': 0, 'uw': 0, 'ut': 0, 'tc': 0, 'sc': 0,
                 'p':  'Not Yet Active', 'q': False,
                 'd':  {w: 0 for w in weeks_iso},
