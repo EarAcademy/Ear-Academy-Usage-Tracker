@@ -180,6 +180,7 @@ SCHOOL_NAME_ALIASES = {
     "Acudeo Protea Glen":                   "Acudeo College Protea Glen",
     "Applewood Preparatory":                "Applewood Preparatory School",
     "CBC Mount Edmund":                     "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
+    "Educ8sa":                              "Educ8 SA",
     "dr.vanderross":                        "Dr. V.D.Ross - C5",
     "Harriston Primary School":             "Harriston School (Primary)",
     "Hermannsburg School":                  "Hermannsburg School (Primary)",
