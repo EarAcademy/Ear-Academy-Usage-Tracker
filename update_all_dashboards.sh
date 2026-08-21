@@ -38,6 +38,23 @@ echo "  Ear Academy — Updating all 3 dashboards"
 echo "  Started: $(date '+%Y-%m-%d %H:%M:%S')"
 echo "=========================================================="
 
+# ─── 0. Pull latest FIRST (guard against clobbering someone else's work) ──
+# This repo now has more than one operator. If this machine's copy is behind
+# and we rebuild + push without pulling, we'd silently overwrite whatever the
+# other operator pushed (reverting their changes and any config like the
+# removed schools). Pull first; if it fails (e.g. a genuine conflict), STOP
+# rather than push a stale, conflicting state.
+echo ""
+echo "[0/3] ⬇️  Pulling latest from GitHub before rebuilding..."
+echo "----------------------------------------------------------"
+if ! git pull origin main; then
+  echo ""
+  echo "❌ git pull failed — NOT rebuilding or pushing."
+  echo "   Resolve the conflict/error above, then re-run. Nothing was published,"
+  echo "   so the live dashboards are untouched."
+  exit 1
+fi
+
 # ─── 1. Sales Dashboard (RUNS FIRST — writes paying_schools.json) ──
 # Usage dashboard now reads paying_schools.json as the canonical roster of
 # paying schools, so sales must run first so that JSON is fresh.

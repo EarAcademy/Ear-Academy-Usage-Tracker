@@ -9,6 +9,7 @@ Segments data by Product Type and Billing Status.
 Old files (no Product Type / Billing Status cols) default to Paying + Classroom & Instrumental.
 """
 
+import difflib
 import json
 import pandas as pd
 import re
@@ -17,12 +18,109 @@ from collections import Counter
 from pathlib import Path
 from datetime import datetime, timedelta
 
+
+def strf(dt, fmt):
+    """Cross-platform strftime. glibc/BSD support '%-d' (day, no leading zero)
+    but Windows' C runtime rejects it with ValueError. Substitute the numeric
+    day/month/hour before delegating so the same format strings work on Mac,
+    Linux, and Windows.
+    """
+    if '%-d' in fmt:
+        fmt = fmt.replace('%-d', str(dt.day))
+    if '%-m' in fmt:
+        fmt = fmt.replace('%-m', str(dt.month))
+    if '%-I' in fmt:
+        fmt = fmt.replace('%-I', str((dt.hour - 1) % 12 + 1))
+    return dt.strftime(fmt)
+
+
 # ── Configuration ────────────────────────────────────────────────────────────
 DATA_FOLDER     = Path("daily_snapshots")
 OUTPUT_FILE     = Path("index.html")
 ROSTER_FILE     = Path("paying_schools.json")    # written by update_sales_dashboard.py
+REPORT_FILE     = Path("daily_report.txt")       # human-readable "what happened" log
 WEEK1_START     = datetime(2026, 1, 19)
 TOTAL_CUSTOMERS = 49          # set from AC roster in main() — fallback to 49
+
+# Schools to HIDE from the Usage dashboard even though they appear in the AC
+# roster (paying_schools.json). The roster is regenerated from ActiveCampaign
+# on every run, so removing a school here — not by editing the JSON — is what
+# makes the removal stick across runs. Matched case- and accent-insensitively
+# against each roster entry's title AND account_name.
+#
+# NOTE: this only affects the USAGE dashboard (index.html). These deals still
+# exist in ActiveCampaign and still count on the Sales dashboard. To remove a
+# school everywhere, its deal must be moved out of AC Pipeline 6 as well.
+ROSTER_EXCLUDE = {
+    "cheré botha school",
+    "raff home school",
+    "windemere primary",
+    "xero test",
+}
+
+
+def _norm_name(s):
+    """Lowercase + strip accents, for robust name comparison (so 'Cheré'
+    matches 'chere' and casing/accents can't cause a miss)."""
+    s = unicodedata.normalize('NFKD', str(s or '')).encode('ascii', 'ignore').decode('ascii')
+    return s.strip().lower()
+
+
+def _is_roster_excluded(entry):
+    """True if this roster entry's title or account_name is in ROSTER_EXCLUDE."""
+    norm_excl = {_norm_name(x) for x in ROSTER_EXCLUDE}
+    return (_norm_name(entry.get('title')) in norm_excl
+            or _norm_name(entry.get('account_name')) in norm_excl)
+
+# Structured record of what each run loaded / skipped, so the operator can see
+# exactly why a file did or didn't make it onto the dashboard. Populated by
+# load_all_data(), consumed by the end-of-run report in main().
+_LOAD_REPORT = {
+    'loaded':               [],   # (filename, date, week)
+    'skipped_no_date':      [],   # filename — no DD-MM-YYYY in the name
+    'skipped_before_wk1':   [],   # filename — dated before WEEK1_START
+    'skipped_no_sheet':     [],   # filename — no usable data sheet
+    'skipped_missing_cols': [],   # filename — no School Name / Email column
+    'errors':               [],   # (filename, error message)
+    'header_typos':         [],   # (filename, canonical column name, actual header found)
+    'roster_error':         None, # reason paying_schools.json failed to load, or None if fine
+}
+
+# ── Tolerant column matching ──────────────────────────────────────────────────
+# A header typo (e.g. "Emai Address" instead of "Email Address") used to drop
+# the ENTIRE file silently, because the exact-substring check found nothing.
+# This fuzzy fallback catches near-miss headers instead. It requires both a
+# high absolute similarity AND a clear margin over every other column in the
+# same file, so it won't guess between two genuinely different columns (e.g.
+# "Full Name" vs "School Name" both containing "Name") — tested against the
+# real column set to confirm the margin holds (best ~0.95 vs runner-up ~0.60).
+# An unclear case is left unmatched (file dropped, as before) rather than
+# risking a wrong column being silently treated as School/Email.
+HEADER_FUZZY_THRESHOLD = 0.80
+HEADER_FUZZY_MARGIN    = 0.15
+
+
+def find_column(columns, required_substrings, canonical_label):
+    """Find a column by exact substring match first; falls back to fuzzy
+    matching against `canonical_label` (e.g. "Email Address") if nothing
+    matches exactly. Returns (column_or_None, matched_via_fuzzy: bool).
+    """
+    exact = next((c for c in columns
+                  if all(s in str(c).lower() for s in required_substrings)), None)
+    if exact is not None:
+        return exact, False
+
+    scored = sorted(
+        ((c, difflib.SequenceMatcher(None, canonical_label.lower(), str(c).lower()).ratio())
+         for c in columns),
+        key=lambda t: -t[1])
+    if not scored:
+        return None, False
+    best_col, best_score = scored[0]
+    runner_up_score = scored[1][1] if len(scored) > 1 else 0.0
+    if best_score >= HEADER_FUZZY_THRESHOLD and (best_score - runner_up_score) >= HEADER_FUZZY_MARGIN:
+        return best_col, True
+    return None, False
 
 EXCLUDED_SCHOOLS = [
     'Academie Orpheus',
@@ -33,6 +131,18 @@ EXCLUDED_SCHOOLS = [
     'Collingwood College',
     'Salford Community Leisure'
 ]
+
+# Snapshot names we already KNOW are not ZAR paying customers (UK music services,
+# pilots, one-off logins). They will always be dropped by the roster gate — that's
+# correct. Listing them here just keeps them out of the "investigate" bucket in the
+# daily report so a genuine miss (e.g. a real school not yet in Pipeline 6) stands
+# out. Purely cosmetic for the report; does NOT affect what the dashboard counts.
+KNOWN_NON_PAYING = {
+    'academie orpheus', 'academie orfeus', 'bolton music services',
+    'bradford music and arts service', 'bury music', 'collingwood college',
+    'salford community leisure', 'oldham music service', 'range high school',
+    'beckfoot priestthorpe school',
+}
 
 
 def should_exclude_school(school_name, billing_status=None):
@@ -105,17 +215,35 @@ def load_paying_schools_roster():
     fall back to legacy (snapshot-only) mode.
     """
     if not ROSTER_FILE.exists():
+        _LOAD_REPORT['roster_error'] = f"{ROSTER_FILE} does not exist"
         return None, None
     try:
         with open(ROSTER_FILE) as f:
             data = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
         print(f"  ⚠️  Could not load {ROSTER_FILE}: {e}")
+        _LOAD_REPORT['roster_error'] = (
+            f"{ROSTER_FILE} is corrupted/truncated and could not be parsed as JSON: {e}. "
+            f"Likely an interrupted write by update_sales_dashboard.py (network drop, "
+            f"laptop sleep, or crash mid-write). Re-run update_sales_dashboard.py, or "
+            f"restore the file from the last good git commit.")
         return None, None
 
     roster = data.get("schools", []) or []
     if not roster:
+        _LOAD_REPORT['roster_error'] = f"{ROSTER_FILE} parsed OK but contains zero schools"
         return None, None
+
+    # Drop any manually-excluded schools (ROSTER_EXCLUDE) — hidden from the
+    # usage dashboard even though AC still lists them. Done here so it survives
+    # every roster regeneration.
+    if ROSTER_EXCLUDE:
+        before = len(roster)
+        roster = [e for e in roster if not _is_roster_excluded(e)]
+        removed = before - len(roster)
+        if removed:
+            print(f"  🚫  ROSTER_EXCLUDE: hid {removed} school(s) from the dashboard "
+                  f"({before} → {len(roster)})")
 
     # Index every roster entry by its lowercased title AND account_name.
     # First-wins on collisions so the title takes priority over account_name.
@@ -137,11 +265,77 @@ def load_paying_schools_roster():
 
 
 def resolve_to_roster(name, lookup=None):
-    """Return the roster entry for a snapshot school name, or None."""
+    """Return the roster entry for a snapshot school name, or None.
+
+    Tries an exact match first (fast path, and always preferred). If that
+    fails, falls back to a fuzzy (token-overlap) match against every roster
+    title/account_name — this is what catches the day-to-day spelling drift
+    between the Ear Academy platform export and ActiveCampaign (a missing
+    apostrophe, "&" vs "and", a dropped "Primary", etc.) so a school with
+    real logins doesn't silently vanish from the dashboard just because its
+    name isn't byte-for-byte identical to AC's.
+
+    Fuzzy hits require both a high absolute score AND a clear margin over
+    the next-best *distinct* school, so it won't confidently guess between
+    two similarly-named schools — an unclear case is left unmatched (and
+    shows up in the daily report) rather than silently mis-attributed.
+    Every fuzzy hit is cached (stable for the rest of this run) and recorded
+    in _FUZZY_MATCH_LOG for the report, so it can be reviewed and promoted
+    to an explicit SCHOOL_NAME_ALIASES entry if correct.
+    """
     lookup = lookup if lookup is not None else _ROSTER_LOOKUP
     if not lookup or not name:
         return None
-    return lookup.get(str(name).strip().lower())
+    key = str(name).strip().lower()
+    if not key:
+        return None
+
+    exact = lookup.get(key)
+    if exact is not None:
+        return exact
+
+    if key in _FUZZY_CACHE:
+        return _FUZZY_CACHE[key]
+
+    entry = _fuzzy_resolve_roster(key, lookup)
+    _FUZZY_CACHE[key] = entry
+    if entry is not None:
+        _FUZZY_MATCH_LOG[str(name).strip()] = clean_roster_display_name(entry)
+    return entry
+
+
+FUZZY_MATCH_THRESHOLD = 0.72   # minimum token-overlap score to consider a hit
+FUZZY_MATCH_MARGIN    = 0.15   # winner must beat the next distinct school by this much
+
+_FUZZY_CACHE     = {}   # snapshot name (lowered) -> roster entry or None, memoised per run
+_FUZZY_MATCH_LOG = {}   # snapshot name (as seen)  -> matched display name, for the report
+
+
+def _fuzzy_resolve_roster(key, lookup):
+    """Best fuzzy match for `key` among all lookup keys, keyed by distinct
+    school (deal_id) so two aliases of the SAME school don't look like a
+    false 'ambiguous' runner-up. Returns the roster entry, or None if no
+    candidate clears both the score threshold and the safety margin.
+    """
+    best_by_deal = {}
+    for cand_key, entry in lookup.items():
+        score = _token_overlap(key, cand_key, stopwords=_ROSTER_STOPWORDS)
+        if score <= 0:
+            continue
+        deal_id = entry.get('deal_id')
+        if score > best_by_deal.get(deal_id, (0.0, None))[0]:
+            best_by_deal[deal_id] = (score, entry)
+
+    if not best_by_deal:
+        return None
+
+    ranked = sorted(best_by_deal.values(), key=lambda t: -t[0])
+    best_score, best_entry = ranked[0]
+    runner_up_score = ranked[1][0] if len(ranked) > 1 else 0.0
+
+    if best_score >= FUZZY_MATCH_THRESHOLD and (best_score - runner_up_score) >= FUZZY_MATCH_MARGIN:
+        return best_entry
+    return None
 
 
 def clean_roster_display_name(entry):
@@ -195,9 +389,25 @@ def _clean_for_matching(s):
     return s
 
 
-def _token_overlap(a, b):
-    stopwords = {'school', 'primary', 'secondary', 'college', 'academy',
-                 'the', 'of', 'and', 'saint', 'high', 'preparatory'}
+# Words stripped when consolidating spelling VARIANTS of the same known school
+# (build_canonical_map, below). Loose on purpose — at that point every input is
+# already confirmed to be one school, so over-matching risk is low.
+_MERGE_STOPWORDS = {'school', 'primary', 'secondary', 'college', 'academy',
+                    'the', 'of', 'and', 'saint', 'high', 'preparatory'}
+
+# Words stripped when matching a snapshot name against the DISTINCT roster of
+# different schools (_fuzzy_resolve_roster, below). Deliberately narrower:
+# 'primary' / 'secondary' / 'high' / 'preparatory' are kept as real tokens
+# here because they're often the only thing distinguishing two campuses of
+# the same name-family (e.g. "Herzlia High School" vs "Herzlia Primary" are
+# different accounts) — treating them as noise caused a real false match in
+# testing. Only genuinely institution-generic words are dropped.
+_ROSTER_STOPWORDS = {'school', 'college', 'academy', 'the', 'of', 'and', 'saint'}
+
+
+def _token_overlap(a, b, stopwords=None):
+    if stopwords is None:
+        stopwords = _MERGE_STOPWORDS
     ta = set(_clean_for_matching(a).split()) - stopwords or set(_clean_for_matching(a).split())
     tb = set(_clean_for_matching(b).split()) - stopwords or set(_clean_for_matching(b).split())
     if not ta or not tb:
@@ -301,8 +511,8 @@ def week_label(week_num):
     start = WEEK1_START + timedelta(weeks=week_num - 1)
     end   = start + timedelta(days=4)
     if start.month == end.month:
-        return f"Week {week_num} ({start.strftime('%-d')}–{end.strftime('%-d %b')})"
-    return f"Week {week_num} ({start.strftime('%-d %b')}–{end.strftime('%-d %b')})"
+        return f"Week {week_num} ({strf(start, '%-d')}–{strf(end, '%-d %b')})"
+    return f"Week {week_num} ({strf(start, '%-d %b')}–{strf(end, '%-d %b')})"
 
 
 def pct_change_html(new_val, old_val):
@@ -376,11 +586,13 @@ def load_all_data():
         file_date = parse_date(file_path.name)
         if not file_date:
             print(f"  ⚠️  Skipped (no date): {file_path.name}")
+            _LOAD_REPORT['skipped_no_date'].append(file_path.name)
             continue
 
         week = assign_week(file_date)
         if week is None:
             print(f"  ⚠️  Skipped (before Week 1): {file_path.name}")
+            _LOAD_REPORT['skipped_before_wk1'].append(file_path.name)
             continue
 
         try:
@@ -388,23 +600,29 @@ def load_all_data():
             sheet = find_data_sheet(xl.sheet_names)
             if not sheet:
                 print(f"  ⚠️  No usable sheet found: {file_path.name}")
+                _LOAD_REPORT['skipped_no_sheet'].append(file_path.name)
                 continue
 
             df = pd.read_excel(file_path, sheet_name=sheet)
 
-            school_col  = next((c for c in df.columns
-                                if 'school' in str(c).lower() and 'name' in str(c).lower()), None)
-            email_col   = next((c for c in df.columns
-                                if 'email' in str(c).lower()), None)
-            product_col = next((c for c in df.columns
-                                if 'product' in str(c).lower()), None)
-            billing_col = next((c for c in df.columns
-                                if 'billing' in str(c).lower()), None)
-            role_col    = next((c for c in df.columns
-                                if 'role' in str(c).lower()), None)
+            school_col,  school_fuzzy  = find_column(df.columns, ['school', 'name'], 'School Name')
+            email_col,   email_fuzzy   = find_column(df.columns, ['email'],          'Email Address')
+            product_col, _             = find_column(df.columns, ['product'],        'Product Type')
+            billing_col, _             = find_column(df.columns, ['billing'],        'Billing Status')
+            role_col,    _             = find_column(df.columns, ['role'],           'UserRole')
+
+            for matched_col, was_fuzzy, canonical in (
+                (school_col, school_fuzzy, 'School Name'),
+                (email_col,  email_fuzzy,  'Email Address'),
+            ):
+                if was_fuzzy:
+                    print(f"  🔤 Header typo caught in {file_path.name}: "
+                          f"'{matched_col}' read as {canonical}")
+                    _LOAD_REPORT['header_typos'].append((file_path.name, canonical, matched_col))
 
             if not school_col or not email_col:
                 print(f"  ⚠️  Missing core columns: {file_path.name}")
+                _LOAD_REPORT['skipped_missing_cols'].append(file_path.name)
                 continue
 
             df = df.copy()
@@ -440,9 +658,11 @@ def load_all_data():
             # Count unique login rows (before expansion) for display
             orig_count = df.groupby(['School', 'Email', 'Date']).ngroups
             print(f"  ✓ {file_date.strftime('%a %d %b')}  (Week {week})  – {file_path.name}")
+            _LOAD_REPORT['loaded'].append((file_path.name, file_date, week))
 
         except Exception as e:
             print(f"  ⚠️  Error reading {file_path.name}: {e}")
+            _LOAD_REPORT['errors'].append((file_path.name, str(e)))
             import traceback; traceback.print_exc()
 
     if not rows:
@@ -590,14 +810,21 @@ def calc_weekly_snapshot(combined):
     pw_day_counts       = pw.groupby('School')['Date'].nunique() if len(pw) else pd.Series(dtype=int)
     prev_consistent     = int((pw_day_counts >= 3).sum())
 
-    # Quiet 7+ / 14+ days — rolling window from today's date.
+    # Quiet 7–13 / 30+ days — rolling window anchored to the most recent
+    # snapshot date, NOT wall-clock now(). If the operator adds Monday's
+    # file but doesn't run the script until Wednesday, "quiet" must still
+    # mean "quiet as of Monday's data" — otherwise every school's quiet
+    # count inflates by however many days late the run happens to be,
+    # even with zero real change in behaviour (this produced a false
+    # "quiet 14+" for a school that had actually logged in 13 days before
+    # the newest snapshot, purely because the script ran 2 days after it).
     # `pay['School']` is already canonicalised by paying() when the roster
     # is loaded, so name variants of the same school can't double-count.
-    today      = pd.Timestamp(datetime.now().date())
+    today      = pd.Timestamp(combined['Date'].max().date())
     ever       = set(pay['School'].unique())
     last_login = pay.groupby('School')['Date'].max()
     quiet_7  = sorted(s for s in ever if 7 <= (today - last_login[s]).days < 14)
-    quiet_14 = sorted(s for s in ever if (today - last_login[s]).days >= 14)
+    quiet_30 = sorted(s for s in ever if (today - last_login[s]).days >= 30)
 
     return {
         'max_week': max_week, 'prev_week': prev_week,
@@ -611,7 +838,7 @@ def calc_weekly_snapshot(combined):
         'consistent_schools': consistent_schools, 'consistent_count': consistent_count,
         'prev_consistent': prev_consistent,
         'quiet_7_schools': quiet_7, 'quiet_7_count': len(quiet_7),
-        'quiet_14_schools': quiet_14, 'quiet_14_count': len(quiet_14),
+        'quiet_30_schools': quiet_30, 'quiet_30_count': len(quiet_30),
     }
 
 
@@ -715,37 +942,26 @@ def calc_top10(combined):
     grp['teacher_count']    = grp['teacher_count'].fillna(0).astype(int)
     grp['participant_count'] = grp['participant_count'].fillna(0).astype(int)
 
-    # Product breakdown per school.
-    # Use rows where the file actually had a Product Type column (ProductExplicit=True) to
-    # determine each school's real product type.  Then assign cls/ins from total_logins so
-    # that W1-W5 logins (files with no Product Type col) are classified correctly instead of
-    # being ghost-counted in both classroom AND instrumental via the 'both' fallback expansion.
+    # Product breakdown per school — REAL per-login counts.
+    # Only count rows where the file actually had a Product Type column
+    # (ProductExplicit=True). Files from W1–W5 had no Product Type column, so
+    # their rows were expanded into both classroom AND instrumental as a
+    # fallback; counting those would ghost-count a login in both buckets, so
+    # they're excluded here. A genuine "Classroom & Instrumental" user legitimately
+    # counts in both (that's a real dual-product login), which unique_logins handles.
+    #
+    # This replaces the old logic that dumped a school's FULL total into BOTH
+    # cls and ins whenever it was tagged "both" — which made an essentially
+    # instrumental-only school (e.g. Koa: 4 classroom vs 698 instrumental logins)
+    # display a wildly wrong "875 cls / 875 ins".
     explicit_pay = pay[pay['ProductExplicit'] == True]
-    school_product_type = {}
-    for school, grp_exp in explicit_pay.groupby('School'):
-        prods = set(grp_exp['Product'].unique())
-        if 'classroom' in prods and 'instrumental' in prods:
-            school_product_type[school] = 'both'
-        elif 'classroom' in prods:
-            school_product_type[school] = 'classroom'
-        elif 'instrumental' in prods:
-            school_product_type[school] = 'instrumental'
+    cls_by_school = (unique_logins(classroom(explicit_pay))
+                     .groupby('School')['Email'].count())
+    ins_by_school = (unique_logins(instrumental(explicit_pay))
+                     .groupby('School')['Email'].count())
 
-    def _cls_ins(row):
-        known = school_product_type.get(row['School'])
-        total = row['total_logins']
-        if known == 'instrumental':
-            return 0, total
-        if known == 'classroom':
-            return total, 0
-        if known == 'both':
-            return total, total
-        # None → no Product Type data at all; return 0s so values are inert
-        return 0, 0
-
-    grp[['cls', 'ins']] = grp.apply(lambda r: pd.Series(_cls_ins(r)), axis=1)
-    grp['cls'] = grp['cls'].astype(int)
-    grp['ins'] = grp['ins'].astype(int)
+    grp['cls'] = grp['School'].map(cls_by_school).fillna(0).astype(int)
+    grp['ins'] = grp['School'].map(ins_by_school).fillna(0).astype(int)
 
     grp['score'] = grp['weeks_active'] * grp['unique_users'] * 2 + grp['total_logins']
     grp = grp.sort_values('score', ascending=False).head(10).reset_index(drop=True)
@@ -754,14 +970,25 @@ def calc_top10(combined):
     for _, row in grp.iterrows():
         school_weeks = sorted(pay[pay['School'] == row['School']]['Week'].unique())
         weeks_str    = ', '.join(f"W{int(w)}" for w in school_weeks)
+        # Derive the display label from the real counts: both non-zero → 'both',
+        # one non-zero → that product, neither → None (no product data at all).
+        cls_n, ins_n = int(row['cls']), int(row['ins'])
+        if cls_n and ins_n:
+            known_product = 'both'
+        elif cls_n:
+            known_product = 'classroom'
+        elif ins_n:
+            known_product = 'instrumental'
+        else:
+            known_product = None
         result.append({
             'name':              row['School'],
             'logins':            int(row['total_logins']),
             'teacher_count':     int(row['teacher_count']),
             'participant_count': int(row['participant_count']),
-            'known_product':     school_product_type.get(row['School']),  # None if no data
-            'cls':               int(row['cls']),
-            'ins':               int(row['ins']),
+            'known_product':     known_product,
+            'cls':               cls_n,
+            'ins':               ins_n,
             'weeks':             weeks_str,
             'weeks_active':      int(row['weeks_active']),
             'in_latest':         max_week in [int(w) for w in school_weeks],
@@ -775,8 +1002,8 @@ def build_daily_pulse_html(dp):
     if not dp:
         return '<section class="dashboard-section"><p>No data.</p></section>'
 
-    yesterday_str  = dp['yesterday'].strftime('%A, %-d %B %Y')
-    day_before_str = dp['day_before'].strftime('%A, %-d %B') if dp['day_before'] else '–'
+    yesterday_str  = strf(dp['yesterday'], '%A, %-d %B %Y')
+    day_before_str = strf(dp['day_before'], '%A, %-d %B') if dp['day_before'] else '–'
 
     login_delta  = pct_change_html(dp['y_logins'],  dp['db_logins'])
     school_delta = pct_change_html(dp['y_schools'], dp['db_schools'])
@@ -838,7 +1065,7 @@ def build_weekly_snapshot_html(snap):
     quiet_7_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                              for s in snap['quiet_7_schools']) or '<em style="color:var(--gray)">All schools active this week!</em>'
     quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
-                           for s in snap['quiet_14_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
+                           for s in snap['quiet_30_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
 
     return f'''
         <!-- ═══════════════════════════════ WEEKLY SNAPSHOT ══════════════════════════════════ -->
@@ -921,13 +1148,13 @@ def build_weekly_snapshot_html(snap):
                     <div class="snap-badges snap-badges-scroll">{quiet_7_badges}</div>
                 </div>
 
-                <!-- Card 5: Quiet 14+ Days -->
+                <!-- Card 5: Quiet 30+ Days -->
                 <div class="snap-card accent-salmon">
-                    <div class="snap-label">Quiet 14+ Days</div>
+                    <div class="snap-label">Quiet 30+ Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet">{snap['quiet_14_count']}</span>
-                            <span class="snap-unit">schools · last login 2+ weeks ago</span>
+                            <span class="snap-value" id="snap-quiet">{snap['quiet_30_count']}</span>
+                            <span class="snap-unit">schools · last login 30+ days ago</span>
                         </div>
                     </div>
                     <div class="snap-badges snap-badges-scroll">{quiet_badges}</div>
@@ -1269,7 +1496,7 @@ def build_lifetime_logins_html(lifetime_data):
 
 PATTERN_RULES = {
     'power_min_tl':         100,    # Power User: ≥100 lifetime logins
-    'power_min_teachers':   50,     # Power User: ≥50 distinct teachers
+    'power_min_users':      50,     # Power User: ≥50 distinct users (teachers + students)
     'highfreq_min_tl':      20,     # High Frequency: ≥20 lifetime logins
     'highfreq_min_per_wk':  4.5,    # High Frequency: ≥4.5 logins per active week
     'consistent_min_ratio': 0.6,    # Consistent: active in ≥60% of weeks since first login
@@ -1279,7 +1506,7 @@ PATTERN_RULES = {
 }
 
 PATTERN_DESCRIPTIONS = {
-    'Power User':            'Extremely high login volume with many unique teachers. These schools have deeply embedded Ear Academy into their program — worth understanding what they do differently and using as case studies.',
+    'Power User':            'Extremely high login volume with many active users (teachers and students). These schools have deeply embedded Ear Academy into their program — worth understanding what they do differently and using as case studies.',
     'High Frequency':        'Multiple logins per active week. These schools use the platform intensively in bursts. Watch for big spikes followed by silence — worth a gentle check-in.',
     'Consistent Weekly':     'Present in 60%+ of weeks since joining. Reliable, habitual usage — your most stable accounts. Low churn risk.',
     'Consistent Low-Volume': '1–2 logins per active week, often a single teacher. Do not confuse low volume with low commitment — quietly but reliably engaged.',
@@ -1317,7 +1544,7 @@ def _classify_pattern(tl, uw, ut, weeks_span, weeks_since_last):
         return 'Not Yet Active', False
     quiet = weeks_since_last >= r['quiet_min_weeks']
 
-    if tl >= r['power_min_tl'] and ut >= r['power_min_teachers']:
+    if tl >= r['power_min_tl'] and ut >= r['power_min_users']:
         return 'Power User', quiet
     if uw == 1:
         return 'One-time', quiet
@@ -1400,7 +1627,13 @@ def calc_usage_patterns(combined):
         uw = len(d_map)
 
         sub = base[base['DealId'] == did]
-        ut = sub['Email'].nunique()
+        ut = sub['Email'].nunique()                                   # total unique users
+        # One role per user (first seen), matching the Top 10 tab's method, so
+        # a user who appears under different roles on different dates isn't
+        # double-counted as both a teacher and a student.
+        sub_users = sub.drop_duplicates(subset=['Email'])
+        tc = sub_users[sub_users['UserRole'].isin(_TEACHER_ROLES)]['Email'].nunique()      # teachers/admins
+        sc = sub_users[sub_users['UserRole'].isin(_PARTICIPANT_ROLES)]['Email'].nunique()  # students
 
         first_week = pd.Timestamp(sub['WeekStart'].min())
         weeks_span = max(int((latest_week - first_week).days // 7) + 1, 1)
@@ -1408,10 +1641,11 @@ def calc_usage_patterns(combined):
         last_week  = pd.Timestamp(sub['WeekStart'].max())
         weeks_since_last = int((latest_week - last_week).days // 7)
 
+        # NOTE: Power User etc. use `ut` (total unique users), not teachers.
         pattern, quiet = _classify_pattern(tl, uw, ut, weeks_span, weeks_since_last)
         schools_out.append({
             's':  display_name_for.get(did, str(did)),
-            'tl': tl, 'uw': uw, 'ut': ut,
+            'tl': tl, 'uw': uw, 'ut': ut, 'tc': int(tc), 'sc': int(sc),
             'p':  pattern, 'q': quiet, 'd': d_map,
         })
 
@@ -1422,7 +1656,7 @@ def calc_usage_patterns(combined):
                 continue
             schools_out.append({
                 's':  clean_roster_display_name(entry),
-                'tl': 0, 'uw': 0, 'ut': 0,
+                'tl': 0, 'uw': 0, 'ut': 0, 'tc': 0, 'sc': 0,
                 'p':  'Not Yet Active', 'q': False,
                 'd':  {w: 0 for w in weeks_iso},
             })
@@ -1438,8 +1672,14 @@ def calc_usage_patterns(combined):
     schools_tracked = len(_ROSTER) if _ROSTER else len(schools_out)
     total_logins_v  = sum(s['tl'] for s in schools_out)
 
-    first_str = pd.Timestamp(weeks_sorted[0]).strftime('%-d %b')
-    last_str  = pd.Timestamp(weeks_sorted[-1]).strftime('%-d %b %Y')
+    # Label the range by the ACTUAL data span, not the week-start Monday of the
+    # last bucket. Using weeks_sorted[-1] (a Monday) made this tab read
+    # "… – 17 Aug" while the rest of the dashboard already showed 20 Aug —
+    # looking 3 days stale even though the latest logins are present (they're
+    # just aggregated into the current week's heatmap column). Anchor to
+    # combined's real min/max so it matches the "Updated" date everywhere else.
+    first_str = strf(pd.Timestamp(combined['Date'].min()), '%-d %b')
+    last_str  = strf(pd.Timestamp(combined['Date'].max()), '%-d %b %Y')
     date_range_label = f'{first_str} – {last_str}'
 
     return {
@@ -1546,6 +1786,157 @@ def build_usage_patterns_js(p):
             f'var DESC={desc_js};')
 
 
+# ── End-of-run "what happened" report ──────────────────────────────────────────
+
+def build_daily_report(combined):
+    """Build the human-readable report of exactly what this run loaded, skipped,
+    and dropped — so the operator can tell a good run from a bad one at a glance.
+    Returns the report as a string; also identifies dropped snapshot schools.
+    """
+    lines = []
+    add = lines.append
+
+    # ── Roster status — the single most impactful failure mode ──
+    # If paying_schools.json failed to load, the whole pipeline silently drops
+    # to legacy mode (old EXCLUDED_SCHOOLS list instead of the real AC roster),
+    # which changes which schools count as "paying" without any error anywhere
+    # else. This banner is deliberately the first thing in the report.
+    if _LOAD_REPORT['roster_error']:
+        add("=" * 60)
+        add("🚨 AC ROSTER FAILED TO LOAD — RUNNING IN DEGRADED LEGACY MODE")
+        add("=" * 60)
+        add(f"  {_LOAD_REPORT['roster_error']}")
+        add("")
+        add("  Every number below is computed WITHOUT the ActiveCampaign roster —")
+        add("  using the old EXCLUDED_SCHOOLS list instead. School counts, 'paying'")
+        add("  status, and totals will NOT match ActiveCampaign until this is fixed.")
+        add("")
+        add("  FIX: re-run update_sales_dashboard.py, or restore paying_schools.json")
+        add("  from the last good git commit, then re-run this script.")
+        add("=" * 60)
+        add("")
+
+    # ── Files ──
+    loaded = _LOAD_REPORT['loaded']
+    add("FILES")
+    add(f"  Loaded OK ........... {len(loaded)}")
+
+    skipped_total = (len(_LOAD_REPORT['skipped_no_date'])
+                     + len(_LOAD_REPORT['skipped_before_wk1'])
+                     + len(_LOAD_REPORT['skipped_no_sheet'])
+                     + len(_LOAD_REPORT['skipped_missing_cols'])
+                     + len(_LOAD_REPORT['errors']))
+    add(f"  Skipped / failed .... {skipped_total}")
+
+    def _list(label, items):
+        if items:
+            add("")
+            add(f"  ⚠️  {label} ({len(items)}) — these did NOT reach the dashboard:")
+            for it in items:
+                add(f"        • {it}")
+
+    _list("No date in filename (rename to 'Daily Usage Snapshot - DD-MM-YYYY.xlsx')",
+          _LOAD_REPORT['skipped_no_date'])
+    _list("Dated before Week 1 (19 Jan 2026)", _LOAD_REPORT['skipped_before_wk1'])
+    _list("No usable data sheet", _LOAD_REPORT['skipped_no_sheet'])
+    _list("Missing 'School Name' / 'Email' column — re-export this file",
+          _LOAD_REPORT['skipped_missing_cols'])
+    if _LOAD_REPORT['errors']:
+        add("")
+        add(f"  ⚠️  Errors while reading ({len(_LOAD_REPORT['errors'])}):")
+        for fn, err in _LOAD_REPORT['errors']:
+            add(f"        • {fn}  →  {err}")
+
+    if _LOAD_REPORT['header_typos']:
+        add("")
+        add(f"  🔤 Header spelling typo caught automatically ({len(_LOAD_REPORT['header_typos'])}) "
+            f"— file still loaded fine:")
+        for fn, canonical, actual in _LOAD_REPORT['header_typos']:
+            add(f"        • {fn}: \"{actual}\" read as {canonical}")
+        add("     These are safe — matched with a very high confidence margin. If one")
+        add("     looks wrong, re-export that file properly rather than relying on this.")
+
+    # ── Freshness ──
+    add("")
+    add("FRESHNESS")
+    if loaded:
+        newest = max(d for _, d, _ in loaded)
+        age = (datetime.now().date() - newest.date()).days
+        flag = "  ⚠️  STALE — is today's file in the folder?" if age >= 3 else ""
+        add(f"  Newest snapshot loaded: {strf(newest, '%A, %-d %B %Y')}  "
+            f"({age} day(s) old){flag}")
+    else:
+        add("  ⚠️  NO FILES LOADED AT ALL — nothing to build from.")
+
+    # ── Schools dropped by the AC-roster gate ──
+    dropped = []
+    if combined is not None and not combined.empty and _ROSTER_LOOKUP is not None:
+        for name in sorted(combined['School'].dropna().unique()):
+            if resolve_to_roster(name) is None:
+                n_rows = int((combined['School'] == name).sum())
+                dropped.append((name, n_rows))
+        dropped.sort(key=lambda x: -x[1])
+
+    # ── Spelling drift caught automatically this run ──
+    add("")
+    add("FUZZY-MATCHED THIS RUN (spelling didn't match AC exactly, matched anyway)")
+    if _FUZZY_MATCH_LOG:
+        for snap_name, matched_display in sorted(_FUZZY_MATCH_LOG.items()):
+            add(f"        • \"{snap_name}\"  →  {matched_display}")
+        add("")
+        add("     These were counted correctly — no logins were lost. If a mapping")
+        add("     above looks wrong, tighten it up by adding an explicit entry to")
+        add("     SCHOOL_NAME_ALIASES so it's exact instead of guessed next time.")
+    else:
+        add("        None this run — every match was exact.")
+
+    investigate = [(n, c) for n, c in dropped if n.strip().lower() not in KNOWN_NON_PAYING]
+    expected    = [(n, c) for n, c in dropped if n.strip().lower() in KNOWN_NON_PAYING]
+
+    add("")
+    add("SCHOOLS IN SNAPSHOTS BUT NOT ON THE DASHBOARD")
+    add("  (name didn't match any AC roster entry)")
+    add("")
+    add("  ⚠️  INVESTIGATE — not a known exclusion:")
+    if investigate:
+        for name, n in investigate:
+            add(f"        • {name:<40} ({n} login row(s))")
+        add("")
+        add("     → If any ARE paying schools: move the deal into AC Pipeline 6")
+        add("       (Onboarding/Activated, ZAR), or add a SCHOOL_NAME_ALIASES entry")
+        add("       for a spelling mismatch. If not paying, add to KNOWN_NON_PAYING.")
+    else:
+        add("        None — nothing unexpected was dropped. ✅")
+
+    if expected:
+        add("")
+        add(f"  Known non-paying (UK music services / pilots — correctly excluded), "
+            f"{len(expected)}:")
+        for name, n in expected:
+            add(f"        • {name:<40} ({n} login row(s))")
+
+    return "\n".join(lines), dropped
+
+
+def print_and_save_report(combined):
+    report, dropped = build_daily_report(combined)
+    banner = "=" * 60
+    print("\n" + banner)
+    print("📋 DAILY LOAD & MATCH REPORT")
+    print(banner)
+    print(report)
+    print(banner)
+    try:
+        stamp = strf(datetime.now(), '%A, %-d %B %Y at %H:%M')
+        with open(REPORT_FILE, 'w', encoding='utf-8') as f:
+            f.write(f"Ear Academy — Daily Load & Match Report\nGenerated: {stamp}\n\n")
+            f.write(report + "\n")
+        print(f"📝 Saved to {REPORT_FILE}")
+    except OSError as e:
+        print(f"  ⚠️  Could not write {REPORT_FILE}: {e}")
+    return dropped
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -1621,7 +2012,7 @@ def main():
     pt_block_html     = build_usage_patterns_html(usage_patterns)
     pt_data_js        = build_usage_patterns_js(usage_patterns)
 
-    updated_date = combined['Date'].max().strftime('%-d %B %Y')
+    updated_date = strf(combined['Date'].max(), '%-d %B %Y')
 
     if not OUTPUT_FILE.exists():
         print(f"❌ {OUTPUT_FILE} not found.")
@@ -1675,8 +2066,8 @@ def main():
     print(f"   Classroom     : {snap['cw_cls_logins']} logins / {snap['cw_cls_schools']} schools")
     print(f"   Instrumental  : {snap['cw_ins_logins']} logins / {snap['cw_ins_schools']} schools")
     print(f"   Consistent    : {snap['consistent_count']} schools (3+ days)")
-    print(f"   Quiet 7+ days : {snap['quiet_7_count']} schools")
-    print(f"   Quiet 14+ days: {snap['quiet_14_count']} schools")
+    print(f"   Quiet 7-13 days: {snap['quiet_7_count']} schools")
+    print(f"   Quiet 30+ days : {snap['quiet_30_count']} schools")
     print(f"   New this week : {len(patterns['new_this_week'])}")
     print(f"   Lifetime graph: {len(lifetime_data)} schools ranked")
     if usage_patterns:
@@ -1690,6 +2081,9 @@ def main():
         print(f"      · Gone Quiet (overlay)   {ut['gone_quiet']}")
     print(f"\n✅ Dashboard written → {OUTPUT_FILE}")
     print("=" * 60)
+
+    # Loud, human-readable report of what loaded / skipped / dropped this run.
+    print_and_save_report(combined)
 
 
 if __name__ == "__main__":

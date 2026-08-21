@@ -14,12 +14,24 @@ Run weekly alongside update_sales_dashboard.py:
   cd ~/Desktop/ear-academy-analytics && python3 update_velocity.py && git add -A && git commit -m "Update velocity $(date '+%Y-%m-%d')" && git push origin main
 """
 
+import argparse
 import json
 import os
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+
+def strf(dt, fmt):
+    """Cross-platform strftime — %-d/%-I are Mac/Linux-only and crash on
+    Windows. Format manually instead of relying on the platform's libc.
+    """
+    if '%-d' in fmt:
+        fmt = fmt.replace('%-d', str(dt.day))
+    if '%-I' in fmt:
+        fmt = fmt.replace('%-I', str((dt.hour - 1) % 12 + 1))
+    return dt.strftime(fmt)
 
 # ── Load credentials from config.py ─────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).parent
@@ -38,7 +50,7 @@ except ImportError:
 
 OUTPUT_FILE = SCRIPT_DIR / "velocity_data.json"
 TODAY = datetime.now(timezone.utc)
-TODAY_LABEL = TODAY.strftime("%-d %b %Y at %H:%M")
+TODAY_LABEL = strf(TODAY, "%-d %b %Y at %H:%M")
 
 # ── Pipeline / Stage constants (from project docs) ───────────────────────────
 PIPELINE_4 = 4   # Sales Qualification
@@ -293,7 +305,7 @@ def fetch_stage_histories(p5_data):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
+def main(no_push=False):
     print()
     print("🔄  Ear Academy — Updating Pipeline Velocity")
     print("=" * 46)
@@ -365,12 +377,17 @@ def main():
     print()
 
     # ── 7. Git push ──────────────────────────────────────────────────────────
+    if no_push:
+        print("🛑  --no-push set — skipping git commit + push (testing mode)")
+        print()
+        return
+
     print("🚀  Publishing to GitHub…")
     try:
         os.chdir(SCRIPT_DIR)
         subprocess.run(["git", "add", "velocity_data.json"], check=True, capture_output=True)
         result = subprocess.run(
-            ["git", "commit", "-m", f"Update velocity data — {TODAY.strftime('%-d %b %Y')}"],
+            ["git", "commit", "-m", f"Update velocity data — {strf(TODAY, '%-d %b %Y')}"],
             capture_output=True, text=True,
         )
         if "nothing to commit" in result.stdout:
@@ -388,4 +405,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Update Ear Academy pipeline velocity from ActiveCampaign.")
+    parser.add_argument("--no-push", action="store_true",
+                         help="Write velocity_data.json locally but skip git commit + push (testing mode).")
+    args = parser.parse_args()
+    main(no_push=args.no_push)
