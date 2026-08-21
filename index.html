@@ -420,11 +420,11 @@
                     <div class="snap-label">Quiet 7–13 Days</div>
                     <div class="snap-body">
                         <div class="snap-metric">
-                            <span class="snap-value" id="snap-quiet-7">5</span>
+                            <span class="snap-value" id="snap-quiet-7">15</span>
                             <span class="snap-unit">schools · last login 1–2 weeks ago</span>
                         </div>
                     </div>
-                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Herzlia High School</span><span class="school-badge quiet-badge">Kammaland Primary School</span><span class="school-badge quiet-badge">Redwood College</span><span class="school-badge quiet-badge">Welwitschia - C5</span></div>
+                    <div class="snap-badges snap-badges-scroll"><span class="school-badge quiet-badge">Acudeo College Kirkney</span><span class="school-badge quiet-badge">Acudeo Crystal Park</span><span class="school-badge quiet-badge">Acudeo Thornview</span><span class="school-badge quiet-badge">Bay Primary</span><span class="school-badge quiet-badge">CBC Mount Edmund</span><span class="school-badge quiet-badge">Generation Schools Hermanus</span><span class="school-badge quiet-badge">Herzlia High School</span><span class="school-badge quiet-badge">Kammaland Primary School</span><span class="school-badge quiet-badge">Pinelands High School</span><span class="school-badge quiet-badge">Pinelands North Primary School</span><span class="school-badge quiet-badge">Prescient Primary</span><span class="school-badge quiet-badge">Princess Park College</span><span class="school-badge quiet-badge">Reddam House Helderfontein</span><span class="school-badge quiet-badge">Redwood College</span><span class="school-badge quiet-badge">Welwitschia - C5</span></div>
                 </div>
 
                 <!-- Card 5: Quiet 14+ Days -->
@@ -1202,4 +1202,19 @@ function renderPatterns(f){
         maxV=Math.max(maxV,1);
         var cells=WEEKS.map(function(w){var v=sch.d[w]||0;return '<div class="pt-heat-cell" style="background:'+heatColor(v,maxV)+'" title="'+sw(w)+': '+v+' login'+(v!==1?'s':'')+'"></div>';}).join('');
         var pc=PC[sch.p]||PC['One-time'];
-        var shortP=sch.p==='Consiste
+        var shortP=sch.p==='Consistent Low-Volume'?'Low-volume':sch.p==='Consistent Weekly'?'Weekly':sch.p==='High Frequency'?'Hi-freq':sch.p;
+        var qt=sch.q?'<span class="pt-quiet-tag">quiet</span>':'';
+        return '<div class="pt-school-row"><div><div class="pt-school-name">'+sch.s+qt+'</div><div class="pt-school-meta">'+sch.tl+' logins &bull; '+sch.ut+' teachers &bull; '+sch.uw+' active weeks</div></div><div class="pt-heat-row">'+cells+'</div><div><span class="pt-badge" style="background:'+pc.bg+';color:'+pc.text+';border:1.5px solid '+pc.border+'">'+shortP+'</span></div></div>';
+    }).join('');
+}
+
+document.getElementById('pt-filters').addEventListener('click',function(e){
+    var btn=e.target.closest('.pt-filter-btn');
+    if(!btn)return;
+    document.querySelectorAll('.pt-filter-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    renderPatterns(btn.dataset.pattern);
+});
+</script>
+</body>
+</html>
