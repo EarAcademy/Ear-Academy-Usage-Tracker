@@ -283,6 +283,17 @@ def load_paying_schools_roster():
         if target_low in lookup and snap_low:
             lookup[snap_low] = lookup[target_low]
 
+    # Make display-override LABELS resolvable too. paying() renames a school's
+    # rows to its display name, and that name is later re-resolved (e.g. in the
+    # patterns tab). If the override label isn't a lookup key it falls back to
+    # fuzzy matching every run (noisy + fragile) — so register each override
+    # label against the same entry its current name resolves to.
+    for shown_name, pretty in DISPLAY_NAME_OVERRIDES.items():
+        shown_low  = (shown_name or "").strip().lower()
+        pretty_low = (pretty or "").strip().lower()
+        if shown_low in lookup and pretty_low and pretty_low not in lookup:
+            lookup[pretty_low] = lookup[shown_low]
+
     return roster, lookup
 
 
