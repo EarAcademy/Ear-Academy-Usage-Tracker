@@ -1,0 +1,8 @@
+# Keep executable scripts LF-only, always — they run on the operator's Mac,
+# where CRLF line endings break bash ("bad interpreter" / stray \r errors).
+# This protects the scripts from being corrupted if edited on Windows.
+*.sh   text eol=lf
+*.py   text eol=lf
+*.command text eol=lf
+
+# HTML/JSON/CSV are fine either way; let git handle them normally.
