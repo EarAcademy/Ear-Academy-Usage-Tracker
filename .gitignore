@@ -9,5 +9,7 @@ __pycache__/
 daily_report.txt
 dropped_rows_ALL.csv
 ac_vs_dashboard_names.csv
+unallocated_rows.csv
+_uk_test.html
 STITCH_DESIGN_SPEC.md
 0_START_HERE.md
