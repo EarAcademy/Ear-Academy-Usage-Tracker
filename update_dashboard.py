@@ -140,8 +140,12 @@ EXCLUDED_SCHOOLS = [
 KNOWN_NON_PAYING = {
     'academie orpheus', 'academie orfeus', 'bolton music services',
     'bradford music and arts service', 'bury music', 'collingwood college',
-    'salford community leisure', 'oldham music service', 'range high school',
+    'salford community leisure', 'oldham music service',
     'beckfoot priestthorpe school',
+    # NOTE: 'range high school' was removed — it is a South African school, not a
+    # UK music service. It has snapshot usage but no ActiveCampaign deal, so it
+    # belongs in INVESTIGATE (a real school that may need a deal created) rather
+    # than being hidden as a known non-paying exclusion.
 }
 
 
