@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-24T15:29:27",
-  "generated_label": "24 Aug 2026 at 15:29",
+  "generated_at": "2026-08-26T16:15:35",
+  "generated_label": "26 Aug 2026 at 16:15",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -10,7 +10,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C')"
   },
-  "count": 54,
+  "count": 52,
   "schools": [
     {
       "deal_id": "1586",
@@ -182,15 +182,6 @@
       "value_zar": 12000,
       "account_id": "417",
       "account_name": "Educ8 SA"
-    },
-    {
-      "deal_id": "1708",
-      "title": "Eduplex Primary",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 12000,
-      "account_id": "379",
-      "account_name": "Eduplex"
     },
     {
       "deal_id": "1589",
@@ -479,15 +470,6 @@
       "value_zar": 4750,
       "account_id": "9889",
       "account_name": "Welwitschia - C5"
-    },
-    {
-      "deal_id": "1592",
-      "title": "Windemere Primary",
-      "stage": "Onboarding",
-      "stage_id": "50",
-      "value_zar": 8050,
-      "account_id": "10214",
-      "account_name": "WINDERMERE PRIMARY SCHOOL"
     },
     {
       "deal_id": "1827",
