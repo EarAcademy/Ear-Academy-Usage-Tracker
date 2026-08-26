@@ -140,7 +140,25 @@ EXCLUDED_SCHOOLS = [
 KNOWN_NON_PAYING = {
     'academie orpheus', 'academie orfeus', 'bolton music services',
     'bradford music and arts service', 'bury music', 'collingwood college',
-    'salford community leisure', 'oldham music service', 'range high school',
+    'salford community leisure', 'oldham music service',
+    'beckfoot priestthorpe school',
+    # NOTE: 'range high school' was removed — it is a South African school, not a
+    # UK music service. It has snapshot usage but no ActiveCampaign deal, so it
+    # belongs in INVESTIGATE (a real school that may need a deal created) rather
+    # than being hidden as a known non-paying exclusion.
+}
+
+# UK pilot schools — these are NOT ActiveCampaign Pipeline-6 paying customers,
+# so they never appear on the main (paying) dashboard. They ARE tracked on their
+# own "UK Pilots" tab. Matched case-insensitively against the snapshot School
+# name. Identified by their UK email domains (.gov.uk / .co.uk / UK academy).
+# Edit this list to add or remove a UK pilot.
+UK_PILOT_SCHOOLS = {
+    'bolton music services',
+    'bradford music and arts service',
+    'bury music',
+    'oldham music service',
+    'salford community leisure',
     'beckfoot priestthorpe school',
 }
 
@@ -180,6 +198,7 @@ SCHOOL_NAME_ALIASES = {
     "Acudeo Protea Glen":                   "Acudeo College Protea Glen",
     "Applewood Preparatory":                "Applewood Preparatory School",
     "CBC Mount Edmund":                     "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
+    "Educ8sa":                              "Educ8 SA",
     "dr.vanderross":                        "Dr. V.D.Ross - C5",
     "Harriston Primary School":             "Harriston School (Primary)",
     "Hermannsburg School":                  "Hermannsburg School (Primary)",
@@ -196,6 +215,27 @@ SCHOOL_NAME_ALIASES = {
     "Sunvalley Primary School":             "Sun Valley",
     "Trinity House":                        "TrinityHouse",
 }
+
+
+# ── Display-name overrides ────────────────────────────────────────────────────
+# Purely cosmetic: controls the label a school SHOWS UNDER on the dashboard.
+# By default a school displays under whatever name appears most often in the
+# daily snapshots — which is sometimes an ugly system string (e.g. "Educ8sa",
+# "dr.vanderross"). Map "what currently shows" → "what to show instead" here.
+#
+# This does NOT affect matching or which schools count — only the visible label.
+# To tidy a name: run the dashboard, see how it appears in the report / page,
+# and add that exact current label on the left with the desired label on the right.
+DISPLAY_NAME_OVERRIDES = {
+    # Currently shows as   →  Show as instead
+    "Educ8sa":               "Educ8 SA",
+    "dr.vanderross":         "Dr. V.D. Ross",
+}
+
+
+def apply_display_override(name):
+    """Return the preferred display label for a school name, if one is set."""
+    return DISPLAY_NAME_OVERRIDES.get(name, name)
 
 
 # ── Paying-schools roster (loaded from paying_schools.json) ──────────────────
@@ -260,6 +300,17 @@ def load_paying_schools_roster():
         snap_low   = (snap_name or "").strip().lower()
         if target_low in lookup and snap_low:
             lookup[snap_low] = lookup[target_low]
+
+    # Make display-override LABELS resolvable too. paying() renames a school's
+    # rows to its display name, and that name is later re-resolved (e.g. in the
+    # patterns tab). If the override label isn't a lookup key it falls back to
+    # fuzzy matching every run (noisy + fragile) — so register each override
+    # label against the same entry its current name resolves to.
+    for shown_name, pretty in DISPLAY_NAME_OVERRIDES.items():
+        shown_low  = (shown_name or "").strip().lower()
+        pretty_low = (pretty or "").strip().lower()
+        if shown_low in lookup and pretty_low and pretty_low not in lookup:
+            lookup[pretty_low] = lookup[shown_low]
 
     return roster, lookup
 
@@ -367,7 +418,9 @@ def build_display_name_for_deal(combined_df):
     counts = (rows.groupby(['DealId', 'School']).size()
                    .reset_index(name='c')
                    .sort_values(['DealId', 'c'], ascending=[True, False]))
-    return counts.drop_duplicates('DealId').set_index('DealId')['School'].to_dict()
+    best = counts.drop_duplicates('DealId').set_index('DealId')['School'].to_dict()
+    # Apply cosmetic display-name overrides (e.g. "Educ8sa" → "Educ8 SA").
+    return {did: apply_display_override(name) for did, name in best.items()}
 
 MERGE_BLOCKLIST = {
     'Bay Primary',
@@ -1605,7 +1658,7 @@ def calc_usage_patterns(combined):
     name_counter = {}
     for sname, did in pay[['School', 'DealId']].itertuples(index=False):
         name_counter.setdefault(did, Counter())[sname] += 1
-    display_name_for = {did: ctr.most_common(1)[0][0]
+    display_name_for = {did: apply_display_override(ctr.most_common(1)[0][0])
                         for did, ctr in name_counter.items()}
 
     # Per-school per-week login counts (deduplicated by School+Email+Date).
@@ -1655,7 +1708,7 @@ def calc_usage_patterns(combined):
             if entry['deal_id'] in active_ids:
                 continue
             schools_out.append({
-                's':  clean_roster_display_name(entry),
+                's':  apply_display_override(clean_roster_display_name(entry)),
                 'tl': 0, 'uw': 0, 'ut': 0, 'tc': 0, 'sc': 0,
                 'p':  'Not Yet Active', 'q': False,
                 'd':  {w: 0 for w in weeks_iso},
@@ -1784,6 +1837,118 @@ def build_usage_patterns_js(p):
             f'var SCHOOLS={schools_js};\n'
             f'var PC={pc_js};\n'
             f'var DESC={desc_js};')
+
+
+# ── UK Pilots tab ────────────────────────────────────────────────────────────
+# UK pilot schools are NOT in the AC paying roster, so they're dropped from the
+# main dashboard. This tab tracks their usage separately using the same weekly
+# heatmap. Driven by the UK_PILOT_SCHOOLS list, not the roster.
+
+def calc_uk_pilots(combined):
+    """Weekly login heatmap + summary for the UK pilot schools.
+    Not roster-gated — selects rows whose School name is in UK_PILOT_SCHOOLS.
+    """
+    if combined is None or combined.empty:
+        return None
+
+    df = combined.copy()
+    df['SchoolNorm'] = df['School'].apply(_norm_name)
+    uk_norm = {_norm_name(s) for s in UK_PILOT_SCHOOLS}
+    df = df[df['SchoolNorm'].isin(uk_norm)]
+    if df.empty:
+        return {'weeks': [], 'schools': [], 'totals': {
+            'schools_tracked': len(UK_PILOT_SCHOOLS), 'total_logins': 0,
+            'weeks_of_data': 0, 'active_recently': 0, 'dormant': 0}}
+
+    df['WeekStart'] = (df['Date'] - pd.to_timedelta(df['Date'].dt.weekday, unit='D')).dt.normalize()
+
+    # Anchor weeks to the FULL dataset span so the UK heatmap columns line up
+    # with the rest of the dashboard's timeline.
+    all_weeks = (combined['Date'] - pd.to_timedelta(combined['Date'].dt.weekday, unit='D')).dt.normalize()
+    weeks_sorted = sorted(all_weeks.unique())
+    weeks_iso    = [pd.Timestamp(w).strftime('%Y-%m-%d') for w in weeks_sorted]
+    latest_week  = pd.Timestamp(weeks_sorted[-1])
+
+    base = total_logins(df)
+    per_week = (base.groupby(['School', 'WeekStart'])['Email'].count()
+                    .reset_index().rename(columns={'Email': 'logins'}))
+
+    schools_out = []
+    for school, rows in base.groupby('School'):
+        wk = per_week[per_week['School'] == school]
+        d_map = {pd.Timestamp(w).strftime('%Y-%m-%d'): int(n)
+                 for w, n in zip(wk['WeekStart'], wk['logins'])}
+        tl = sum(d_map.values())
+        uw = len(d_map)
+        users = rows.drop_duplicates(subset=['Email'])
+        tc = users[users['UserRole'].isin(_TEACHER_ROLES)]['Email'].nunique()
+        sc = users[users['UserRole'].isin(_PARTICIPANT_ROLES)]['Email'].nunique()
+        last_week = pd.Timestamp(rows['WeekStart'].max())
+        weeks_since_last = int((latest_week - last_week).days // 7)
+        last_seen = strf(pd.Timestamp(rows['Date'].max()), '%-d %b %Y')
+        schools_out.append({
+            's': school, 'tl': tl, 'uw': uw, 'tc': int(tc), 'sc': int(sc),
+            'last': last_seen, 'dormant': weeks_since_last >= 6,
+            'd': d_map,
+        })
+
+    schools_out.sort(key=lambda x: (-x['tl'], x['s'].lower()))
+
+    return {
+        'weeks': weeks_iso,
+        'schools': schools_out,
+        'totals': {
+            'schools_tracked': len(schools_out),
+            'total_logins':    sum(s['tl'] for s in schools_out),
+            'weeks_of_data':   len(weeks_iso),
+            'active_recently': sum(1 for s in schools_out if not s['dormant']),
+            'dormant':         sum(1 for s in schools_out if s['dormant']),
+        },
+        'date_range_label': f"{strf(pd.Timestamp(combined['Date'].min()), '%-d %b')} – "
+                            f"{strf(pd.Timestamp(combined['Date'].max()), '%-d %b %Y')}",
+    }
+
+
+def build_uk_pilots_html(p):
+    """Visible HTML block for the UK Pilots tab (between UK_PILOTS_BLOCK markers)."""
+    if not p or not p['schools']:
+        return ('<h2 class="section-title pacific">🇬🇧 UK Pilots</h2>\n'
+                '<p class="section-desc">No UK pilot activity found in the snapshots yet.</p>')
+    t = p['totals']
+    return f'''<h2 class="section-title pacific">🇬🇧 UK Pilots — {p['date_range_label']}</h2>
+        <p class="section-desc">Non-paying UK pilot schools (not in ActiveCampaign Pipeline 6) · tracked separately from paying customers</p>
+
+        <div class="pt-summary-grid">
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{t['schools_tracked']}</div><div class="pt-card-label">UK pilot schools</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">{t['total_logins']}</div><div class="pt-card-label">Total logins</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">{t['active_recently']}</div><div class="pt-card-label">Active (last 6 wks)</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">{t['dormant']}</div><div class="pt-card-label">Dormant 6+ wks</div></div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{len(p['schools'])}</strong> UK pilot schools &nbsp;·&nbsp; Heatmap: {p['date_range_label']}</div>
+            <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#c8eed9;vertical-align:middle;margin-right:3px;"></span>Low</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#E8E4DF;vertical-align:middle;margin-right:3px;"></span>None</span>
+            </div>
+        </div>
+
+        <div class="pt-table-header">
+            <div>School</div>
+            <div id="uk-week-headers" style="display:flex;gap:3px;"></div>
+            <div>Last seen</div>
+        </div>
+        <div class="pt-school-list" id="uk-school-list"></div>'''
+
+
+def build_uk_pilots_js(p):
+    """JS data block for the UK Pilots heatmap (between UK_PILOTS_DATA markers)."""
+    if not p:
+        return 'var UK_WEEKS=[];var UK_SCHOOLS=[];'
+    return (f"var UK_WEEKS={json.dumps(p['weeks'])};\n"
+            f"var UK_SCHOOLS={json.dumps(p['schools'], ensure_ascii=False)};")
 
 
 # ── End-of-run "what happened" report ──────────────────────────────────────────
@@ -2001,6 +2166,7 @@ def main():
     top10         = calc_top10(combined)
     lifetime_data = calc_lifetime_logins(combined)
     usage_patterns = calc_usage_patterns(combined)
+    uk_pilots      = calc_uk_pilots(combined)
 
     # Build HTML sections
     daily_pulse_html  = build_daily_pulse_html(dp)
@@ -2011,6 +2177,8 @@ def main():
     lifetime_html     = build_lifetime_logins_html(lifetime_data)
     pt_block_html     = build_usage_patterns_html(usage_patterns)
     pt_data_js        = build_usage_patterns_js(usage_patterns)
+    uk_block_html     = build_uk_pilots_html(uk_pilots)
+    uk_data_js        = build_uk_pilots_js(uk_pilots)
 
     updated_date = strf(combined['Date'].max(), '%-d %B %Y')
 
@@ -2048,6 +2216,21 @@ def main():
     html = re.sub(
         r'// PATTERNS_DATA_START.*?// PATTERNS_DATA_END',
         f'// PATTERNS_DATA_START\n{pt_data_js}\n// PATTERNS_DATA_END',
+        html, flags=re.DOTALL,
+    )
+    # UK Pilots: visible HTML block
+    html = re.sub(
+        r'<!-- UK_PILOTS_BLOCK_START -->.*?<!-- UK_PILOTS_BLOCK_END -->',
+        ('<!-- UK_PILOTS_BLOCK_START -->\n        '
+         '<!-- Auto-generated by update_dashboard.py — do not edit by hand. -->\n'
+         f'{uk_block_html}\n'
+         '        <!-- UK_PILOTS_BLOCK_END -->'),
+        html, flags=re.DOTALL,
+    )
+    # UK Pilots: JS data (UK_WEEKS, UK_SCHOOLS)
+    html = re.sub(
+        r'// UK_PILOTS_DATA_START.*?// UK_PILOTS_DATA_END',
+        f'// UK_PILOTS_DATA_START\n{uk_data_js}\n// UK_PILOTS_DATA_END',
         html, flags=re.DOTALL,
     )
     html = re.sub(

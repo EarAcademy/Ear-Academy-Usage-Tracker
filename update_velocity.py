@@ -313,6 +313,22 @@ def main(no_push=False):
     print(f"  🚫  Will NOT touch:   pipeline_velocity.html")
     print()
 
+    # ── 0. Pull latest FIRST, before writing anything ────────────────────────
+    # See update_sales_dashboard.py for why: pulling before this run's fresh
+    # JSON is written means the commit this run makes can push as a clean
+    # fast-forward, instead of getting rejected at the very end.
+    pull_ok = True
+    if not no_push:
+        print("⬇️   Pulling latest from GitHub first...")
+        pull = subprocess.run(["git", "-C", str(SCRIPT_DIR), "pull", "origin", "main"],
+                               capture_output=True, text=True)
+        if pull.returncode != 0:
+            pull_ok = False
+            print(f"  ⚠️  git pull failed:\n{pull.stdout.strip()}\n{pull.stderr.strip()}")
+            print("  Will still fetch fresh data and save it locally below, but will")
+            print("  SKIP pushing at the end. Resolve the pull manually, then push.")
+        print()
+
     # ── 1. Pipeline 4 (New Leads) ────────────────────────────────────────────
     print("📊  Pipeline 4 — New Lead stage:")
     p4 = fetch_pipeline4()
@@ -379,6 +395,12 @@ def main(no_push=False):
     # ── 7. Git push ──────────────────────────────────────────────────────────
     if no_push:
         print("🛑  --no-push set — skipping git commit + push (testing mode)")
+        print()
+        return
+    if not pull_ok:
+        print("🛑  Skipping push — the pull at the start of this run failed.")
+        print("    velocity_data.json was saved locally. Run 'git pull origin main'")
+        print("    by hand, resolve anything it reports, then 'git push origin main'.")
         print()
         return
 
