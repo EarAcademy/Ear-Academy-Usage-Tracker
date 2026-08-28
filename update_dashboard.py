@@ -258,7 +258,7 @@ def load_paying_schools_roster():
         _LOAD_REPORT['roster_error'] = f"{ROSTER_FILE} does not exist"
         return None, None
     try:
-        with open(ROSTER_FILE) as f:
+        with open(ROSTER_FILE, encoding='utf-8') as f:
             data = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
         print(f"  ⚠️  Could not load {ROSTER_FILE}: {e}")
@@ -2186,7 +2186,7 @@ def main():
         print(f"❌ {OUTPUT_FILE} not found.")
         return
 
-    with open(OUTPUT_FILE, 'r') as f:
+    with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
         html = f.read()
 
     new_content = (
@@ -2239,7 +2239,7 @@ def main():
         html,
     )
 
-    with open(OUTPUT_FILE, 'w') as f:
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         f.write(html)
 
     print("📊 Summary")
