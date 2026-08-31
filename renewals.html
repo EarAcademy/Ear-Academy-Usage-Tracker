@@ -81,8 +81,12 @@
   <div class="hcard blue"><div class="hlabel">Renewed This Month</div><div class="hval" id="h-month">—</div><div class="hsub2" id="h-month-sub">—</div></div>
 </div>
 
+<div id="test-banner" style="display:none;background:#fff3e0;border:1px solid #f0c674;border-left:4px solid var(--amber);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.25rem;font-size:.85rem;color:#7a5a0a;">
+  ⚠️ <strong>Showing placeholder test data.</strong> No real school has confirmed a renewal yet — the rows below are the renewal automation's own test fixtures, kept visible here temporarily so the page can be reviewed with realistic data. They'll be swapped out once real renewals start landing.
+</div>
+
 <div class="notebox">
-  <strong>What counts as a confirmed renewal:</strong> only deals ActiveCampaign has moved into the Pipeline 6 <strong>"Renewed"</strong> stage. Schools in <strong>"Upcoming Renewal"</strong> are approaching their renewal date but haven't confirmed yet — they won't appear here until the renewal actually goes through. B2C accounts and automation test deals are excluded.
+  <strong>What counts as a confirmed renewal:</strong> only deals ActiveCampaign has moved into the Pipeline 6 <strong>"Renewed"</strong> stage. Schools in <strong>"Upcoming Renewal"</strong> are approaching their renewal date but haven't confirmed yet — they won't appear here until the renewal actually goes through. B2C accounts are excluded.
 </div>
 
 <div class="slabel">Confirmed Renewals</div>
@@ -103,7 +107,8 @@ function emptyRow(){
   return '<tr><td colspan="3" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">No confirmed renewals yet. Schools will appear here once ActiveCampaign moves their deal into the "Renewed" stage.</td></tr>';
 }
 function renewalRow(r){
-  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}</div></td><td><span class="bdg">${fmtDate(r.renewed_on)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
+  const testTag = r.is_test ? ' <span class="bdg" style="background:#fff3e0;color:#b8760a;margin-left:6px">TEST</span>' : '';
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag}</div></td><td><span class="bdg">${fmtDate(r.renewed_on)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
 }
 
 fetch('renewals_data.json?v=' + Date.now())
@@ -112,6 +117,9 @@ fetch('renewals_data.json?v=' + Date.now())
     const renewals = d.renewals || [];
     document.getElementById('h-count').textContent = d.count ?? renewals.length;
     document.getElementById('h-value').textContent = zarRand(d.total_value_zar);
+    if (d.test_data_included && renewals.some(r => r.is_test)) {
+      document.getElementById('test-banner').style.display = 'block';
+    }
 
     const now = new Date();
     const thisMonth = renewals.filter(r => {

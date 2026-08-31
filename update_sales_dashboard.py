@@ -395,12 +395,24 @@ def build_paying_schools_roster(cam_deals):
     return roster
 
 
+# TEMPORARY (added 2026-08-31, Brandon's request): the renewal automation has no
+# real "Renewed" deals yet, so show its "ZZZ TEST..." fixtures as placeholder
+# data to demo the page. Flip back to False once real renewals start landing --
+# ZZZ-test deals must NEVER count in the roster/ARR/customer numbers (those
+# still exclude them via _is_test_deal(), unaffected by this flag).
+RENEWALS_INCLUDE_TEST_DEALS = True
+
+
 def build_renewals_data(cam_all):
     """Confirmed renewals: Pipeline 6 deals in the 'Renewed' stage ONLY --
     the stage that confirms a school's renewal actually went through (not
     'Upcoming Renewal', which just means the cycle is approaching).
 
-    Same currency/B2C/test-deal exclusions as the paying-schools roster.
+    Same currency/B2C exclusions as the paying-schools roster. Test-deal
+    exclusion is gated by RENEWALS_INCLUDE_TEST_DEALS (see above) -- every
+    OTHER consumer of _is_test_deal() (roster, ARR tiers, customer count)
+    always excludes them regardless of this flag.
+
     'renewed_on' is the deal's last-modified date (AC doesn't expose a
     stage-entry timestamp directly) -- a reasonable proxy since moving a
     deal into Renewed is normally the last thing that happens to it.
@@ -412,7 +424,9 @@ def build_renewals_data(cam_all):
         if str(d.get("stage")) != S_RENEWED:
             continue
         title = (d.get("title") or "").strip()
-        if "b2c" in title.lower() or _is_test_deal(title):
+        if "b2c" in title.lower():
+            continue
+        if _is_test_deal(title) and not RENEWALS_INCLUDE_TEST_DEALS:
             continue
         matching.append(d)
 
@@ -438,6 +452,7 @@ def build_renewals_data(cam_all):
             "account_id":   aid,
             "account_name": aname or None,
             "value_zar":    int(value_zar),
+            "is_test":      _is_test_deal(title),
             "renewed_on":   (d.get("mdate") or "")[:10] or None,
         })
 
@@ -626,11 +641,16 @@ def main(no_push=False):
             "pipeline":  P_CAM,
             "stage":     f"{S_RENEWED} (Renewed) only",
             "currency":  "zar",
-            "exclude":   "B2C accounts (deal title or account name contains 'B2C'); "
-                         "automation test deals (title starts with 'ZZZ')",
+            "exclude":   "B2C accounts (deal title or account name contains 'B2C')"
+                         + (" -- automation test deals (title starts with 'ZZZ') currently"
+                            " INCLUDED as placeholder data, see RENEWALS_INCLUDE_TEST_DEALS"
+                            " in update_sales_dashboard.py"
+                            if RENEWALS_INCLUDE_TEST_DEALS else
+                            "; automation test deals (title starts with 'ZZZ')"),
             "note":      "Does NOT include 'Upcoming Renewal' (52) -- that stage means "
                          "the cycle is approaching, not that the renewal is confirmed.",
         },
+        "test_data_included": RENEWALS_INCLUDE_TEST_DEALS,
         "count":            len(renewals),
         "total_value_zar":  sum(r["value_zar"] for r in renewals),
         "renewals":         renewals,

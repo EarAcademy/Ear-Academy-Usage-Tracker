@@ -1,14 +1,61 @@
 {
-  "generated_at": "2026-08-31T11:42:54",
-  "generated_label": "31 Aug 2026 at 11:42",
+  "generated_at": "2026-08-31T11:47:59",
+  "generated_label": "31 Aug 2026 at 11:47",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
     "currency": "zar",
-    "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')",
+    "exclude": "B2C accounts (deal title or account name contains 'B2C') -- automation test deals (title starts with 'ZZZ') currently INCLUDED as placeholder data, see RENEWALS_INCLUDE_TEST_DEALS in update_sales_dashboard.py",
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
-  "count": 0,
-  "total_value_zar": 0,
-  "renewals": []
+  "test_data_included": true,
+  "count": 5,
+  "total_value_zar": 100000,
+  "renewals": [
+    {
+      "deal_id": "1834",
+      "title": "ZZZ TEST T1 - Happy Path Quote (no prior invoice)",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 20000,
+      "is_test": true,
+      "renewed_on": "2026-08-28"
+    },
+    {
+      "deal_id": "1836",
+      "title": "ZZZ TEST T3 - Mistake on Closed Deal",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 20000,
+      "is_test": true,
+      "renewed_on": "2026-08-28"
+    },
+    {
+      "deal_id": "1837",
+      "title": "ZZZ TEST T4 - Zap1b Auto-Renew Eligible",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 20000,
+      "is_test": true,
+      "renewed_on": "2026-08-28"
+    },
+    {
+      "deal_id": "1843",
+      "title": "ZZZ TEST T4b - Zap1b Auto-Renew Retest",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 20000,
+      "is_test": true,
+      "renewed_on": "2026-08-28"
+    },
+    {
+      "deal_id": "1841",
+      "title": "ZZZ TEST T1b - Happy Path Quote Retest",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 20000,
+      "is_test": true,
+      "renewed_on": "2026-08-28"
+    }
+  ]
 }
