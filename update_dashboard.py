@@ -126,10 +126,12 @@ def find_column(columns, required_substrings, canonical_label):
 EXCLUDED_SCHOOLS = [
     'Academie Orpheus',
     'Academie Orfeus',
+    'Beckfoot Priestthorpe School',
     'Bolton Music Services',
     'Bradford Music and Arts Service',
     'Bury Music',
     'Collingwood College',
+    'Oldham Music Service',
     'Salford Community Leisure'
 ]
 
@@ -531,15 +533,18 @@ def classify_product(pt):
 
 
 def classify_billing(bs):
-    """Return 'Paying', 'Demo', or 'Paying' (default for old files).
-    Both 'Demo' and 'Pilot' billing statuses are treated as non-paying (mapped to 'Demo').
+    """Return 'Paying' or 'Demo'. Any Pilot/Demo-like status -- 'Demo',
+    'Pilot', 'UK Pilot', etc. -- maps to 'Demo' (matched case-insensitively
+    by substring, so new label variants don't silently fall through as
+    'Paying'). Only used by the legacy fallback path when the AC roster
+    fails to load; roster-mode paying() ignores this column entirely.
     """
     if pd.isna(bs):
         return 'Paying'
     s = str(bs).strip()
-    if s in ('Demo', 'Pilot'):
+    if 'pilot' in s.lower() or 'demo' in s.lower():
         return 'Demo'
-    return s if s == 'Paying' else 'Paying'
+    return 'Paying'
 
 
 # ── Date / week helpers ───────────────────────────────────────────────────────
