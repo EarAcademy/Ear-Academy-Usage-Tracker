@@ -480,16 +480,4 @@
       "stage_id": "52",
       "value_zar": 4750,
       "account_id": "9889",
-      "account_name": "Welwitschia - C5"
-    },
-    {
-      "deal_id": "1827",
-      "title": "Xero Test",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 100,
-      "account_id": "11744",
-      "account_name": "Xero Test"
-    }
-  ]
-}
+      "account_name"
