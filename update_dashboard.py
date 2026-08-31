@@ -36,6 +36,7 @@ def strf(dt, fmt):
 
 # ── Configuration ────────────────────────────────────────────────────────────
 DATA_FOLDER     = Path("daily_snapshots")
+B2C_FOLDER      = Path("b2c_snapshots")      # individual-client (non-school) usage exports
 OUTPUT_FILE     = Path("index.html")
 ROSTER_FILE     = Path("paying_schools.json")    # written by update_sales_dashboard.py
 REPORT_FILE     = Path("daily_report.txt")       # human-readable "what happened" log
@@ -1951,6 +1952,163 @@ def build_uk_pilots_js(p):
             f"var UK_SCHOOLS={json.dumps(p['schools'], ensure_ascii=False)};")
 
 
+# ── B2C Clients tab ──────────────────────────────────────────────────────────
+# Individual (non-school) clients signed up for a specific instrumental course.
+# Entirely separate cohort from the AC school roster and the daily_snapshots/
+# files — this tab's own data (b2c_snapshots/*.xlsx, same shape as a daily
+# snapshot) is the single source of truth for who's a B2C client and which
+# course they're in. The 'School Name' column in those files holds the course
+# name instead of a school name.
+
+def load_b2c_data():
+    """Load B2C client usage exports from B2C_FOLDER. Returns None if the
+    folder doesn't exist or has no files yet — the tab renders an empty
+    state rather than failing the whole run.
+
+    Expects a dedicated course/instrument column (not the 'School Name'
+    column, which in these exports is just a fixed 'The Ear Academy'
+    placeholder rather than a real course name).
+    """
+    if not B2C_FOLDER.exists():
+        return None
+    excel_files = sorted(B2C_FOLDER.glob("*.xlsx"))
+    if not excel_files:
+        return None
+
+    rows = []
+    for file_path in excel_files:
+        file_date = parse_date(file_path.name)
+        if not file_date:
+            print(f"  ⚠️  B2C: skipped (no date): {file_path.name}")
+            continue
+        try:
+            xl    = pd.ExcelFile(file_path)
+            sheet = find_data_sheet(xl.sheet_names)
+            if not sheet:
+                print(f"  ⚠️  B2C: no usable sheet found: {file_path.name}")
+                continue
+
+            df = pd.read_excel(file_path, sheet_name=sheet)
+            course_col, _ = find_column(df.columns, ['course'], 'Course')
+            if not course_col:
+                course_col, _ = find_column(df.columns, ['instrument'], 'Course')
+            email_col, _ = find_column(df.columns, ['email'], 'Email Address')
+            if not course_col or not email_col:
+                print(f"  ⚠️  B2C: missing Course/Email column: {file_path.name}")
+                continue
+
+            df = df.copy()
+            df['Course'] = df[course_col].astype(str).str.strip()
+            df['Email']  = df[email_col]
+            df['Date']   = file_date
+            df = df[(df['Course'] != '') & (df['Course'].str.lower() != 'nan')]
+
+            rows.append(df[['Course', 'Email', 'Date']])
+            print(f"  ✓ B2C {file_date.strftime('%a %d %b')}  – {file_path.name}")
+        except Exception as e:
+            print(f"  ⚠️  B2C: error reading {file_path.name}: {e}")
+
+    if not rows:
+        return None
+    combined = pd.concat(rows, ignore_index=True)
+    combined['Date'] = pd.to_datetime(combined['Date'])
+    return combined
+
+
+def calc_b2c_clients(b2c):
+    """Weekly login heatmap + summary for B2C clients, grouped by the
+    instrumental course they signed up for."""
+    if b2c is None or b2c.empty:
+        return None
+
+    df = b2c.copy()
+    df['WeekStart'] = (df['Date'] - pd.to_timedelta(df['Date'].dt.weekday, unit='D')).dt.normalize()
+    weeks_sorted = sorted(df['WeekStart'].unique())
+    weeks_iso    = [pd.Timestamp(w).strftime('%Y-%m-%d') for w in weeks_sorted]
+    latest_week  = pd.Timestamp(weeks_sorted[-1])
+
+    base = df.drop_duplicates(subset=['Course', 'Email', 'Date'])
+    per_week = (base.groupby(['Course', 'WeekStart'])['Email'].count()
+                    .reset_index().rename(columns={'Email': 'logins'}))
+
+    courses_out = []
+    for course, rows in base.groupby('Course'):
+        wk = per_week[per_week['Course'] == course]
+        d_map = {pd.Timestamp(w).strftime('%Y-%m-%d'): int(n)
+                 for w, n in zip(wk['WeekStart'], wk['logins'])}
+        tl = sum(d_map.values())
+        uw = len(d_map)
+        nc = rows['Email'].nunique()
+        last_week = pd.Timestamp(rows['WeekStart'].max())
+        weeks_since_last = int((latest_week - last_week).days // 7)
+        last_seen = strf(pd.Timestamp(rows['Date'].max()), '%-d %b %Y')
+        courses_out.append({
+            'c': course, 'tl': tl, 'uw': uw, 'nc': int(nc),
+            'last': last_seen, 'dormant': weeks_since_last >= 6,
+            'd': d_map,
+        })
+
+    courses_out.sort(key=lambda x: (-x['tl'], x['c'].lower()))
+
+    return {
+        'weeks': weeks_iso,
+        'courses': courses_out,
+        'totals': {
+            'courses_tracked': len(courses_out),
+            'total_clients':   int(base['Email'].nunique()),
+            'total_logins':    sum(c['tl'] for c in courses_out),
+            'active_recently': sum(1 for c in courses_out if not c['dormant']),
+            'dormant':         sum(1 for c in courses_out if c['dormant']),
+        },
+        'date_range_label': f"{strf(pd.Timestamp(df['Date'].min()), '%-d %b')} – "
+                            f"{strf(pd.Timestamp(df['Date'].max()), '%-d %b %Y')}",
+    }
+
+
+def build_b2c_html(b):
+    """Visible HTML block for the B2C Clients tab (between B2C_BLOCK markers)."""
+    if not b or not b['courses']:
+        return ('<h2 class="section-title pacific">🎻 B2C Clients</h2>\n'
+                '<p class="section-desc">No B2C client activity yet — drop usage exports '
+                f'into {B2C_FOLDER}/ (same format as a daily snapshot) to populate this tab.</p>')
+    t = b['totals']
+    return f'''<h2 class="section-title pacific">🎻 B2C Clients — {b['date_range_label']}</h2>
+        <p class="section-desc">Individual clients signed up for a specific instrumental course · tracked separately from paying schools</p>
+
+        <div class="pt-summary-grid">
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{t['courses_tracked']}</div><div class="pt-card-label">Courses tracked</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--gold2)"></div><div class="pt-card-num">{t['total_clients']}</div><div class="pt-card-label">Total clients</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">{t['total_logins']}</div><div class="pt-card-label">Total logins</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">{t['active_recently']}</div><div class="pt-card-label">Active (last 6 wks)</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">{t['dormant']}</div><div class="pt-card-label">Dormant 6+ wks</div></div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{len(b['courses'])}</strong> courses &nbsp;·&nbsp; Heatmap: {b['date_range_label']}</div>
+            <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#c8eed9;vertical-align:middle;margin-right:3px;"></span>Low</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#E8E4DF;vertical-align:middle;margin-right:3px;"></span>None</span>
+            </div>
+        </div>
+
+        <div class="pt-table-header">
+            <div>Course</div>
+            <div id="b2c-week-headers" style="display:flex;gap:3px;"></div>
+            <div>Last seen</div>
+        </div>
+        <div class="pt-school-list" id="b2c-course-list"></div>'''
+
+
+def build_b2c_js(b):
+    """JS data block for the B2C Clients heatmap (between B2C_DATA markers)."""
+    if not b:
+        return 'var B2C_WEEKS=[];var B2C_COURSES=[];'
+    return (f"var B2C_WEEKS={json.dumps(b['weeks'])};\n"
+            f"var B2C_COURSES={json.dumps(b['courses'], ensure_ascii=False)};")
+
+
 # ── End-of-run "what happened" report ──────────────────────────────────────────
 
 def build_daily_report(combined):
@@ -2167,6 +2325,8 @@ def main():
     lifetime_data = calc_lifetime_logins(combined)
     usage_patterns = calc_usage_patterns(combined)
     uk_pilots      = calc_uk_pilots(combined)
+    b2c_data       = load_b2c_data()
+    b2c_clients    = calc_b2c_clients(b2c_data)
 
     # Build HTML sections
     daily_pulse_html  = build_daily_pulse_html(dp)
@@ -2179,6 +2339,8 @@ def main():
     pt_data_js        = build_usage_patterns_js(usage_patterns)
     uk_block_html     = build_uk_pilots_html(uk_pilots)
     uk_data_js        = build_uk_pilots_js(uk_pilots)
+    b2c_block_html    = build_b2c_html(b2c_clients)
+    b2c_data_js       = build_b2c_js(b2c_clients)
 
     updated_date = strf(combined['Date'].max(), '%-d %B %Y')
 
@@ -2231,6 +2393,21 @@ def main():
     html = re.sub(
         r'// UK_PILOTS_DATA_START.*?// UK_PILOTS_DATA_END',
         f'// UK_PILOTS_DATA_START\n{uk_data_js}\n// UK_PILOTS_DATA_END',
+        html, flags=re.DOTALL,
+    )
+    # B2C Clients: visible HTML block
+    html = re.sub(
+        r'<!-- B2C_BLOCK_START -->.*?<!-- B2C_BLOCK_END -->',
+        ('<!-- B2C_BLOCK_START -->\n        '
+         '<!-- Auto-generated by update_dashboard.py — do not edit by hand. -->\n'
+         f'{b2c_block_html}\n'
+         '        <!-- B2C_BLOCK_END -->'),
+        html, flags=re.DOTALL,
+    )
+    # B2C Clients: JS data (B2C_WEEKS, B2C_COURSES)
+    html = re.sub(
+        r'// B2C_DATA_START.*?// B2C_DATA_END',
+        f'// B2C_DATA_START\n{b2c_data_js}\n// B2C_DATA_END',
         html, flags=re.DOTALL,
     )
     html = re.sub(
