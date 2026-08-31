@@ -92,10 +92,10 @@
 </div>
 
 <div class="slabel">Due For Renewal</div>
-<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>In Stage Since</th><th>Value</th></tr></thead><tbody id="utbody"></tbody></table></div></div>
+<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>Renewal Date</th><th>Access End Date</th><th>Value</th></tr></thead><tbody id="utbody"></tbody></table></div></div>
 
 <div class="slabel">Confirmed Renewals</div>
-<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>Renewed On</th><th>Value</th></tr></thead><tbody id="rtbody"></tbody></table></div></div>
+<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>Renewal Date</th><th>Access End Date</th><th>Value</th></tr></thead><tbody id="rtbody"></tbody></table></div></div>
 
 </main>
 <footer class="footer"><a href="investor.html">← Back to Sales Dashboard</a> &nbsp;·&nbsp; ActiveCampaign · Pipeline 6 (Customer Account Management), stage "Renewed" only · <span id="footdate">—</span></footer>
@@ -109,16 +109,19 @@ function fmtDate(iso){
   return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 }
 function emptyRow(msg){
-  return `<tr><td colspan="3" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">${msg}</td></tr>`;
+  return `<tr><td colspan="4" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">${msg}</td></tr>`;
 }
 function testTag(r){
   return r.is_test ? ' <span class="bdg" style="background:#fff3e0;color:#b8760a;margin-left:6px">TEST</span>' : '';
 }
+function dateCell(iso){
+  return iso ? `<span class="bdg">${fmtDate(iso)}</span>` : '<span style="color:var(--gray);font-size:.8rem">—</span>';
+}
 function renewalRow(r){
-  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td><span class="bdg">${fmtDate(r.renewed_on)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td>${dateCell(r.renewal_date)}</td><td>${dateCell(r.access_end_date)}</td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
 }
 function upcomingRow(r){
-  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td><span class="bdg" style="background:#fff3e0;color:#b8760a">${fmtDate(r.since)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td>${dateCell(r.renewal_date)}</td><td>${dateCell(r.access_end_date)}</td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
 }
 
 fetch('renewals_data.json?v=' + Date.now())

@@ -118,6 +118,41 @@ def ac_get(endpoint, params=None):
     return results
 
 
+# Deal custom field IDs (confirmed via GET /api/3/dealCustomFieldMeta --
+# the AC UI's "Renewal Date" and "Deal Access End Date" fields).
+CF_RENEWAL_DATE    = "95"
+CF_ACCESS_END_DATE = "99"
+
+
+def fetch_deal_custom_dates(deal_ids):
+    """Fetch the real 'Renewal Date' and 'Deal Access End Date' custom
+    field values for each deal, via /api/3/deals/{id}/dealCustomFieldData.
+    One API call per deal -- fine for the renewals lists (tens of deals,
+    not hundreds). Returns {deal_id: {'renewal_date': str|None,
+    'access_end_date': str|None}}.
+    """
+    headers = {"Api-Token": AC_API_KEY}
+    out = {}
+    for deal_id in deal_ids:
+        try:
+            r = requests.get(f"{AC_BASE_URL}/api/3/deals/{deal_id}/dealCustomFieldData",
+                              headers=headers, timeout=30)
+            r.raise_for_status()
+            fields = r.json().get("dealCustomFieldData", [])
+        except requests.RequestException as e:
+            print(f"  ⚠️  AC API error fetching custom fields for deal {deal_id}: {e}")
+            fields = []
+        vals = {}
+        for f in fields:
+            v = f.get("fieldValue")
+            vals[str(f.get("customFieldId"))] = v.strip() if isinstance(v, str) else v
+        out[deal_id] = {
+            "renewal_date":    vals.get(CF_RENEWAL_DATE) or None,
+            "access_end_date": vals.get(CF_ACCESS_END_DATE) or None,
+        }
+    return out
+
+
 def fetch_deals_for_pipeline(pipeline_id, status_filter=OPEN):
     """Return all deals in a given pipeline, filtered by status. Default = open only."""
     print(f"  Fetching deals from Pipeline {pipeline_id}…")
@@ -410,10 +445,11 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
     consumer of _is_test_deal() (roster, ARR tiers, customer count) always
     excludes them regardless of this flag.
 
-    `date_field` names the output date key (e.g. 'renewed_on') and is
-    filled from the deal's last-modified date -- AC doesn't expose a
-    stage-entry timestamp directly, so this is a proxy for "since when
-    has this deal been in this stage".
+    Pulls the deal's real 'Renewal Date' and 'Deal Access End Date' custom
+    fields (see fetch_deal_custom_dates). `date_field` names the output key
+    that mirrors renewal_date -- kept for backward compat with callers --
+    and falls back to the deal's last-modified date only when the custom
+    field itself is empty.
     """
     matching = []
     for d in cam_all:
@@ -430,6 +466,7 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
 
     account_ids   = {str(d.get("account")) for d in matching if d.get("account")}
     account_names = fetch_account_names(account_ids)
+    custom_dates  = fetch_deal_custom_dates([str(d.get("id", "")) for d in matching])
 
     out = []
     for d in matching:
@@ -438,20 +475,27 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
         if aname and "b2c" in aname.lower():
             continue
 
-        title = (d.get("title") or "").strip()
+        title   = (d.get("title") or "").strip()
+        deal_id = str(d.get("id", ""))
         try:
             value_zar = int(d.get("value", 0)) / 100
         except (ValueError, TypeError):
             value_zar = 0
 
+        dates = custom_dates.get(deal_id, {})
+        renewal_date    = dates.get("renewal_date")
+        access_end_date = dates.get("access_end_date")
+
         out.append({
-            "deal_id":      str(d.get("id", "")),
-            "title":        title,
-            "account_id":   aid,
-            "account_name": aname or None,
-            "value_zar":    int(value_zar),
-            "is_test":      _is_test_deal(title),
-            date_field:     (d.get("mdate") or "")[:10] or None,
+            "deal_id":         deal_id,
+            "title":           title,
+            "account_id":      aid,
+            "account_name":    aname or None,
+            "value_zar":       int(value_zar),
+            "is_test":         _is_test_deal(title),
+            "renewal_date":    renewal_date,
+            "access_end_date": access_end_date,
+            date_field:        renewal_date or (d.get("mdate") or "")[:10] or None,
         })
 
     out.sort(key=lambda r: r[date_field] or "", reverse=True)
