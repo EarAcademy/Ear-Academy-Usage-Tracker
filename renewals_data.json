@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-08-31T11:42:54",
+  "generated_label": "31 Aug 2026 at 11:42",
+  "filter": {
+    "pipeline": "6",
+    "stage": "70 (Renewed) only",
+    "currency": "zar",
+    "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')",
+    "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
+  },
+  "count": 0,
+  "total_value_zar": 0,
+  "renewals": []
+}

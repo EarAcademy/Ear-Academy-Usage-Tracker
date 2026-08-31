@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renewals — Ear Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --lapis:#1d70b8;--sky:#38aae1;--green:#00a19a;--amber:#e8a020;--red:#d63b3b;--cream:#F5F1ED;--white:#ffffff;--dark:#2C2C2C;--gray:#666666;--lgray:#E8E4DF;--shadow:0 4px 24px rgba(0,0,0,0.07);--radius:18px; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+  .header{background:var(--white);border-bottom:1px solid var(--lgray);padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:0.75rem}
+  .header-left{display:flex;align-items:center;gap:1rem}
+  .logo{width:42px;height:42px;background:var(--lapis);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .logo svg{width:26px;height:26px}
+  .htitle{font-family:'Quicksand',sans-serif;font-size:1.15rem;font-weight:700;color:var(--lapis)}
+  .hsub{font-size:0.8rem;color:var(--gray);margin-top:1px}
+  .nav{display:flex;gap:0.5rem;flex-wrap:wrap}
+  .ntab{padding:0.45rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;color:var(--gray);border:1.5px solid var(--lgray);transition:all .18s}
+  .ntab:hover{color:var(--lapis);border-color:var(--lapis)}
+  .ntab.active{background:var(--lapis);color:var(--white);border-color:var(--lapis)}
+  .updated{font-size:0.75rem;color:var(--gray);white-space:nowrap}
+  .main{max-width:1400px;margin:0 auto;padding:2rem 2.5rem}
+  .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.75rem 2rem}
+  .slabel{font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;color:var(--lapis);letter-spacing:.3px;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
+  .slabel::after{content:'';flex:1;height:1px;background:var(--lgray)}
+  /* HERO */
+  .hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-bottom:2rem}
+  .hcard{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.4rem 1.6rem;border-left:4px solid var(--lgray)}
+  .hcard.green{border-left-color:var(--green)}.hcard.lapis{border-left-color:var(--lapis)}.hcard.blue{border-left-color:var(--sky)}
+  .hlabel{font-size:.72rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px}
+  .hval{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:var(--dark);line-height:1.1;margin:.25rem 0 .2rem}
+  .hval.green{color:var(--green)}
+  .hsub2{font-size:.75rem;color:var(--gray);line-height:1.4}
+  /* NOTE BOX */
+  .notebox{background:linear-gradient(135deg,#eef4fb,#f5f1ed);border:1px solid #c8ddf0;border-radius:var(--radius);padding:1.1rem 1.5rem;margin-bottom:2rem;font-size:.82rem;color:var(--gray);line-height:1.6}
+  .notebox strong{color:var(--lapis)}
+  /* TABLE */
+  .tw{overflow-x:auto}
+  table.dt{width:100%;border-collapse:collapse;font-size:.82rem}
+  .dt th{background:var(--cream);color:var(--lapis);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;padding:.6rem .9rem;text-align:left;border-bottom:2px solid var(--lgray);white-space:nowrap}
+  .dt td{padding:.65rem .9rem;border-bottom:1px solid var(--lgray);vertical-align:middle}
+  .dt tr:last-child td{border-bottom:none}
+  .dt tr:hover td{background:#faf9f7}
+  .dn{font-weight:700;color:var(--dark)}
+  .bdg{display:inline-block;padding:.18rem .6rem;border-radius:20px;font-size:.73rem;font-weight:700;white-space:nowrap;background:#e6f7f7;color:#007a74}
+  .footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--gray);border-top:1px solid var(--lgray);margin-top:1rem}
+  .footer a{color:var(--lapis);text-decoration:none}
+  @media(max-width:900px){.hgrid{grid-template-columns:1fr}.main{padding:1.25rem 1rem}}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+    <div class="logo">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 4C8.58 4 5 7.58 5 12c0 2.76 1.4 5.19 3.54 6.65V20h8.92v-1.35A8 8 0 0013 4z" fill="white" fill-opacity="0.9"/>
+        <circle cx="13" cy="12" r="3" fill="#1d70b8"/>
+        <path d="M13 9v6M10 12h6" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="htitle">Ear Academy — Renewals</div>
+      <div class="hsub">Confirmed license renewals · Pipeline 6 "Renewed" stage only · ZAR</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="index.html" class="ntab">Usage Analytics</a>
+    <a href="investor.html" class="ntab">Sales Activity</a>
+    <a href="pipeline_velocity.html" class="ntab">Pipeline Velocity</a>
+    <a href="renewals.html" class="ntab active">Renewals</a>
+  </nav>
+  <div class="updated" id="hdate">Loading…</div>
+</header>
+
+<main class="main">
+
+<div class="hgrid">
+  <div class="hcard green"><div class="hlabel">Confirmed Renewals</div><div class="hval green" id="h-count">—</div><div class="hsub2">Schools in the "Renewed" stage</div></div>
+  <div class="hcard lapis"><div class="hlabel">Total Renewal Value</div><div class="hval" id="h-value">—</div><div class="hsub2">Annual ZAR, confirmed renewals only</div></div>
+  <div class="hcard blue"><div class="hlabel">Renewed This Month</div><div class="hval" id="h-month">—</div><div class="hsub2" id="h-month-sub">—</div></div>
+</div>
+
+<div class="notebox">
+  <strong>What counts as a confirmed renewal:</strong> only deals ActiveCampaign has moved into the Pipeline 6 <strong>"Renewed"</strong> stage. Schools in <strong>"Upcoming Renewal"</strong> are approaching their renewal date but haven't confirmed yet — they won't appear here until the renewal actually goes through. B2C accounts and automation test deals are excluded.
+</div>
+
+<div class="slabel">Confirmed Renewals</div>
+<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>Renewed On</th><th>Value</th></tr></thead><tbody id="rtbody"></tbody></table></div></div>
+
+</main>
+<footer class="footer"><a href="investor.html">← Back to Sales Dashboard</a> &nbsp;·&nbsp; ActiveCampaign · Pipeline 6 (Customer Account Management), stage "Renewed" only · <span id="footdate">—</span></footer>
+
+<script>
+function zarRand(r){return'R'+Math.round(r||0).toLocaleString('en-ZA')}
+function fmtDate(iso){
+  if(!iso) return '—';
+  const d=new Date(iso+'T00:00:00');
+  if(isNaN(d)) return '—';
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+function emptyRow(){
+  return '<tr><td colspan="3" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">No confirmed renewals yet. Schools will appear here once ActiveCampaign moves their deal into the "Renewed" stage.</td></tr>';
+}
+function renewalRow(r){
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}</div></td><td><span class="bdg">${fmtDate(r.renewed_on)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
+}
+
+fetch('renewals_data.json?v=' + Date.now())
+  .then(r => r.json())
+  .then(d => {
+    const renewals = d.renewals || [];
+    document.getElementById('h-count').textContent = d.count ?? renewals.length;
+    document.getElementById('h-value').textContent = zarRand(d.total_value_zar);
+
+    const now = new Date();
+    const thisMonth = renewals.filter(r => {
+      if (!r.renewed_on) return false;
+      const dt = new Date(r.renewed_on + 'T00:00:00');
+      return dt.getFullYear() === now.getFullYear() && dt.getMonth() === now.getMonth();
+    });
+    document.getElementById('h-month').textContent = thisMonth.length;
+    document.getElementById('h-month-sub').textContent = now.toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+
+    document.getElementById('rtbody').innerHTML = renewals.length
+      ? renewals.map(renewalRow).join('')
+      : emptyRow();
+
+    if (d.generated_label) {
+      document.getElementById('hdate').textContent = 'Updated ' + d.generated_label;
+      document.getElementById('footdate').textContent = d.generated_label;
+    }
+  })
+  .catch(() => {
+    document.getElementById('h-count').textContent = '—';
+    document.getElementById('h-value').textContent = '—';
+    document.getElementById('h-month').textContent = '—';
+    document.getElementById('rtbody').innerHTML = emptyRow();
+    document.getElementById('hdate').textContent = 'renewals_data.json not found';
+  });
+</script>
+</body>
+</html>

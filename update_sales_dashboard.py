@@ -39,9 +39,10 @@ except ImportError:
     print("ERROR: config.py not found. Make sure you're running from ear-academy-analytics/")
     sys.exit(1)
 
-SCRIPT_DIR  = Path(__file__).parent
-JSON_FILE   = SCRIPT_DIR / "pipeline_data.json"
-ROSTER_FILE = SCRIPT_DIR / "paying_schools.json"   # canonical paying-schools roster
+SCRIPT_DIR    = Path(__file__).parent
+JSON_FILE     = SCRIPT_DIR / "pipeline_data.json"
+ROSTER_FILE   = SCRIPT_DIR / "paying_schools.json"   # canonical paying-schools roster
+RENEWALS_FILE = SCRIPT_DIR / "renewals_data.json"    # confirmed-renewals list
 
 # Pipeline IDs (confirmed from memory)
 P_QUAL = "4"   # Sales Qualification
@@ -394,6 +395,56 @@ def build_paying_schools_roster(cam_deals):
     return roster
 
 
+def build_renewals_data(cam_all):
+    """Confirmed renewals: Pipeline 6 deals in the 'Renewed' stage ONLY --
+    the stage that confirms a school's renewal actually went through (not
+    'Upcoming Renewal', which just means the cycle is approaching).
+
+    Same currency/B2C/test-deal exclusions as the paying-schools roster.
+    'renewed_on' is the deal's last-modified date (AC doesn't expose a
+    stage-entry timestamp directly) -- a reasonable proxy since moving a
+    deal into Renewed is normally the last thing that happens to it.
+    """
+    matching = []
+    for d in cam_all:
+        if (d.get("currency") or "").lower() != "zar":
+            continue
+        if str(d.get("stage")) != S_RENEWED:
+            continue
+        title = (d.get("title") or "").strip()
+        if "b2c" in title.lower() or _is_test_deal(title):
+            continue
+        matching.append(d)
+
+    account_ids   = {str(d.get("account")) for d in matching if d.get("account")}
+    account_names = fetch_account_names(account_ids)
+
+    renewals = []
+    for d in matching:
+        aid   = str(d.get("account")) if d.get("account") else None
+        aname = account_names.get(aid, "") if aid else ""
+        if aname and "b2c" in aname.lower():
+            continue
+
+        title = (d.get("title") or "").strip()
+        try:
+            value_zar = int(d.get("value", 0)) / 100
+        except (ValueError, TypeError):
+            value_zar = 0
+
+        renewals.append({
+            "deal_id":      str(d.get("id", "")),
+            "title":        title,
+            "account_id":   aid,
+            "account_name": aname or None,
+            "value_zar":    int(value_zar),
+            "renewed_on":   (d.get("mdate") or "")[:10] or None,
+        })
+
+    renewals.sort(key=lambda r: r["renewed_on"] or "", reverse=True)
+    return renewals
+
+
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main(no_push=False):
     print("\n🔄  Ear Academy — Updating Sales Dashboard")
@@ -485,6 +536,11 @@ def main(no_push=False):
     # (and investor.html's headline number) match the usage dashboard exactly.
     customers = len(roster)
 
+    # ── 4c. Confirmed renewals (Renewed stage only) ──────────────────────────
+    print("\n🔁  Building renewals list (Pipeline 6, stage 70 'Renewed' only)…")
+    renewals = build_renewals_data(cam_all)
+    print(f"    → {len(renewals)} confirmed renewals")
+
     # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
     data = {
@@ -562,6 +618,27 @@ def main(no_push=False):
         json.dump(roster_data, f, indent=2, ensure_ascii=False)
     print(f"✅  paying_schools.json updated ({len(roster)} schools)")
 
+    # ── 6c. Write the confirmed-renewals list ────────────────────────────────
+    renewals_data = {
+        "generated_at":    now.isoformat(timespec="seconds"),
+        "generated_label": timestamp,
+        "filter": {
+            "pipeline":  P_CAM,
+            "stage":     f"{S_RENEWED} (Renewed) only",
+            "currency":  "zar",
+            "exclude":   "B2C accounts (deal title or account name contains 'B2C'); "
+                         "automation test deals (title starts with 'ZZZ')",
+            "note":      "Does NOT include 'Upcoming Renewal' (52) -- that stage means "
+                         "the cycle is approaching, not that the renewal is confirmed.",
+        },
+        "count":            len(renewals),
+        "total_value_zar":  sum(r["value_zar"] for r in renewals),
+        "renewals":         renewals,
+    }
+    with open(RENEWALS_FILE, "w", encoding="utf-8") as f:
+        json.dump(renewals_data, f, indent=2, ensure_ascii=False)
+    print(f"✅  renewals_data.json updated ({len(renewals)} confirmed renewals)")
+
     # ── 7. Git commit & push ─────────────────────────────────────────────────
     if no_push:
         print("\n🛑  --no-push set — skipping git commit + push.")
@@ -574,7 +651,8 @@ def main(no_push=False):
         print("\n🚀  Publishing to GitHub…")
         try:
             subprocess.run(["git", "-C", str(SCRIPT_DIR), "add",
-                            "pipeline_data.json", "paying_schools.json", "investor.html"], check=True)
+                            "pipeline_data.json", "paying_schools.json", "renewals_data.json",
+                            "investor.html", "renewals.html"], check=True)
             subprocess.run(["git", "-C", str(SCRIPT_DIR), "commit", "-m",
                             f"Update sales dashboard — {timestamp}"], check=True)
             subprocess.run(["git", "-C", str(SCRIPT_DIR), "push", "origin", "main"], check=True)
