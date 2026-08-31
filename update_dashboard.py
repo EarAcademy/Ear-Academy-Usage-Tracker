@@ -1960,14 +1960,26 @@ def build_uk_pilots_js(p):
 # course they're in. The 'School Name' column in those files holds the course
 # name instead of a school name.
 
+def _parse_b2c_datetime(s):
+    """Parse the B2C export's 'Friday, 28 August 2026 at 22:16' timestamp.
+    Returns NaT on anything that doesn't match."""
+    try:
+        return pd.Timestamp(datetime.strptime(str(s).strip(), '%A, %d %B %Y at %H:%M'))
+    except (ValueError, TypeError):
+        return pd.NaT
+
+
 def load_b2c_data():
     """Load B2C client usage exports from B2C_FOLDER. Returns None if the
     folder doesn't exist or has no files yet — the tab renders an empty
     state rather than failing the whole run.
 
-    Expects a dedicated course/instrument column (not the 'School Name'
-    column, which in these exports is just a fixed 'The Ear Academy'
-    placeholder rather than a real course name).
+    Shape differs from the school snapshots: each row is one client, with
+    one or more 'Course #N' columns (a client can be enrolled in more than
+    one instrument) and a real per-row 'Date & Time' — NOT a single date
+    for the whole file, since these exports are a running client list
+    rather than a single day's activity. Each non-empty Course #N becomes
+    its own (Course, Email, Date) row.
     """
     if not B2C_FOLDER.exists():
         return None
@@ -1977,10 +1989,6 @@ def load_b2c_data():
 
     rows = []
     for file_path in excel_files:
-        file_date = parse_date(file_path.name)
-        if not file_date:
-            print(f"  ⚠️  B2C: skipped (no date): {file_path.name}")
-            continue
         try:
             xl    = pd.ExcelFile(file_path)
             sheet = find_data_sheet(xl.sheet_names)
@@ -1989,22 +1997,29 @@ def load_b2c_data():
                 continue
 
             df = pd.read_excel(file_path, sheet_name=sheet)
-            course_col, _ = find_column(df.columns, ['course'], 'Course')
-            if not course_col:
-                course_col, _ = find_column(df.columns, ['instrument'], 'Course')
             email_col, _ = find_column(df.columns, ['email'], 'Email Address')
-            if not course_col or not email_col:
-                print(f"  ⚠️  B2C: missing Course/Email column: {file_path.name}")
+            date_col,  _ = find_column(df.columns, ['date'],  'Date & Time')
+            course_cols = [c for c in df.columns if 'course' in str(c).lower()]
+            if not email_col or not date_col or not course_cols:
+                print(f"  ⚠️  B2C: missing Email/Date/Course column(s): {file_path.name}")
                 continue
 
             df = df.copy()
-            df['Course'] = df[course_col].astype(str).str.strip()
-            df['Email']  = df[email_col]
-            df['Date']   = file_date
-            df = df[(df['Course'] != '') & (df['Course'].str.lower() != 'nan')]
+            df['Email']     = df[email_col]
+            df['EventDate'] = df[date_col].apply(_parse_b2c_datetime)
 
-            rows.append(df[['Course', 'Email', 'Date']])
-            print(f"  ✓ B2C {file_date.strftime('%a %d %b')}  – {file_path.name}")
+            n_before = len(rows)
+            for course_col in course_cols:
+                sub = df[['Email', 'EventDate', course_col]].rename(columns={course_col: 'Course'})
+                sub = sub.dropna(subset=['Course'])
+                sub['Course'] = sub['Course'].astype(str).str.strip()
+                sub = sub[(sub['Course'] != '') & (sub['Course'].str.lower() != 'nan')]
+                sub = sub[sub['EventDate'].notna()]
+                if len(sub):
+                    rows.append(sub.rename(columns={'EventDate': 'Date'})[['Course', 'Email', 'Date']])
+
+            n_added = sum(len(r) for r in rows[n_before:])
+            print(f"  ✓ B2C  – {file_path.name}  ({len(df)} clients, {n_added} enrollment rows)")
         except Exception as e:
             print(f"  ⚠️  B2C: error reading {file_path.name}: {e}")
 
@@ -2012,6 +2027,7 @@ def load_b2c_data():
         return None
     combined = pd.concat(rows, ignore_index=True)
     combined['Date'] = pd.to_datetime(combined['Date'])
+    combined = combined.drop_duplicates(subset=['Course', 'Email', 'Date'])
     return combined
 
 
