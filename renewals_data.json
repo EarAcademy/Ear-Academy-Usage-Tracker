@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-31T11:56:57",
-  "generated_label": "31 Aug 2026 at 11:56",
+  "generated_at": "2026-08-31T15:06:23",
+  "generated_label": "31 Aug 2026 at 15:06",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -132,55 +132,10 @@
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1561",
-        "title": "PBC",
-        "account_id": "9964",
-        "account_name": "Plettenberg Bay Christian Primary School",
-        "value_zar": 8050,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
         "deal_id": "1562",
         "title": "Raff Home School",
         "account_id": "9982",
         "account_name": "Raff Home School",
-        "value_zar": 8050,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
-        "deal_id": "1487",
-        "title": "Curro Langebaan",
-        "account_id": "9570",
-        "account_name": "Curro Langebaan Primary School",
-        "value_zar": 8050,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
-        "deal_id": "1413",
-        "title": "Harriston School (Primary)",
-        "account_id": "9627",
-        "account_name": "Harriston School (Primary)",
-        "value_zar": 8050,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
-        "deal_id": "1412",
-        "title": "Hermannsburg School (Primary)",
-        "account_id": "11178",
-        "account_name": "DEUTSCHE SCHULE HERMANNSBURG - SA",
-        "value_zar": 8050,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
-        "deal_id": "1298",
-        "title": "Prescient Primary",
-        "account_id": "8807",
-        "account_name": "Prescient Primary",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
@@ -195,15 +150,6 @@
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1478",
-        "title": "Lebone II College (Primary)",
-        "account_id": "9665",
-        "account_name": "Lebone II College (Primary)",
-        "value_zar": 8050,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
         "deal_id": "1498",
         "title": "Kammaland Primary School",
         "account_id": "9654",
@@ -213,46 +159,46 @@
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1559",
-        "title": "Hazyview Primary School",
-        "account_id": "9936",
-        "account_name": "Hazyview Private Primary School",
+        "deal_id": "1478",
+        "title": "Lebone II College (Primary)",
+        "account_id": "9665",
+        "account_name": "Lebone II College (Primary)",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1577",
-        "title": "East Side",
-        "account_id": "9854",
-        "account_name": "Eastside Primary School",
+        "deal_id": "1298",
+        "title": "Prescient Primary",
+        "account_id": "8807",
+        "account_name": "Prescient Primary",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1647",
-        "title": "Herzlia Weizmann",
-        "account_id": "9631",
-        "account_name": "Herzlia Weizman Primary School",
+        "deal_id": "1412",
+        "title": "Hermannsburg School (Primary)",
+        "account_id": "11178",
+        "account_name": "DEUTSCHE SCHULE HERMANNSBURG - SA",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1626",
-        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-        "account_id": "10960",
-        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "deal_id": "1413",
+        "title": "Harriston School (Primary)",
+        "account_id": "9627",
+        "account_name": "Harriston School (Primary)",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1616",
-        "title": "Sun Valley",
-        "account_id": "427",
-        "account_name": "SUN VALLEY PRIMARY SCHOOL",
+        "deal_id": "1487",
+        "title": "Curro Langebaan",
+        "account_id": "9570",
+        "account_name": "Curro Langebaan Primary School",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
@@ -262,6 +208,15 @@
         "title": "Herzlia Highlands Primary School",
         "account_id": "9630",
         "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
+        "value_zar": 8050,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "1559",
+        "title": "Hazyview Primary School",
+        "account_id": "9936",
+        "account_name": "Hazyview Private Primary School",
         "value_zar": 8050,
         "is_test": false,
         "since": "2026-08-28"
@@ -294,6 +249,51 @@
         "since": "2026-08-28"
       },
       {
+        "deal_id": "1616",
+        "title": "Sun Valley",
+        "account_id": "427",
+        "account_name": "SUN VALLEY PRIMARY SCHOOL",
+        "value_zar": 8050,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "1626",
+        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "account_id": "10960",
+        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "value_zar": 8050,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "1647",
+        "title": "Herzlia Weizmann",
+        "account_id": "9631",
+        "account_name": "Herzlia Weizman Primary School",
+        "value_zar": 8050,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "1561",
+        "title": "PBC",
+        "account_id": "9964",
+        "account_name": "Plettenberg Bay Christian Primary School",
+        "value_zar": 8050,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "1577",
+        "title": "East Side",
+        "account_id": "9854",
+        "account_name": "Eastside Primary School",
+        "value_zar": 8050,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
         "deal_id": "1209",
         "title": "Applewood Preparatory School",
         "account_id": "8773",
@@ -312,28 +312,10 @@
         "since": "2026-08-28"
       },
       {
-        "deal_id": "255",
-        "title": "Danie Ackermann Primary",
-        "account_id": "422",
-        "account_name": "Danie Ackermann Primary",
-        "value_zar": 4750,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
-        "deal_id": "824",
-        "title": "Early Learning Centre",
-        "account_id": "9927",
-        "account_name": "Early Learning Centre",
-        "value_zar": 4750,
-        "is_test": false,
-        "since": "2026-08-28"
-      },
-      {
-        "deal_id": "1537",
-        "title": "Dr. V.D.Ross - C5",
-        "account_id": "9887",
-        "account_name": "DR. Van Der Ross - C5",
+        "deal_id": "1506",
+        "title": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
+        "account_id": "9592",
+        "account_name": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
         "value_zar": 4750,
         "is_test": false,
         "since": "2026-08-28"
@@ -348,10 +330,28 @@
         "since": "2026-08-28"
       },
       {
-        "deal_id": "1506",
-        "title": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
-        "account_id": "9592",
-        "account_name": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
+        "deal_id": "1537",
+        "title": "Dr. V.D.Ross - C5",
+        "account_id": "9887",
+        "account_name": "DR. Van Der Ross - C5",
+        "value_zar": 4750,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "255",
+        "title": "Danie Ackermann Primary",
+        "account_id": "422",
+        "account_name": "Danie Ackermann Primary",
+        "value_zar": 4750,
+        "is_test": false,
+        "since": "2026-08-28"
+      },
+      {
+        "deal_id": "824",
+        "title": "Early Learning Centre",
+        "account_id": "9927",
+        "account_name": "Early Learning Centre",
         "value_zar": 4750,
         "is_test": false,
         "since": "2026-08-28"

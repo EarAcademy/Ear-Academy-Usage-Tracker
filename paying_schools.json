@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-31T11:56:57",
-  "generated_label": "31 Aug 2026 at 11:56",
+  "generated_at": "2026-08-31T15:06:23",
+  "generated_label": "31 Aug 2026 at 15:06",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 52,
+  "count": 53,
   "schools": [
     {
       "deal_id": "1586",
@@ -256,6 +256,15 @@
       "value_zar": 8050,
       "account_id": "9631",
       "account_name": "Herzlia Weizman Primary School"
+    },
+    {
+      "deal_id": "1695",
+      "title": "HILLCREST PRIMARY SCHOOL",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 12000,
+      "account_id": "9740",
+      "account_name": "HILLCREST PRIMARY SCHOOL"
     },
     {
       "deal_id": "1191",
