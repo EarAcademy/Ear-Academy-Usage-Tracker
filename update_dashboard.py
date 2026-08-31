@@ -1974,12 +1974,13 @@ def load_b2c_data():
     folder doesn't exist or has no files yet — the tab renders an empty
     state rather than failing the whole run.
 
-    Shape differs from the school snapshots: each row is one client, with
-    one or more 'Course #N' columns (a client can be enrolled in more than
-    one instrument) and a real per-row 'Date & Time' — NOT a single date
-    for the whole file, since these exports are a running client list
-    rather than a single day's activity. Each non-empty Course #N becomes
-    its own (Course, Email, Date) row.
+    Shape differs from the school snapshots: each row is one client, with a
+    Name, one or more 'Course #N' columns (a client can be enrolled in more
+    than one instrument), and a real per-row 'Date & Time' of their
+    signup/activity — NOT a single date for the whole file, since these
+    exports are a running client list rather than a single day's activity.
+    Returns one row per (Email, Date) — logins are counted per PERSON, not
+    per course, so a client with two courses isn't double-counted.
     """
     if not B2C_FOLDER.exists():
         return None
@@ -1999,6 +2000,9 @@ def load_b2c_data():
             df = pd.read_excel(file_path, sheet_name=sheet)
             email_col, _ = find_column(df.columns, ['email'], 'Email Address')
             date_col,  _ = find_column(df.columns, ['date'],  'Date & Time')
+            name_col,  _ = find_column(df.columns, ['full', 'name'], 'Full Name')
+            first_col, _ = find_column(df.columns, ['first', 'name'], 'First Name')
+            last_col,  _ = find_column(df.columns, ['surname'], 'Surname')
             course_cols = [c for c in df.columns if 'course' in str(c).lower()]
             if not email_col or not date_col or not course_cols:
                 print(f"  ⚠️  B2C: missing Email/Date/Course column(s): {file_path.name}")
@@ -2008,18 +2012,29 @@ def load_b2c_data():
             df['Email']     = df[email_col]
             df['EventDate'] = df[date_col].apply(_parse_b2c_datetime)
 
-            n_before = len(rows)
-            for course_col in course_cols:
-                sub = df[['Email', 'EventDate', course_col]].rename(columns={course_col: 'Course'})
-                sub = sub.dropna(subset=['Course'])
-                sub['Course'] = sub['Course'].astype(str).str.strip()
-                sub = sub[(sub['Course'] != '') & (sub['Course'].str.lower() != 'nan')]
-                sub = sub[sub['EventDate'].notna()]
-                if len(sub):
-                    rows.append(sub.rename(columns={'EventDate': 'Date'})[['Course', 'Email', 'Date']])
+            if name_col:
+                df['Name'] = df[name_col].astype(str).str.strip()
+            elif first_col or last_col:
+                first = df[first_col].astype(str).str.strip() if first_col else ''
+                last  = df[last_col].astype(str).str.strip()  if last_col  else ''
+                df['Name'] = (first + ' ' + last).str.strip()
+            else:
+                df['Name'] = ''
+            df.loc[df['Name'].isin(['', 'nan', 'nan nan']), 'Name'] = df['Email']
 
-            n_added = sum(len(r) for r in rows[n_before:])
-            print(f"  ✓ B2C  – {file_path.name}  ({len(df)} clients, {n_added} enrollment rows)")
+            def _courses(row):
+                vals = []
+                for c in course_cols:
+                    v = row[c]
+                    if pd.notna(v) and str(v).strip() and str(v).strip().lower() != 'nan':
+                        vals.append(str(v).strip())
+                return ', '.join(vals)
+            df['Courses'] = df.apply(_courses, axis=1)
+
+            df = df[df['EventDate'].notna()]
+            if len(df):
+                rows.append(df.rename(columns={'EventDate': 'Date'})[['Email', 'Name', 'Courses', 'Date']])
+            print(f"  ✓ B2C  – {file_path.name}  ({len(df)} clients)")
         except Exception as e:
             print(f"  ⚠️  B2C: error reading {file_path.name}: {e}")
 
@@ -2027,13 +2042,14 @@ def load_b2c_data():
         return None
     combined = pd.concat(rows, ignore_index=True)
     combined['Date'] = pd.to_datetime(combined['Date'])
-    combined = combined.drop_duplicates(subset=['Course', 'Email', 'Date'])
+    combined = combined.drop_duplicates(subset=['Email', 'Date'])
     return combined
 
 
 def calc_b2c_clients(b2c):
-    """Weekly login heatmap + summary for B2C clients, grouped by the
-    instrumental course they signed up for."""
+    """Weekly login heatmap + summary for B2C clients, one row per PERSON
+    (their course(s) shown as an attribute, not the grouping key — we're
+    counting a client's logins, not a course's)."""
     if b2c is None or b2c.empty:
         return None
 
@@ -2043,38 +2059,44 @@ def calc_b2c_clients(b2c):
     weeks_iso    = [pd.Timestamp(w).strftime('%Y-%m-%d') for w in weeks_sorted]
     latest_week  = pd.Timestamp(weeks_sorted[-1])
 
-    base = df.drop_duplicates(subset=['Course', 'Email', 'Date'])
-    per_week = (base.groupby(['Course', 'WeekStart'])['Email'].count()
-                    .reset_index().rename(columns={'Email': 'logins'}))
+    base = df.drop_duplicates(subset=['Email', 'Date'])
+    per_week = (base.groupby(['Email', 'WeekStart'])['Date'].count()
+                    .reset_index().rename(columns={'Date': 'logins'}))
 
-    courses_out = []
-    for course, rows in base.groupby('Course'):
-        wk = per_week[per_week['Course'] == course]
+    all_courses = set()
+    clients_out = []
+    for email, rows in base.groupby('Email'):
+        wk = per_week[per_week['Email'] == email]
         d_map = {pd.Timestamp(w).strftime('%Y-%m-%d'): int(n)
                  for w, n in zip(wk['WeekStart'], wk['logins'])}
         tl = sum(d_map.values())
         uw = len(d_map)
-        nc = rows['Email'].nunique()
+        name = rows.sort_values('Date')['Name'].iloc[-1]
+        courses = set()
+        for c in rows['Courses']:
+            courses.update(p.strip() for p in str(c).split(',') if p.strip())
+        all_courses.update(courses)
+        course_label = ', '.join(sorted(courses)) if courses else '—'
         last_week = pd.Timestamp(rows['WeekStart'].max())
         weeks_since_last = int((latest_week - last_week).days // 7)
         last_seen = strf(pd.Timestamp(rows['Date'].max()), '%-d %b %Y')
-        courses_out.append({
-            'c': course, 'tl': tl, 'uw': uw, 'nc': int(nc),
+        clients_out.append({
+            'n': name, 'course': course_label, 'tl': tl, 'uw': uw,
             'last': last_seen, 'dormant': weeks_since_last >= 6,
             'd': d_map,
         })
 
-    courses_out.sort(key=lambda x: (-x['tl'], x['c'].lower()))
+    clients_out.sort(key=lambda x: (-x['tl'], x['n'].lower()))
 
     return {
         'weeks': weeks_iso,
-        'courses': courses_out,
+        'clients': clients_out,
         'totals': {
-            'courses_tracked': len(courses_out),
-            'total_clients':   int(base['Email'].nunique()),
-            'total_logins':    sum(c['tl'] for c in courses_out),
-            'active_recently': sum(1 for c in courses_out if not c['dormant']),
-            'dormant':         sum(1 for c in courses_out if c['dormant']),
+            'total_clients':   len(clients_out),
+            'courses_tracked': len(all_courses),
+            'total_logins':    sum(c['tl'] for c in clients_out),
+            'active_recently': sum(1 for c in clients_out if not c['dormant']),
+            'dormant':         sum(1 for c in clients_out if c['dormant']),
         },
         'date_range_label': f"{strf(pd.Timestamp(df['Date'].min()), '%-d %b')} – "
                             f"{strf(pd.Timestamp(df['Date'].max()), '%-d %b %Y')}",
@@ -2083,7 +2105,7 @@ def calc_b2c_clients(b2c):
 
 def build_b2c_html(b):
     """Visible HTML block for the B2C Clients tab (between B2C_BLOCK markers)."""
-    if not b or not b['courses']:
+    if not b or not b['clients']:
         return ('<h2 class="section-title pacific">🎻 B2C Clients</h2>\n'
                 '<p class="section-desc">No B2C client activity yet — drop usage exports '
                 f'into {B2C_FOLDER}/ (same format as a daily snapshot) to populate this tab.</p>')
@@ -2092,15 +2114,15 @@ def build_b2c_html(b):
         <p class="section-desc">Individual clients signed up for a specific instrumental course · tracked separately from paying schools</p>
 
         <div class="pt-summary-grid">
-            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{t['courses_tracked']}</div><div class="pt-card-label">Courses tracked</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--gold2)"></div><div class="pt-card-num">{t['total_clients']}</div><div class="pt-card-label">Total clients</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{t['courses_tracked']}</div><div class="pt-card-label">Courses tracked</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">{t['total_logins']}</div><div class="pt-card-label">Total logins</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">{t['active_recently']}</div><div class="pt-card-label">Active (last 6 wks)</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">{t['dormant']}</div><div class="pt-card-label">Dormant 6+ wks</div></div>
         </div>
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
-            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{len(b['courses'])}</strong> courses &nbsp;·&nbsp; Heatmap: {b['date_range_label']}</div>
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{len(b['clients'])}</strong> clients &nbsp;·&nbsp; Heatmap: {b['date_range_label']}</div>
             <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
                 <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
                 <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
@@ -2110,7 +2132,7 @@ def build_b2c_html(b):
         </div>
 
         <div class="pt-table-header">
-            <div>Course</div>
+            <div>Client</div>
             <div id="b2c-week-headers" style="display:flex;gap:3px;"></div>
             <div>Last seen</div>
         </div>
@@ -2122,7 +2144,7 @@ def build_b2c_js(b):
     if not b:
         return 'var B2C_WEEKS=[];var B2C_COURSES=[];'
     return (f"var B2C_WEEKS={json.dumps(b['weeks'])};\n"
-            f"var B2C_COURSES={json.dumps(b['courses'], ensure_ascii=False)};")
+            f"var B2C_COURSES={json.dumps(b['clients'], ensure_ascii=False)};")
 
 
 # ── End-of-run "what happened" report ──────────────────────────────────────────
