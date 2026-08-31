@@ -54,9 +54,23 @@ S_DEMO        = "43"   # Pipeline 5 → Demo/Pilot
 S_NEGOTIATION = "46"   # Pipeline 5 → Negotiation
 S_ONBOARDING  = "50"   # Pipeline 6 → Onboarding
 S_ACTIVATED   = "51"   # Pipeline 6 → Activated
+S_UPCOMING_RENEWAL = "52"   # Pipeline 6 → Upcoming Renewal (still a paying customer)
+S_RENEWED          = "70"   # Pipeline 6 → Renewed (still a paying customer)
+
+# Paying-customer stages: any deal in one of these still counts as an active
+# paying school. Excludes Low Activity (53), Churning (54), Lost (55) — those
+# are genuinely at-risk/gone, not just mid-renewal-cycle.
+PAYING_STAGES = (S_ONBOARDING, S_ACTIVATED, S_UPCOMING_RENEWAL, S_RENEWED)
 
 OPEN = "0"
 WON  = "1"
+
+
+def _is_test_deal(title):
+    """True for automation/debug deals (e.g. the renewal-automation Zap's
+    test fixtures), which must never be counted as real paying schools or
+    real revenue. Matches the 'ZZZ ...' naming convention used for them."""
+    return (title or "").strip().upper().startswith("ZZZ")
 
 
 # ── AC API helpers ─────────────────────────────────────────────────────────────
@@ -247,6 +261,8 @@ def calculate_arr_tiers(won_deals):
     }
 
     for deal in won_deals:
+        if _is_test_deal(deal.get("title")):
+            continue
         try:
             value_zar = int(deal.get("value", 0)) / 100  # cents → ZAR
         except (ValueError, TypeError):
@@ -321,9 +337,10 @@ def build_paying_schools_roster(cam_deals):
 
     Filters (per system policy):
       • currency == ZAR
-      • stage in {Onboarding (50), Activated (51)}
+      • stage in PAYING_STAGES (Onboarding, Activated, Upcoming Renewal, Renewed)
       • exclude B2C accounts (deal title or account name contains 'B2C',
         case-insensitive) — these are individual subscribers, not schools.
+      • exclude automation test/debug deals (title starts with 'ZZZ')
 
     Returns a list of dicts with deal + account info. Sorted by title.
     """
@@ -331,10 +348,10 @@ def build_paying_schools_roster(cam_deals):
     for d in cam_deals:
         if (d.get("currency") or "").lower() != "zar":
             continue
-        if str(d.get("stage")) not in (S_ONBOARDING, S_ACTIVATED):
+        if str(d.get("stage")) not in PAYING_STAGES:
             continue
         title = (d.get("title") or "").strip()
-        if "b2c" in title.lower():
+        if "b2c" in title.lower() or _is_test_deal(title):
             continue
         matching.append(d)
 
@@ -357,9 +374,11 @@ def build_paying_schools_roster(cam_deals):
             value_zar = 0
 
         stage_id    = str(d.get("stage"))
-        stage_label = "Activated"   if stage_id == S_ACTIVATED  \
-                 else "Onboarding"  if stage_id == S_ONBOARDING \
-                 else stage_id
+        stage_label = ("Activated"         if stage_id == S_ACTIVATED         else
+                       "Onboarding"        if stage_id == S_ONBOARDING        else
+                       "Upcoming Renewal"  if stage_id == S_UPCOMING_RENEWAL  else
+                       "Renewed"           if stage_id == S_RENEWED           else
+                       stage_id)
 
         roster.append({
             "deal_id":      str(d.get("id", "")),
@@ -420,12 +439,16 @@ def main(no_push=False):
     negotiation   = count_by_stage(conv_deals, S_NEGOTIATION)
     onboarding    = count_by_stage(cam_all,    S_ONBOARDING)
     activated     = count_by_stage(cam_all,    S_ACTIVATED)
-    customers     = onboarding + activated   # total paying schools
+    upcoming_renewal = count_by_stage(cam_all, S_UPCOMING_RENEWAL)
+    renewed           = count_by_stage(cam_all, S_RENEWED)
+    customers     = onboarding + activated + upcoming_renewal + renewed   # total paying schools
 
     print(f"    Sales Qualification (New Lead): {qualification}")
     print(f"    Sales Conversion    (Demo):     {demo}")
     print(f"    Sales Conversion    (Neg):      {negotiation}")
-    print(f"    Customer Acc Mgmt   (Total):    {customers}  ({onboarding} onboarding + {activated} activated)")
+    print(f"    Customer Acc Mgmt   (Total):    {customers}  "
+          f"({onboarding} onboarding + {activated} activated + "
+          f"{upcoming_renewal} upcoming renewal + {renewed} renewed)")
 
     # ── 2. Monthly new leads & deals ─────────────────────────────────────────
     print("\n📅  Monthly activity (leads & deals from AC — Product Demos stay in HTML):")
@@ -452,9 +475,15 @@ def main(no_push=False):
     lost_deals = fetch_lost_deals_pipeline5()
 
     # ── 4b. Paying-schools roster (canonical list for usage dashboard) ───────
-    print("\n🏫  Building paying-schools roster (Pipeline 6, stages 50+51, ZAR, no B2C)…")
+    print("\n🏫  Building paying-schools roster "
+          "(Pipeline 6, stages 50/51/52/70, ZAR, no B2C, no test deals)…")
     roster = build_paying_schools_roster(cam_all)
     print(f"    → {len(roster)} paying schools in roster")
+
+    # The roster applies the B2C + test-deal exclusions that the raw stage
+    # count above doesn't — use it as the customer count so pipeline_data.json
+    # (and investor.html's headline number) match the usage dashboard exactly.
+    customers = len(roster)
 
     # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
@@ -501,14 +530,16 @@ def main(no_push=False):
             "monthly_deals":  "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
             "product_demos":  "Manually tracked — edit the Product Demos row in investor.html directly",
             "schools_list":   "Manually maintained — edit the school pills in investor.html directly",
-            "customers":      f"Onboarding ({onboarding}) + Activated ({activated}) in Pipeline 6",
-            "arr_tiers":      "Won ZAR deals in Pipeline 6, bucketed by annual value (cents ÷ 100)",
+            "customers":      f"Onboarding ({onboarding}) + Activated ({activated}) + "
+                               f"Upcoming Renewal ({upcoming_renewal}) + Renewed ({renewed}) in "
+                               f"Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+            "arr_tiers":      "Won ZAR deals in Pipeline 6, bucketed by annual value (cents ÷ 100), excludes automation test deals",
             "lost_deals":     "Lost deals in Pipeline 5 (Sales Conversion) only — excludes Pipeline 4 qualification rejections",
         }
     }
 
     # ── 6. Write JSON ────────────────────────────────────────────────────────
-    with open(JSON_FILE, "w") as f:
+    with open(JSON_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
     print(f"\n✅  pipeline_data.json updated ({timestamp})")
 
@@ -518,14 +549,16 @@ def main(no_push=False):
         "generated_label": timestamp,
         "filter": {
             "pipeline":        P_CAM,
-            "stages":          [f"{S_ONBOARDING} (Onboarding)", f"{S_ACTIVATED} (Activated)"],
+            "stages":          [f"{S_ONBOARDING} (Onboarding)", f"{S_ACTIVATED} (Activated)",
+                                 f"{S_UPCOMING_RENEWAL} (Upcoming Renewal)", f"{S_RENEWED} (Renewed)"],
             "currency":        "zar",
-            "exclude":         "B2C accounts (deal title or account name contains 'B2C')",
+            "exclude":         "B2C accounts (deal title or account name contains 'B2C'); "
+                                "automation test deals (title starts with 'ZZZ')",
         },
         "count":   len(roster),
         "schools": roster,
     }
-    with open(ROSTER_FILE, "w") as f:
+    with open(ROSTER_FILE, "w", encoding="utf-8") as f:
         json.dump(roster_data, f, indent=2, ensure_ascii=False)
     print(f"✅  paying_schools.json updated ({len(roster)} schools)")
 

@@ -1,9 +1,9 @@
 {
   "pipeline": {
-    "qualification": 177,
+    "qualification": 175,
     "demo": 18,
     "negotiation": 21,
-    "customers": 27
+    "customers": 52
   },
   "monthly": {
     "jan": {
@@ -21,8 +21,8 @@
   },
   "email": {
     "sent": "1856",
-    "replied": "1443",
-    "rate": "77.7%",
+    "replied": "1444",
+    "rate": "77.8%",
     "new_contacts": "36"
   },
   "arr_tiers": {
@@ -43,23 +43,23 @@
     },
     "tier4": {
       "label": "R20k+",
-      "count": 14,
-      "revenue": 284100.0
+      "count": 3,
+      "revenue": 64100.0
     }
   },
   "lost_deals": {
     "count": 19,
     "total_value": 148144.0
   },
-  "last_updated": "31 Aug 2026 at 09:45",
+  "last_updated": "31 Aug 2026 at 10:07",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (1) + Activated (26) in Pipeline 6",
-    "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100)",
+    "customers": "Onboarding (1) + Activated (26) + Upcoming Renewal (32) + Renewed (5) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }
 }
