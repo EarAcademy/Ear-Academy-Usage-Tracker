@@ -403,25 +403,23 @@ def build_paying_schools_roster(cam_deals):
 RENEWALS_INCLUDE_TEST_DEALS = True
 
 
-def build_renewals_data(cam_all):
-    """Confirmed renewals: Pipeline 6 deals in the 'Renewed' stage ONLY --
-    the stage that confirms a school's renewal actually went through (not
-    'Upcoming Renewal', which just means the cycle is approaching).
-
+def _build_stage_deal_list(cam_all, stage_id, date_field):
+    """Shared filter/shape logic for a single Pipeline 6 stage's deal list.
     Same currency/B2C exclusions as the paying-schools roster. Test-deal
-    exclusion is gated by RENEWALS_INCLUDE_TEST_DEALS (see above) -- every
-    OTHER consumer of _is_test_deal() (roster, ARR tiers, customer count)
-    always excludes them regardless of this flag.
+    exclusion is gated by RENEWALS_INCLUDE_TEST_DEALS -- every OTHER
+    consumer of _is_test_deal() (roster, ARR tiers, customer count) always
+    excludes them regardless of this flag.
 
-    'renewed_on' is the deal's last-modified date (AC doesn't expose a
-    stage-entry timestamp directly) -- a reasonable proxy since moving a
-    deal into Renewed is normally the last thing that happens to it.
+    `date_field` names the output date key (e.g. 'renewed_on') and is
+    filled from the deal's last-modified date -- AC doesn't expose a
+    stage-entry timestamp directly, so this is a proxy for "since when
+    has this deal been in this stage".
     """
     matching = []
     for d in cam_all:
         if (d.get("currency") or "").lower() != "zar":
             continue
-        if str(d.get("stage")) != S_RENEWED:
+        if str(d.get("stage")) != stage_id:
             continue
         title = (d.get("title") or "").strip()
         if "b2c" in title.lower():
@@ -433,7 +431,7 @@ def build_renewals_data(cam_all):
     account_ids   = {str(d.get("account")) for d in matching if d.get("account")}
     account_names = fetch_account_names(account_ids)
 
-    renewals = []
+    out = []
     for d in matching:
         aid   = str(d.get("account")) if d.get("account") else None
         aname = account_names.get(aid, "") if aid else ""
@@ -446,18 +444,33 @@ def build_renewals_data(cam_all):
         except (ValueError, TypeError):
             value_zar = 0
 
-        renewals.append({
+        out.append({
             "deal_id":      str(d.get("id", "")),
             "title":        title,
             "account_id":   aid,
             "account_name": aname or None,
             "value_zar":    int(value_zar),
             "is_test":      _is_test_deal(title),
-            "renewed_on":   (d.get("mdate") or "")[:10] or None,
+            date_field:     (d.get("mdate") or "")[:10] or None,
         })
 
-    renewals.sort(key=lambda r: r["renewed_on"] or "", reverse=True)
-    return renewals
+    out.sort(key=lambda r: r[date_field] or "", reverse=True)
+    return out
+
+
+def build_renewals_data(cam_all):
+    """Confirmed renewals: Pipeline 6 deals in the 'Renewed' stage ONLY --
+    the stage that confirms a school's renewal actually went through (not
+    'Upcoming Renewal', which just means the cycle is approaching)."""
+    return _build_stage_deal_list(cam_all, S_RENEWED, "renewed_on")
+
+
+def build_upcoming_renewals_data(cam_all):
+    """Schools due for renewal: Pipeline 6 deals in 'Upcoming Renewal' --
+    the cycle is approaching but NOT yet confirmed. 'since' is when the
+    deal was last modified (proxy for when it entered this stage), not an
+    actual renewal due-date -- AC doesn't expose one on these deals."""
+    return _build_stage_deal_list(cam_all, S_UPCOMING_RENEWAL, "since")
 
 
 # ── Main ───────────────────────────────────────────────────────────────────────
@@ -555,6 +568,10 @@ def main(no_push=False):
     print("\n🔁  Building renewals list (Pipeline 6, stage 70 'Renewed' only)…")
     renewals = build_renewals_data(cam_all)
     print(f"    → {len(renewals)} confirmed renewals")
+
+    print("⏳  Building upcoming-renewals list (Pipeline 6, stage 52 'Upcoming Renewal')…")
+    upcoming_renewals = build_upcoming_renewals_data(cam_all)
+    print(f"    → {len(upcoming_renewals)} due for renewal")
 
     # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
@@ -654,10 +671,23 @@ def main(no_push=False):
         "count":            len(renewals),
         "total_value_zar":  sum(r["value_zar"] for r in renewals),
         "renewals":         renewals,
+        "upcoming": {
+            "filter": {
+                "pipeline": P_CAM,
+                "stage":    f"{S_UPCOMING_RENEWAL} (Upcoming Renewal) only",
+                "currency": "zar",
+                "note":     "Renewal cycle approaching but NOT yet confirmed -- "
+                            "these schools are still active paying customers.",
+            },
+            "count":           len(upcoming_renewals),
+            "total_value_zar": sum(r["value_zar"] for r in upcoming_renewals),
+            "schools":         upcoming_renewals,
+        },
     }
     with open(RENEWALS_FILE, "w", encoding="utf-8") as f:
         json.dump(renewals_data, f, indent=2, ensure_ascii=False)
-    print(f"✅  renewals_data.json updated ({len(renewals)} confirmed renewals)")
+    print(f"✅  renewals_data.json updated "
+          f"({len(renewals)} confirmed, {len(upcoming_renewals)} due for renewal)")
 
     # ── 7. Git commit & push ─────────────────────────────────────────────────
     if no_push:

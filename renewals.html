@@ -25,12 +25,13 @@
   .slabel{font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;color:var(--lapis);letter-spacing:.3px;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem}
   .slabel::after{content:'';flex:1;height:1px;background:var(--lgray)}
   /* HERO */
-  .hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-bottom:2rem}
+  .hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-bottom:2rem}
   .hcard{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.4rem 1.6rem;border-left:4px solid var(--lgray)}
-  .hcard.green{border-left-color:var(--green)}.hcard.lapis{border-left-color:var(--lapis)}.hcard.blue{border-left-color:var(--sky)}
+  .hcard.green{border-left-color:var(--green)}.hcard.lapis{border-left-color:var(--lapis)}.hcard.blue{border-left-color:var(--sky)}.hcard.amber{border-left-color:var(--amber)}
   .hlabel{font-size:.72rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px}
   .hval{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:var(--dark);line-height:1.1;margin:.25rem 0 .2rem}
   .hval.green{color:var(--green)}
+  .hval.amber{color:var(--amber)}
   .hsub2{font-size:.75rem;color:var(--gray);line-height:1.4}
   /* NOTE BOX */
   .notebox{background:linear-gradient(135deg,#eef4fb,#f5f1ed);border:1px solid #c8ddf0;border-radius:var(--radius);padding:1.1rem 1.5rem;margin-bottom:2rem;font-size:.82rem;color:var(--gray);line-height:1.6}
@@ -76,18 +77,22 @@
 <main class="main">
 
 <div class="hgrid">
+  <div class="hcard amber"><div class="hlabel">Due For Renewal</div><div class="hval amber" id="h-due-count">—</div><div class="hsub2" id="h-due-value">—</div></div>
   <div class="hcard green"><div class="hlabel">Confirmed Renewals</div><div class="hval green" id="h-count">—</div><div class="hsub2">Schools in the "Renewed" stage</div></div>
   <div class="hcard lapis"><div class="hlabel">Total Renewal Value</div><div class="hval" id="h-value">—</div><div class="hsub2">Annual ZAR, confirmed renewals only</div></div>
   <div class="hcard blue"><div class="hlabel">Renewed This Month</div><div class="hval" id="h-month">—</div><div class="hsub2" id="h-month-sub">—</div></div>
 </div>
 
 <div id="test-banner" style="display:none;background:#fff3e0;border:1px solid #f0c674;border-left:4px solid var(--amber);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.25rem;font-size:.85rem;color:#7a5a0a;">
-  ⚠️ <strong>Showing placeholder test data.</strong> No real school has confirmed a renewal yet — the rows below are the renewal automation's own test fixtures, kept visible here temporarily so the page can be reviewed with realistic data. They'll be swapped out once real renewals start landing.
+  ⚠️ <strong>Showing placeholder test data.</strong> No real school has confirmed a renewal yet — some rows below are the renewal automation's own test fixtures, kept visible here temporarily so the page can be reviewed with realistic data. They'll be swapped out once real renewals start landing.
 </div>
 
 <div class="notebox">
-  <strong>What counts as a confirmed renewal:</strong> only deals ActiveCampaign has moved into the Pipeline 6 <strong>"Renewed"</strong> stage. Schools in <strong>"Upcoming Renewal"</strong> are approaching their renewal date but haven't confirmed yet — they won't appear here until the renewal actually goes through. B2C accounts are excluded.
+  <strong>Due for renewal</strong> = Pipeline 6 deals in <strong>"Upcoming Renewal"</strong> — the cycle is approaching but not yet confirmed; these schools are still active paying customers. <strong>Confirmed renewals</strong> = deals ActiveCampaign has actually moved into the <strong>"Renewed"</strong> stage. B2C accounts are excluded from both.
 </div>
+
+<div class="slabel">Due For Renewal</div>
+<div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>In Stage Since</th><th>Value</th></tr></thead><tbody id="utbody"></tbody></table></div></div>
 
 <div class="slabel">Confirmed Renewals</div>
 <div class="card" style="margin-bottom:2rem"><div class="tw"><table class="dt"><thead><tr><th>School</th><th>Renewed On</th><th>Value</th></tr></thead><tbody id="rtbody"></tbody></table></div></div>
@@ -103,21 +108,31 @@ function fmtDate(iso){
   if(isNaN(d)) return '—';
   return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 }
-function emptyRow(){
-  return '<tr><td colspan="3" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">No confirmed renewals yet. Schools will appear here once ActiveCampaign moves their deal into the "Renewed" stage.</td></tr>';
+function emptyRow(msg){
+  return `<tr><td colspan="3" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">${msg}</td></tr>`;
+}
+function testTag(r){
+  return r.is_test ? ' <span class="bdg" style="background:#fff3e0;color:#b8760a;margin-left:6px">TEST</span>' : '';
 }
 function renewalRow(r){
-  const testTag = r.is_test ? ' <span class="bdg" style="background:#fff3e0;color:#b8760a;margin-left:6px">TEST</span>' : '';
-  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag}</div></td><td><span class="bdg">${fmtDate(r.renewed_on)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td><span class="bdg">${fmtDate(r.renewed_on)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
+}
+function upcomingRow(r){
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td><span class="bdg" style="background:#fff3e0;color:#b8760a">${fmtDate(r.since)}</span></td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td></tr>`;
 }
 
 fetch('renewals_data.json?v=' + Date.now())
   .then(r => r.json())
   .then(d => {
     const renewals = d.renewals || [];
+    const upcoming = (d.upcoming && d.upcoming.schools) || [];
+
     document.getElementById('h-count').textContent = d.count ?? renewals.length;
     document.getElementById('h-value').textContent = zarRand(d.total_value_zar);
-    if (d.test_data_included && renewals.some(r => r.is_test)) {
+    document.getElementById('h-due-count').textContent = (d.upcoming && d.upcoming.count) ?? upcoming.length;
+    document.getElementById('h-due-value').textContent = zarRand(d.upcoming && d.upcoming.total_value_zar) + ' annual ZAR at stake';
+
+    if (d.test_data_included && (renewals.some(r => r.is_test) || upcoming.some(r => r.is_test))) {
       document.getElementById('test-banner').style.display = 'block';
     }
 
@@ -132,7 +147,11 @@ fetch('renewals_data.json?v=' + Date.now())
 
     document.getElementById('rtbody').innerHTML = renewals.length
       ? renewals.map(renewalRow).join('')
-      : emptyRow();
+      : emptyRow('No confirmed renewals yet. Schools will appear here once ActiveCampaign moves their deal into the "Renewed" stage.');
+
+    document.getElementById('utbody').innerHTML = upcoming.length
+      ? upcoming.map(upcomingRow).join('')
+      : emptyRow('No schools currently due for renewal.');
 
     if (d.generated_label) {
       document.getElementById('hdate').textContent = 'Updated ' + d.generated_label;
@@ -142,8 +161,11 @@ fetch('renewals_data.json?v=' + Date.now())
   .catch(() => {
     document.getElementById('h-count').textContent = '—';
     document.getElementById('h-value').textContent = '—';
+    document.getElementById('h-due-count').textContent = '—';
+    document.getElementById('h-due-value').textContent = '—';
     document.getElementById('h-month').textContent = '—';
-    document.getElementById('rtbody').innerHTML = emptyRow();
+    document.getElementById('rtbody').innerHTML = emptyRow('renewals_data.json not found.');
+    document.getElementById('utbody').innerHTML = emptyRow('renewals_data.json not found.');
     document.getElementById('hdate').textContent = 'renewals_data.json not found';
   });
 </script>
