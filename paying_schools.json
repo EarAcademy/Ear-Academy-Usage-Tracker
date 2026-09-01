@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-31T15:17:59",
-  "generated_label": "31 Aug 2026 at 15:17",
+  "generated_at": "2026-09-01T15:22:02",
+  "generated_label": "01 Sep 2026 at 15:22",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 53,
+  "count": 56,
   "schools": [
     {
       "deal_id": "1586",
@@ -76,6 +76,33 @@
       "value_zar": 8050,
       "account_id": "9981",
       "account_name": "Bay Primary"
+    },
+    {
+      "deal_id": "1854",
+      "title": "Bob Test 1",
+      "stage": "Renewed",
+      "stage_id": "70",
+      "value_zar": 12000,
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation"
+    },
+    {
+      "deal_id": "1855",
+      "title": "Bob Test 2",
+      "stage": "Renewed",
+      "stage_id": "70",
+      "value_zar": 12000,
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation"
+    },
+    {
+      "deal_id": "1856",
+      "title": "Bob Test 3",
+      "stage": "Renewed",
+      "stage_id": "70",
+      "value_zar": 12000,
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation"
     },
     {
       "deal_id": "143",

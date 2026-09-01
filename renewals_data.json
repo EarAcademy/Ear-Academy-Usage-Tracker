@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-31T15:17:59",
-  "generated_label": "31 Aug 2026 at 15:17",
+  "generated_at": "2026-09-01T15:22:02",
+  "generated_label": "01 Sep 2026 at 15:22",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,9 +9,20 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": true,
-  "count": 5,
-  "total_value_zar": 100000,
+  "count": 10,
+  "total_value_zar": 160000,
   "renewals": [
+    {
+      "deal_id": "1841",
+      "title": "ZZZ TEST T1b - Happy Path Quote Retest",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 20000,
+      "is_test": true,
+      "renewal_date": "2027-08-28",
+      "access_end_date": "2027-08-28",
+      "renewed_on": "2027-08-28"
+    },
     {
       "deal_id": "1834",
       "title": "ZZZ TEST T1 - Happy Path Quote (no prior invoice)",
@@ -24,15 +35,48 @@
       "renewed_on": "2027-08-28"
     },
     {
-      "deal_id": "1841",
-      "title": "ZZZ TEST T1b - Happy Path Quote Retest",
+      "deal_id": "1856",
+      "title": "Bob Test 3",
       "account_id": "11752",
       "account_name": "ZZZ TEST School - Renewal Automation",
-      "value_zar": 20000,
+      "value_zar": 12000,
+      "is_test": false,
+      "renewal_date": "2026-09-01",
+      "access_end_date": null,
+      "renewed_on": "2026-09-01"
+    },
+    {
+      "deal_id": "1855",
+      "title": "Bob Test 2",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 12000,
+      "is_test": false,
+      "renewal_date": "2026-09-01",
+      "access_end_date": null,
+      "renewed_on": "2026-09-01"
+    },
+    {
+      "deal_id": "1854",
+      "title": "Bob Test 1",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 12000,
+      "is_test": false,
+      "renewal_date": "2026-09-01",
+      "access_end_date": null,
+      "renewed_on": "2026-09-01"
+    },
+    {
+      "deal_id": "1851",
+      "title": "ZZZ TEST R2-D - Zap2 Renewal Invoice",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 12000,
       "is_test": true,
-      "renewal_date": "2027-08-28",
-      "access_end_date": "2027-08-28",
-      "renewed_on": "2027-08-28"
+      "renewal_date": "2026-09-01",
+      "access_end_date": "2027-09-01",
+      "renewed_on": "2026-09-01"
     },
     {
       "deal_id": "1836",
@@ -46,8 +90,19 @@
       "renewed_on": "2026-08-28"
     },
     {
-      "deal_id": "1837",
-      "title": "ZZZ TEST T4 - Zap1b Auto-Renew Eligible",
+      "deal_id": "1850",
+      "title": "ZZZ TEST R2-C - Zap1b AutoRenew",
+      "account_id": "11752",
+      "account_name": "ZZZ TEST School - Renewal Automation",
+      "value_zar": 12000,
+      "is_test": true,
+      "renewal_date": "2026-08-25",
+      "access_end_date": "2026-09-25",
+      "renewed_on": "2026-08-25"
+    },
+    {
+      "deal_id": "1843",
+      "title": "ZZZ TEST T4b - Zap1b Auto-Renew Retest",
       "account_id": "11752",
       "account_name": "ZZZ TEST School - Renewal Automation",
       "value_zar": 20000,
@@ -57,8 +112,8 @@
       "renewed_on": "2026-08-20"
     },
     {
-      "deal_id": "1843",
-      "title": "ZZZ TEST T4b - Zap1b Auto-Renew Retest",
+      "deal_id": "1837",
+      "title": "ZZZ TEST T4 - Zap1b Auto-Renew Eligible",
       "account_id": "11752",
       "account_name": "ZZZ TEST School - Renewal Automation",
       "value_zar": 20000,
@@ -75,9 +130,20 @@
       "currency": "zar",
       "note": "Renewal cycle approaching but NOT yet confirmed -- these schools are still active paying customers."
     },
-    "count": 32,
-    "total_value_zar": 298330,
+    "count": 33,
+    "total_value_zar": 310330,
     "schools": [
+      {
+        "deal_id": "1848",
+        "title": "ZZZ TEST R2-A - Zap1 Flag Activated",
+        "account_id": "11752",
+        "account_name": "ZZZ TEST School - Renewal Automation",
+        "value_zar": 12000,
+        "is_test": true,
+        "renewal_date": "2026-11-30",
+        "access_end_date": "2026-12-31",
+        "since": "2026-11-30"
+      },
       {
         "deal_id": "778",
         "title": "Herzlia Renewal 2025",
@@ -145,21 +211,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1562",
-        "title": "Raff Home School",
-        "account_id": "9982",
-        "account_name": "Raff Home School",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "584",
-        "title": "Reddam House Helderfontein",
-        "account_id": "244",
-        "account_name": "Reddam House Helderfontein",
+        "deal_id": "1478",
+        "title": "Lebone II College (Primary)",
+        "account_id": "9665",
+        "account_name": "Lebone II College (Primary)",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -178,10 +233,21 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1478",
-        "title": "Lebone II College (Primary)",
-        "account_id": "9665",
-        "account_name": "Lebone II College (Primary)",
+        "deal_id": "1616",
+        "title": "Sun Valley",
+        "account_id": "427",
+        "account_name": "SUN VALLEY PRIMARY SCHOOL",
+        "value_zar": 8050,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1543",
+        "title": "St Martin's Prep",
+        "account_id": "9829",
+        "account_name": "St Martin's Preparatory School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -233,10 +299,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1595",
-        "title": "Herzlia Highlands Primary School",
-        "account_id": "9630",
-        "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
+        "deal_id": "1557",
+        "title": "Bay Primary",
+        "account_id": "9981",
+        "account_name": "Bay Primary",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -255,10 +321,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1557",
-        "title": "Bay Primary",
-        "account_id": "9981",
-        "account_name": "Bay Primary",
+        "deal_id": "1561",
+        "title": "PBC",
+        "account_id": "9964",
+        "account_name": "Plettenberg Bay Christian Primary School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -266,10 +332,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1543",
-        "title": "St Martin's Prep",
-        "account_id": "9829",
-        "account_name": "St Martin's Preparatory School",
+        "deal_id": "1562",
+        "title": "Raff Home School",
+        "account_id": "9982",
+        "account_name": "Raff Home School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -277,10 +343,21 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1616",
-        "title": "Sun Valley",
-        "account_id": "427",
-        "account_name": "SUN VALLEY PRIMARY SCHOOL",
+        "deal_id": "1577",
+        "title": "East Side",
+        "account_id": "9854",
+        "account_name": "Eastside Primary School",
+        "value_zar": 8050,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1595",
+        "title": "Herzlia Highlands Primary School",
+        "account_id": "9630",
+        "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -310,21 +387,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1561",
-        "title": "PBC",
-        "account_id": "9964",
-        "account_name": "Plettenberg Bay Christian Primary School",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1577",
-        "title": "East Side",
-        "account_id": "9854",
-        "account_name": "Eastside Primary School",
+        "deal_id": "584",
+        "title": "Reddam House Helderfontein",
+        "account_id": "244",
+        "account_name": "Reddam House Helderfontein",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -337,6 +403,28 @@
         "account_id": "8773",
         "account_name": "APPLEWOOD PREPARATORY SCHOOL",
         "value_zar": 4830,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1537",
+        "title": "Dr. V.D.Ross - C5",
+        "account_id": "9887",
+        "account_name": "DR. Van Der Ross - C5",
+        "value_zar": 4750,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1536",
+        "title": "Vergenoegd PS - C5",
+        "account_id": "9888",
+        "account_name": "Vergenoegd - C5",
+        "value_zar": 4750,
         "is_test": false,
         "renewal_date": "2026-10-12",
         "access_end_date": "2026-12-31",
@@ -358,28 +446,6 @@
         "title": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
         "account_id": "9592",
         "account_name": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)",
-        "value_zar": 4750,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1536",
-        "title": "Vergenoegd PS - C5",
-        "account_id": "9888",
-        "account_name": "Vergenoegd - C5",
-        "value_zar": 4750,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1537",
-        "title": "Dr. V.D.Ross - C5",
-        "account_id": "9887",
-        "account_name": "DR. Van Der Ross - C5",
         "value_zar": 4750,
         "is_test": false,
         "renewal_date": "2026-10-12",
