@@ -87,6 +87,12 @@ _LOAD_REPORT = {
     'roster_error':         None, # reason paying_schools.json failed to load, or None if fine
 }
 
+# Trial individuals (Billing Status == 'Trial'), captured at load time from the
+# raw billing column before classify_billing() / the internal-row mask drop
+# them. Populated by load_all_data(), consumed by calc_trials() for the Trials
+# tab. One entry per raw login row: {name, email, date, role}.
+_TRIAL_ROWS = []
+
 # ── Tolerant column matching ──────────────────────────────────────────────────
 # A header typo (e.g. "Emai Address" instead of "Email Address") used to drop
 # the ENTIRE file silently, because the exact-substring check found nothing.
@@ -607,6 +613,8 @@ def load_all_data():
     if not excel_files:
         return None
 
+    _TRIAL_ROWS.clear()   # reset so repeat calls in one process don't double-count
+
     # Pass 1 – build canonical name map
     raw_name_pool = []
     for file_path in excel_files:
@@ -687,6 +695,33 @@ def load_all_data():
                 continue
 
             df = df.copy()
+
+            # ── Capture Trial rows from the RAW billing column BEFORE any
+            # transform. classify_billing() below squashes 'Trial' → 'Paying'
+            # (it only special-cases pilot/demo), and the internal-row mask
+            # further down drops the 'Ear Onboarding' placeholder these rows
+            # use — so this is the only point where trial individuals are
+            # still visible. Feeds the Trials tab (calc_trials).
+            if billing_col:
+                name_col, _ = find_column(df.columns, ['full', 'name'], 'Full Name')
+                if not name_col:
+                    name_col, _ = find_column(df.columns, ['first', 'name'], 'First Name')
+                for _, raw in df.iterrows():
+                    if str(raw.get(billing_col, '')).strip().lower() != 'trial':
+                        continue
+                    email = str(raw.get(email_col, '')).strip()
+                    if not email or email.lower() == 'nan':
+                        continue
+                    nm = str(raw.get(name_col, '')).strip() if name_col else ''
+                    if nm.lower() in ('', 'nan'):
+                        nm = email
+                    _TRIAL_ROWS.append({
+                        'name':  nm,
+                        'email': email,
+                        'date':  file_date,
+                        'role':  str(raw.get(role_col, '')).strip() if role_col else '',
+                    })
+
             df['School']   = df[school_col].apply(lambda n: normalize_school_name(n, canonical_map))
             df['Email']    = df[email_col]
             df['Date']     = file_date
@@ -2154,6 +2189,107 @@ def build_b2c_js(b):
             f"var B2C_COURSES={json.dumps(b['clients'], ensure_ascii=False)};")
 
 
+# ── Trials tab ─────────────────────────────────────────────────────────────────
+# Individuals on a trial period (snapshot Billing Status == 'Trial'), captured
+# at load time into _TRIAL_ROWS. Not schools and not in the AC roster — tracked
+# on their own tab, person-centric, same weekly-heatmap shape as B2C Clients.
+
+def calc_trials(trial_rows):
+    """Weekly login heatmap + summary for trial individuals, one row per
+    PERSON (by email). Anchored to the same weekly grid as the rest of the
+    dashboard so columns line up."""
+    if not trial_rows:
+        return None
+
+    df = pd.DataFrame(trial_rows)
+    df['Date'] = pd.to_datetime(df['date'])
+    df = df.drop_duplicates(subset=['email', 'Date'])
+    df['WeekStart'] = (df['Date'] - pd.to_timedelta(df['Date'].dt.weekday, unit='D')).dt.normalize()
+
+    weeks_sorted = sorted(df['WeekStart'].unique())
+    weeks_iso    = [pd.Timestamp(w).strftime('%Y-%m-%d') for w in weeks_sorted]
+    latest_week  = pd.Timestamp(weeks_sorted[-1])
+
+    per_week = (df.groupby(['email', 'WeekStart'])['Date'].count()
+                  .reset_index().rename(columns={'Date': 'logins'}))
+
+    people = []
+    for email, rows in df.groupby('email'):
+        wk = per_week[per_week['email'] == email]
+        d_map = {pd.Timestamp(w).strftime('%Y-%m-%d'): int(n)
+                 for w, n in zip(wk['WeekStart'], wk['logins'])}
+        tl = sum(d_map.values())
+        uw = len(d_map)
+        name = rows.sort_values('Date')['name'].iloc[-1]
+        role = next((r for r in rows.sort_values('Date')['role'][::-1] if str(r).strip()
+                     and str(r).lower() != 'nan'), '')
+        last_week = pd.Timestamp(rows['WeekStart'].max())
+        weeks_since_last = int((latest_week - last_week).days // 7)
+        last_seen = strf(pd.Timestamp(rows['Date'].max()), '%-d %b %Y')
+        people.append({
+            'n': name, 'email': email, 'role': role, 'tl': tl, 'uw': uw,
+            'last': last_seen, 'dormant': weeks_since_last >= 6, 'd': d_map,
+        })
+
+    people.sort(key=lambda x: (-x['tl'], x['n'].lower()))
+
+    return {
+        'weeks': weeks_iso,
+        'people': people,
+        'totals': {
+            'total_trials':    len(people),
+            'total_logins':    sum(p['tl'] for p in people),
+            'active_recently': sum(1 for p in people if not p['dormant']),
+            'dormant':         sum(1 for p in people if p['dormant']),
+        },
+        'date_range_label': f"{strf(pd.Timestamp(df['Date'].min()), '%-d %b')} – "
+                            f"{strf(pd.Timestamp(df['Date'].max()), '%-d %b %Y')}",
+    }
+
+
+def build_trials_html(t):
+    """Visible HTML block for the Trials tab (between TRIALS_BLOCK markers)."""
+    if not t or not t['people']:
+        return ('<h2 class="section-title pacific">🧪 Trials</h2>\n'
+                '<p class="section-desc">No trial activity yet — individuals on a trial period '
+                '(snapshot Billing Status "Trial") will appear here.</p>')
+    s = t['totals']
+    return f'''<h2 class="section-title pacific">🧪 Trials — {t['date_range_label']}</h2>
+        <p class="section-desc">Individuals on a trial period (Billing Status "Trial") · not paying customers · tracked separately</p>
+
+        <div class="pt-summary-grid">
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--gold2)"></div><div class="pt-card-num">{s['total_trials']}</div><div class="pt-card-label">Trial users</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">{s['total_logins']}</div><div class="pt-card-label">Total logins</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">{s['active_recently']}</div><div class="pt-card-label">Active (last 6 wks)</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">{s['dormant']}</div><div class="pt-card-label">Dormant 6+ wks</div></div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{len(t['people'])}</strong> trial users &nbsp;·&nbsp; Heatmap: {t['date_range_label']}</div>
+            <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#c8eed9;vertical-align:middle;margin-right:3px;"></span>Low</span>
+                <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#E8E4DF;vertical-align:middle;margin-right:3px;"></span>None</span>
+            </div>
+        </div>
+
+        <div class="pt-table-header">
+            <div>Trial user</div>
+            <div id="trials-week-headers" style="display:flex;gap:3px;"></div>
+            <div>Last seen</div>
+        </div>
+        <div class="pt-school-list" id="trials-list"></div>'''
+
+
+def build_trials_js(t):
+    """JS data block for the Trials heatmap (between TRIALS_DATA markers)."""
+    if not t:
+        return 'var TRIALS_WEEKS=[];var TRIALS_PEOPLE=[];'
+    return (f"var TRIALS_WEEKS={json.dumps(t['weeks'])};\n"
+            f"var TRIALS_PEOPLE={json.dumps(t['people'], ensure_ascii=False)};")
+
+
 # ── End-of-run "what happened" report ──────────────────────────────────────────
 
 def build_daily_report(combined):
@@ -2372,6 +2508,7 @@ def main():
     uk_pilots      = calc_uk_pilots(combined)
     b2c_data       = load_b2c_data()
     b2c_clients    = calc_b2c_clients(b2c_data)
+    trials         = calc_trials(_TRIAL_ROWS)
 
     # Build HTML sections
     daily_pulse_html  = build_daily_pulse_html(dp)
@@ -2386,6 +2523,8 @@ def main():
     uk_data_js        = build_uk_pilots_js(uk_pilots)
     b2c_block_html    = build_b2c_html(b2c_clients)
     b2c_data_js       = build_b2c_js(b2c_clients)
+    trials_block_html = build_trials_html(trials)
+    trials_data_js    = build_trials_js(trials)
 
     updated_date = strf(combined['Date'].max(), '%-d %B %Y')
 
@@ -2453,6 +2592,21 @@ def main():
     html = re.sub(
         r'// B2C_DATA_START.*?// B2C_DATA_END',
         f'// B2C_DATA_START\n{b2c_data_js}\n// B2C_DATA_END',
+        html, flags=re.DOTALL,
+    )
+    # Trials: visible HTML block
+    html = re.sub(
+        r'<!-- TRIALS_BLOCK_START -->.*?<!-- TRIALS_BLOCK_END -->',
+        ('<!-- TRIALS_BLOCK_START -->\n        '
+         '<!-- Auto-generated by update_dashboard.py — do not edit by hand. -->\n'
+         f'{trials_block_html}\n'
+         '        <!-- TRIALS_BLOCK_END -->'),
+        html, flags=re.DOTALL,
+    )
+    # Trials: JS data (TRIALS_WEEKS, TRIALS_PEOPLE)
+    html = re.sub(
+        r'// TRIALS_DATA_START.*?// TRIALS_DATA_END',
+        f'// TRIALS_DATA_START\n{trials_data_js}\n// TRIALS_DATA_END',
         html, flags=re.DOTALL,
     )
     html = re.sub(
