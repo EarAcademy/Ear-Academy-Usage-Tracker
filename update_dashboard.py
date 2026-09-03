@@ -132,7 +132,8 @@ EXCLUDED_SCHOOLS = [
     'Bury Music',
     'Collingwood College',
     'Oldham Music Service',
-    'Salford Community Leisure'
+    'Salford Community Leisure',
+    'Steeton Primary School',
 ]
 
 # Snapshot names we already KNOW are not ZAR paying customers (UK music services,
@@ -144,7 +145,7 @@ KNOWN_NON_PAYING = {
     'academie orpheus', 'academie orfeus', 'bolton music services',
     'bradford music and arts service', 'bury music', 'collingwood college',
     'salford community leisure', 'oldham music service',
-    'beckfoot priestthorpe school',
+    'beckfoot priestthorpe school', 'steeton primary school',
     # NOTE: 'range high school' was removed — it is a South African school, not a
     # UK music service. It has snapshot usage but no ActiveCampaign deal, so it
     # belongs in INVESTIGATE (a real school that may need a deal created) rather
@@ -163,6 +164,7 @@ UK_PILOT_SCHOOLS = {
     'oldham music service',
     'salford community leisure',
     'beckfoot priestthorpe school',
+    'steeton primary school',
 }
 
 
