@@ -51,15 +51,47 @@ echo "=========================================================="
 # other operator pushed (reverting their changes and any config like the
 # removed schools). Pull first; if it fails (e.g. a genuine conflict), STOP
 # rather than push a stale, conflicting state.
+#
+# EXCEPTION: index.html and the *.json data files are 100% machine-generated
+# by the steps below — nothing in them is ever hand-authored. If the ONLY
+# pull conflicts are in that known set of generated files, it's safe to just
+# take the incoming (origin) version and move on: steps 1-4 below overwrite
+# them with fresh correct content within seconds anyway. Conflicts in any
+# OTHER file still stop the script for a human to look at, same as before.
+GENERATED_FILES="index.html pipeline_data.json paying_schools.json velocity_data.json renewals_data.json followup_tracker.json"
+
 echo ""
 echo "[0/4] ⬇️  Pulling latest from GitHub before rebuilding..."
 echo "----------------------------------------------------------"
 if ! git pull origin main; then
-  echo ""
-  echo "❌ git pull failed — NOT rebuilding or pushing."
-  echo "   Resolve the conflict/error above, then re-run. Nothing was published,"
-  echo "   so the live dashboards are untouched."
-  exit 1
+  conflicted=$(git diff --name-only --diff-filter=U)
+  non_generated=$(comm -23 <(echo "$conflicted" | sort) <(echo "$GENERATED_FILES" | tr ' ' '\n' | sort))
+
+  if [ -n "$conflicted" ] && [ -z "$non_generated" ]; then
+    echo ""
+    echo "⚠️  Merge conflict, but only in auto-generated files — resolving automatically:"
+    echo "$conflicted" | sed 's/^/    /'
+    for f in $conflicted; do
+      git checkout --theirs -- "$f"
+      git add "$f"
+    done
+    if git commit -m "Merge: auto-resolved generated-file conflict (took incoming, will regenerate)"; then
+      echo "✅ Auto-resolved — continuing with fresh regeneration below."
+    else
+      echo "❌ Could not complete the auto-merge commit — stopping. See error above."
+      exit 1
+    fi
+  else
+    echo ""
+    echo "❌ git pull failed — NOT rebuilding or pushing."
+    if [ -n "$non_generated" ]; then
+      echo "   Conflict includes non-generated file(s) that need a human look:"
+      echo "$non_generated" | sed 's/^/     - /'
+    fi
+    echo "   Resolve the conflict/error above, then re-run. Nothing was published,"
+    echo "   so the live dashboards are untouched."
+    exit 1
+  fi
 fi
 
 # ─── 1. Sales Dashboard (RUNS FIRST — writes paying_schools.json) ──
