@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-03T13:30:32",
-  "generated_label": "03 Sep 2026 at 13:30",
+  "generated_at": "2026-09-03T13:59:54",
+  "generated_label": "03 Sep 2026 at 13:59",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -40,7 +40,7 @@
       "account_id": "11752",
       "account_name": "ZZZ TEST School - Renewal Automation",
       "value_zar": 12000,
-      "is_test": false,
+      "is_test": true,
       "renewal_date": "2026-09-01",
       "access_end_date": null,
       "renewed_on": "2026-09-01"
@@ -51,7 +51,7 @@
       "account_id": "11752",
       "account_name": "ZZZ TEST School - Renewal Automation",
       "value_zar": 12000,
-      "is_test": false,
+      "is_test": true,
       "renewal_date": "2026-09-01",
       "access_end_date": null,
       "renewed_on": "2026-09-01"
@@ -62,7 +62,7 @@
       "account_id": "11752",
       "account_name": "ZZZ TEST School - Renewal Automation",
       "value_zar": 12000,
-      "is_test": false,
+      "is_test": true,
       "renewal_date": "2026-09-01",
       "access_end_date": null,
       "renewed_on": "2026-09-01"

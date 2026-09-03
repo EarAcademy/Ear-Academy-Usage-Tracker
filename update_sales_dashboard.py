@@ -67,10 +67,22 @@ OPEN = "0"
 WON  = "1"
 
 
-def _is_test_deal(title):
-    """True for automation/debug deals (e.g. the renewal-automation Zap's
-    test fixtures), which must never be counted as real paying schools or
-    real revenue. Matches the 'ZZZ ...' naming convention used for them."""
+# Account ID of "ZZZ TEST School - Renewal Automation" -- the renewal
+# automation's dedicated test account. Deals created under it must never
+# count as real schools/revenue, regardless of how the individual deal is
+# titled (e.g. "Bob Test 1" doesn't start with 'ZZZ' but still belongs to
+# this test account -- title-only matching missed it).
+TEST_ACCOUNT_IDS = {"11752"}
+
+
+def _is_test_deal(title, account_id=None):
+    """True for automation/debug deals, which must never be counted as
+    real paying schools or real revenue. Matches either the 'ZZZ ...'
+    title convention OR the known test account -- title alone isn't
+    reliable since test deals get renamed per-scenario (e.g. 'Bob Test
+    1'), but they're always created under the same test account."""
+    if account_id is not None and str(account_id) in TEST_ACCOUNT_IDS:
+        return True
     return (title or "").strip().upper().startswith("ZZZ")
 
 
@@ -297,7 +309,7 @@ def calculate_arr_tiers(won_deals):
     }
 
     for deal in won_deals:
-        if _is_test_deal(deal.get("title")):
+        if _is_test_deal(deal.get("title"), deal.get("account")):
             continue
         try:
             value_zar = int(deal.get("value", 0)) / 100  # cents → ZAR
@@ -387,7 +399,7 @@ def build_paying_schools_roster(cam_deals):
         if str(d.get("stage")) not in PAYING_STAGES:
             continue
         title = (d.get("title") or "").strip()
-        if "b2c" in title.lower() or _is_test_deal(title):
+        if "b2c" in title.lower() or _is_test_deal(title, d.get("account")):
             continue
         matching.append(d)
 
@@ -460,7 +472,7 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
         title = (d.get("title") or "").strip()
         if "b2c" in title.lower():
             continue
-        if _is_test_deal(title) and not RENEWALS_INCLUDE_TEST_DEALS:
+        if _is_test_deal(title, d.get("account")) and not RENEWALS_INCLUDE_TEST_DEALS:
             continue
         matching.append(d)
 
@@ -492,7 +504,7 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
             "account_id":      aid,
             "account_name":    aname or None,
             "value_zar":       int(value_zar),
-            "is_test":         _is_test_deal(title),
+            "is_test":         _is_test_deal(title, aid),
             "renewal_date":    renewal_date,
             "access_end_date": access_end_date,
             date_field:        renewal_date or (d.get("mdate") or "")[:10] or None,
