@@ -6,7 +6,13 @@
 #   1. Updates the Usage Dashboard  (index.html)
 #   2. Updates the Sales Dashboard  (investor.html)
 #   3. Updates the Velocity Dashboard (pipeline_velocity.html)
-#   4. Commits + pushes everything to GitHub in ONE commit
+#   4. Updates the Follow-Up Tracker (followup_tracker.json — incremental,
+#      only checks deals that newly dropped off the stale list today)
+#   5. Commits + pushes everything to GitHub in ONE commit
+#
+# For a full weekly re-verification of the follow-up tracker (catches
+# status drift on deals checked days ago), run separately:
+#   python3 update_followup_tracker.py --full-reverify
 #
 # Each Python step is independent — if one fails, the others
 # still run, and you get a clear summary at the end.
@@ -31,10 +37,11 @@ cd ~/Desktop/ear-academy-analytics || {
 usage_ok=0
 sales_ok=0
 velocity_ok=0
+followup_ok=0
 
 echo ""
 echo "=========================================================="
-echo "  Ear Academy — Updating all 3 dashboards"
+echo "  Ear Academy — Updating all dashboards + follow-up tracker"
 echo "  Started: $(date '+%Y-%m-%d %H:%M:%S')"
 echo "=========================================================="
 
@@ -45,7 +52,7 @@ echo "=========================================================="
 # removed schools). Pull first; if it fails (e.g. a genuine conflict), STOP
 # rather than push a stale, conflicting state.
 echo ""
-echo "[0/3] ⬇️  Pulling latest from GitHub before rebuilding..."
+echo "[0/4] ⬇️  Pulling latest from GitHub before rebuilding..."
 echo "----------------------------------------------------------"
 if ! git pull origin main; then
   echo ""
@@ -59,7 +66,7 @@ fi
 # Usage dashboard now reads paying_schools.json as the canonical roster of
 # paying schools, so sales must run first so that JSON is fresh.
 echo ""
-echo "[1/3] 💰 Sales Dashboard (pulls live data from ActiveCampaign)"
+echo "[1/4] 💰 Sales Dashboard (pulls live data from ActiveCampaign)"
 echo "----------------------------------------------------------"
 if python3 update_sales_dashboard.py; then
   echo "✅ Sales dashboard updated"
@@ -70,7 +77,7 @@ fi
 
 # ─── 2. Usage Dashboard ─────────────────────────────────────
 echo ""
-echo "[2/3] 📊 Usage Dashboard (reads daily_snapshots/ + paying_schools.json)"
+echo "[2/4] 📊 Usage Dashboard (reads daily_snapshots/ + paying_schools.json)"
 echo "----------------------------------------------------------"
 if python3 update_dashboard.py; then
   echo "✅ Usage dashboard updated"
@@ -81,13 +88,30 @@ fi
 
 # ─── 3. Velocity Dashboard ──────────────────────────────────
 echo ""
-echo "[3/3] ⚡ Velocity Dashboard (pulls deal data from ActiveCampaign)"
+echo "[3/4] ⚡ Velocity Dashboard (pulls deal data from ActiveCampaign)"
 echo "----------------------------------------------------------"
 if python3 update_velocity.py; then
   echo "✅ Velocity dashboard updated"
   velocity_ok=1
 else
   echo "❌ Velocity dashboard FAILED — see error above"
+fi
+
+# ─── 4. Follow-Up Tracker (incremental — only checks NEW stale drop-offs) ──
+# Must run AFTER update_velocity.py — it reads velocity_data.json's fresh
+# stale_deals list to compute what's newly dropped off since the last run.
+echo ""
+echo "[4/4] 📋 Follow-Up Tracker (incremental check of newly-cleared stale deals)"
+echo "----------------------------------------------------------"
+if [ $velocity_ok -eq 1 ]; then
+  if python3 update_followup_tracker.py; then
+    echo "✅ Follow-up tracker updated"
+    followup_ok=1
+  else
+    echo "❌ Follow-up tracker FAILED — see error above"
+  fi
+else
+  echo "⏭️  Skipped — velocity dashboard didn't update, so stale list isn't fresh."
 fi
 
 # ─── Git commit + push ──────────────────────────────────────
@@ -101,6 +125,7 @@ parts=()
 [ $usage_ok    -eq 1 ] && parts+=("usage")
 [ $sales_ok    -eq 1 ] && parts+=("sales")
 [ $velocity_ok -eq 1 ] && parts+=("velocity")
+[ $followup_ok -eq 1 ] && parts+=("followup")
 
 if [ ${#parts[@]} -eq 0 ]; then
   echo "⚠️  All three updates failed — nothing to commit. Check the errors above."
@@ -124,6 +149,7 @@ echo "=========================================================="
 [ $usage_ok    -eq 1 ] && echo "  ✅ Usage Dashboard"    || echo "  ❌ Usage Dashboard"
 [ $sales_ok    -eq 1 ] && echo "  ✅ Sales Dashboard"    || echo "  ❌ Sales Dashboard"
 [ $velocity_ok -eq 1 ] && echo "  ✅ Velocity Dashboard" || echo "  ❌ Velocity Dashboard"
+[ $followup_ok -eq 1 ] && echo "  ✅ Follow-Up Tracker"  || echo "  ❌ Follow-Up Tracker"
 echo ""
 echo "  Finished: $(date '+%Y-%m-%d %H:%M:%S')"
 echo "=========================================================="

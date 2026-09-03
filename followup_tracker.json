@@ -1,0 +1,1621 @@
+{
+  "schema_version": 1,
+  "cleanup_window_start": "2026-08-17T08:30:18Z",
+  "last_run": "2026-09-03T07:04:28Z",
+  "last_full_reverify": "2026-09-01T13:38:13Z",
+  "last_seen_stale_ids": [
+    30,
+    251,
+    618,
+    635,
+    647,
+    1235,
+    1305,
+    1314,
+    1421,
+    1469,
+    1532,
+    1593,
+    1615,
+    1624,
+    1660,
+    1664,
+    1666,
+    1672,
+    1674,
+    1675,
+    1684,
+    1688,
+    1689,
+    1690,
+    1692,
+    1693,
+    1696,
+    1699,
+    1700,
+    1703,
+    1704,
+    1706,
+    1711,
+    1713,
+    1714,
+    1716,
+    1717,
+    1719,
+    1721,
+    1722,
+    1725,
+    1726,
+    1727,
+    1728,
+    1730,
+    1734,
+    1737,
+    1745,
+    1750,
+    1751,
+    1752,
+    1753,
+    1755,
+    1756,
+    1758,
+    1759,
+    1760,
+    1761,
+    1762,
+    1763,
+    1764,
+    1765,
+    1766,
+    1768,
+    1769,
+    1774,
+    1776,
+    1792,
+    1794
+  ],
+  "tracked": {
+    "559": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "582": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "591": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "592": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "555": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "597": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "607": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "609": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "626": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "623": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "622": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "617": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "968": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "625": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "629": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "636": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1137": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "587": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1523": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1420": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1071": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1082": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "826": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1605": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1611": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1417": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1619": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1621": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "240": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1430": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1218": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1171": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "604": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1683": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1782": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1781": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1738": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1748": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1074": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1076": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1212": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1173": {
+      "title": "",
+      "classification": "not_found",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "567": {
+      "title": "Marshall Nelson Youth Media Movement",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 0,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "560": {
+      "title": "Melissa Woolward Curro",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 0,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "806": {
+      "title": "Highly Engaged - St Teresa's School - Friend",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "827": {
+      "title": "Curro Digi Ed Delft",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1549": {
+      "title": "Canterbury Prep",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "199": {
+      "title": "Willowmoore High School - Lorna Sanders - TRAILBLAZER SA",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1783": {
+      "title": "Curro Kathu",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1780": {
+      "title": "Livingstone High School",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1779": {
+      "title": "Oakridge Academy",
+      "group": "8",
+      "stage": "61",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1729": {
+      "title": "Batshazwayo Secondary School",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1732": {
+      "title": "Isipingo Secondary School",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1547": {
+      "title": "Curro Salt Rock",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 20050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1591": {
+      "title": "Kronendal Primary School",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1304": {
+      "title": "Fourways High School",
+      "group": "7",
+      "stage": "59",
+      "status": "2",
+      "value_zar": 4500,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1205": {
+      "title": "Christel house South Africa",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1211": {
+      "title": "Christel House SA (Donetha Cupido)",
+      "group": "8",
+      "stage": "61",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1234": {
+      "title": "Regio independent school",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "588": {
+      "title": "EKURHULENI NORTH DISTRICT R.K. MOTSEMME - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "593": {
+      "title": "Kempton Park Primary School Patricia le Roux - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "594": {
+      "title": "St Theresa's convent school",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "595": {
+      "title": "St Dominic's Catholic Girls School Boksburg Charmaine Van Schalkwyk - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "596": {
+      "title": "SA College Private School Archford Mutigwa - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "612": {
+      "title": "Dowerglen High School",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "615": {
+      "title": "Atlas Combined School Runyararo Chimowa - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "624": {
+      "title": "Noah's Ark Academy April Moreo - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "556": {
+      "title": "Jaco van Niekerk WCED eLearning Head Office",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "557": {
+      "title": "Lorette John Rondebosch Prep",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "563": {
+      "title": "ChantÈ Barry Curro Hermanus Primary",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "564": {
+      "title": "Acacia Park Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "566": {
+      "title": "Hesna Van Dewenter Metropole East metropole",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "568": {
+      "title": "Cantel Ross Cape Winelands Education Department",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "569": {
+      "title": "Anne-Mari Le Roux MEED",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "565": {
+      "title": "Neliswa Mafu Athlone School for The Blind",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "614": {
+      "title": "Leap Science And Maths Schools - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "532": {
+      "title": "Star of the Sea Convent",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 0,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "533": {
+      "title": "Kerria Primary School",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "589": {
+      "title": "Pinnacle College Rynfield - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "511": {
+      "title": "Summerdale High School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "542": {
+      "title": "Paulus Joubert Secondary",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "586": {
+      "title": "Robert Hicks School - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "601": {
+      "title": "Ruimsig Academy - Schoolscape Event",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "602": {
+      "title": "St. Dominic's Catholic School for Girls - Schoolscape Event",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "606": {
+      "title": "Alma Mater - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "634": {
+      "title": "The Way Christian School - Schoolscape Event",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "619": {
+      "title": "Amity SA International - Schoolscape Event",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 20000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "627": {
+      "title": "Department of Education - Schoolscape Event",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "638": {
+      "title": "Skeen primary",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "639": {
+      "title": "Parkhurst Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "640": {
+      "title": "SPACE AGE INDEPENDENT - Schoolscape Event",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "271": {
+      "title": "Marvin Park Primary School",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "599": {
+      "title": "Tshirela primary - Schoolscape Event",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 1,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "420": {
+      "title": "Norma Primary - Trailblazer",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1303": {
+      "title": "Curro Academy Wilgeheuwel",
+      "group": "5",
+      "stage": "46",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_negotiation",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1482": {
+      "title": "Kingfisher Private School (Primary)",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1473": {
+      "title": "Curro Sitari Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1540": {
+      "title": "Riverside Primary",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1554": {
+      "title": "Study Express",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1194": {
+      "title": "Wiehan Smit",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1310": {
+      "title": "AdvTech",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 4750,
+      "classification": "partnerships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1257": {
+      "title": "Amy Fielding - Morningside - 2 term trial",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1560": {
+      "title": "Curro Sandown Primary School",
+      "group": "5",
+      "stage": "46",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_negotiation",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1311": {
+      "title": "Overberg E Learning Dept",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "partnerships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1428": {
+      "title": "Cecil Road Primary School",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1567": {
+      "title": "Clifton School (Preparatory) Durban",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1175": {
+      "title": "Good Hope Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1445": {
+      "title": "Junior College",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1425": {
+      "title": "Future Nation Schools Fleurhof",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1263": {
+      "title": "Penny Winward - Pelham Senior Primary - Two term deal",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1463": {
+      "title": "Curro Delft High School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1568": {
+      "title": "Strand Private Academy",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1410": {
+      "title": "WCED",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "partnerships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1431": {
+      "title": "Cowan House Preparatory School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1597": {
+      "title": "Oakley House",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1475": {
+      "title": "Curro Century City Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1579": {
+      "title": "Soneike School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1610": {
+      "title": "Mikfield",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "628": {
+      "title": "The Kings School Robin Hills - Schoolscape Event",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "620": {
+      "title": "Eden Schools",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1625": {
+      "title": "Port Shepstone Junior Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1627": {
+      "title": "Curro Savanna City",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1629": {
+      "title": "Zodiac Primary School",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1628": {
+      "title": "Springfield Model Primary School",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1170": {
+      "title": "Lizette Potgeiter - Courtria Primary - Two Term Trial",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1602": {
+      "title": "Mount Carmel Christian School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1188": {
+      "title": "Anastacia Gordon - metro east Depart - Two Term offer",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "partnerships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1182": {
+      "title": "Ashley Edwards - Tafleberg school - Two Term Trial",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1620": {
+      "title": "Dalpark Private School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1601": {
+      "title": "CCE",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "partnerships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "368": {
+      "title": "Kommetjie Primary - Ansie Whitby - TRAILBLAZER SA",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1598": {
+      "title": "The Rock Academy",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1570": {
+      "title": "AISCT",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1255": {
+      "title": "Durban Preparatory school",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1240": {
+      "title": "Vallance Meyer - Albert Myburgh Secondary School - Free Trial",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1239": {
+      "title": "HMS La Rochelle - Melina Smit",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1181": {
+      "title": "Ina Van Zyl - West Coast Academy",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1788": {
+      "title": "University of Cape Town",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1786": {
+      "title": "European School Bergen",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1785": {
+      "title": "French School Cape Town",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1784": {
+      "title": "Eagle House",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1778": {
+      "title": "Cape Winelands International School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1777": {
+      "title": "Forest Edge",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1596": {
+      "title": "Greenwood Bay",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1754": {
+      "title": "Laerskool Uitsig Primary",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1742": {
+      "title": "Grantham Park Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1739": {
+      "title": "Waterfall College",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1741": {
+      "title": "Avoca Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1773": {
+      "title": "Bellpark Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1573": {
+      "title": "Reddford House Blue Hills",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1603": {
+      "title": "MEPS",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1426": {
+      "title": "Flamboyant School",
+      "group": "5",
+      "stage": "46",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_negotiation",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1455": {
+      "title": "Generations School - Imhoff",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1466": {
+      "title": "International School of South Africa (Primary)",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "637": {
+      "title": "Acts House of Education",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1429": {
+      "title": "Durban Christian Centre School (DCCS)",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1608": {
+      "title": "Empangeni Preparatory School",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1168": {
+      "title": "Stirling Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1575": {
+      "title": "Midstream College",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1631": {
+      "title": "Margate Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1264": {
+      "title": "Zululand Remedial Centre",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "sponsorships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1231": {
+      "title": "Nova Pioneer",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "partnerships",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1622": {
+      "title": "Charles Hugo Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1226": {
+      "title": "Basa Freedom School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1258": {
+      "title": "Hillcrest High School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1217": {
+      "title": "Arrow Academy",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1228": {
+      "title": "Brackenhurst Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1167": {
+      "title": "Mountain View",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1189": {
+      "title": "Bosmansdam High School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1186": {
+      "title": "Tomorrows College",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    },
+    "1757": {
+      "title": "Northland School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "first_dropped_seen": "2026-09-01",
+      "last_verified": "2026-09-01"
+    }
+  }
+}
