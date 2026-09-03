@@ -2,6 +2,10 @@
 __pycache__/
 *.pyc
 
+# Credentials — never commit these
+config.py
+supabase_config.py
+
 # macOS metadata
 .DS_Store
 
