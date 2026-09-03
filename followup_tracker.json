@@ -1,41 +1,28 @@
 {
   "schema_version": 1,
   "cleanup_window_start": "2026-08-17T08:30:18Z",
-  "last_run": "2026-09-03T07:04:28Z",
+  "last_run": "2026-09-03T14:31:49Z",
   "last_full_reverify": "2026-09-01T13:38:13Z",
   "last_seen_stale_ids": [
     30,
+    35,
     251,
     618,
     635,
     647,
+    1181,
     1235,
+    1240,
     1305,
     1314,
     1421,
-    1469,
     1532,
-    1593,
-    1615,
-    1624,
     1660,
-    1664,
-    1666,
     1672,
-    1674,
     1675,
     1684,
     1688,
-    1689,
-    1690,
-    1692,
-    1693,
-    1696,
     1699,
-    1700,
-    1703,
-    1704,
-    1706,
     1711,
     1713,
     1714,
@@ -52,25 +39,7 @@
     1734,
     1737,
     1745,
-    1750,
-    1751,
-    1752,
     1753,
-    1755,
-    1756,
-    1758,
-    1759,
-    1760,
-    1761,
-    1762,
-    1763,
-    1764,
-    1765,
-    1766,
-    1768,
-    1769,
-    1774,
-    1776,
     1792,
     1794
   ],
@@ -1616,6 +1585,306 @@
       "classification": "refreshed_new_lead",
       "first_dropped_seen": "2026-09-01",
       "last_verified": "2026-09-01"
+    },
+    "1469": {
+      "title": "Meridian Pinehurst Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1593": {
+      "title": "Creston Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1615": {
+      "title": "Destinatus",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1624": {
+      "title": "Aspiration Academic",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1664": {
+      "title": "Kenridge Primary",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1666": {
+      "title": "Cape Winelands Education District",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "partnerships",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1674": {
+      "title": "Hermeslaan Primary School",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1689": {
+      "title": "GROOTE SCHUUR PRIMARY SCHOOL",
+      "group": "8",
+      "stage": "61",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1690": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1692": {
+      "title": "Helderberg Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1693": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1696": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1700": {
+      "title": "TAMBOERSKLOOF PRIMARY SCHOOL",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1703": {
+      "title": "Curro Meridian Rustenburg",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1704": {
+      "title": "Professor Shiluvana Mhlaba High",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1706": {
+      "title": "Krugersdorp High",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1750": {
+      "title": "Holy Family College",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1751": {
+      "title": "Moriting Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1752": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1755": {
+      "title": "Grace and Favour Academy",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1756": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1758": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1759": {
+      "title": "Monuments High School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1760": {
+      "title": "Hoerskool Elspark",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1761": {
+      "title": "Yeoville Boys Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1762": {
+      "title": "My Tutor and Teaching Centre",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1763": {
+      "title": "Jeugland",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1764": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1765": {
+      "title": "Johannesburg South Education Department",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "partnerships",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1766": {
+      "title": "Laerskool Fleur Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1768": {
+      "title": "Tshwane North",
+      "group": "9",
+      "stage": "63",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "partnerships",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1769": {
+      "title": "Protea School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1774": {
+      "classification": "not_found",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
+    },
+    "1776": {
+      "title": "Whale Coast Academy",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "last_verified": "2026-09-03",
+      "first_dropped_seen": "2026-09-03"
     }
   }
 }
