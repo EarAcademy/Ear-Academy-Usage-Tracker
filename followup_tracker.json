@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "cleanup_window_start": "2026-08-17T08:30:18Z",
-  "last_run": "2026-09-03T14:31:49Z",
+  "last_run": "2026-09-04T09:23:33Z",
   "last_full_reverify": "2026-09-01T13:38:13Z",
   "last_seen_stale_ids": [
     30,
