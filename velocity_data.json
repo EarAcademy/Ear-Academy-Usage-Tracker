@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-09T09:53:35Z",
-  "generated_label": "9 Sep 2026 at 09:53",
+  "generated_at": "2026-09-09T10:31:16Z",
+  "generated_label": "9 Sep 2026 at 10:31",
   "pipeline4": {
     "total": 111,
     "avg_days_in_stage": 48,
@@ -249,7 +249,7 @@
         "id": "1256",
         "title": "Drakensberg boys choir",
         "days_in_stage": 90,
-        "total_age_days": 540,
+        "total_age_days": 541,
         "value_zar": 12000,
         "cdate": "2025-03-17"
       }
@@ -628,11 +628,11 @@
       ]
     },
     "nego": {
-      "count": 30,
-      "avg_days_in_stage": 21,
-      "total_value_zar": 363600,
+      "count": 28,
+      "avg_days_in_stage": 23,
+      "total_value_zar": 339600,
       "buckets": {
-        "u30": 26,
+        "u30": 24,
         "u60": 1,
         "u90": 3,
         "u180": 0,
@@ -788,7 +788,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-04-20",
-              "days": 141
+              "days": 142
             }
           ]
         },
@@ -1152,17 +1152,6 @@
           ]
         },
         {
-          "id": "1867",
-          "title": "Kerry Automation Test",
-          "stage": "46",
-          "days_in_stage": 1,
-          "total_age_days": 1,
-          "value_zar": 12000,
-          "edate": "2026-09-08",
-          "cdate": "2026-09-08",
-          "stage_history": []
-        },
-        {
           "id": "1868",
           "title": "Spark Theresa Park",
           "stage": "46",
@@ -1222,17 +1211,6 @@
           ]
         },
         {
-          "id": "1882",
-          "title": "Quote Automation Test 2",
-          "stage": "46",
-          "days_in_stage": 0,
-          "total_age_days": 1,
-          "value_zar": 12000,
-          "edate": "2026-09-08",
-          "cdate": "2026-09-08",
-          "stage_history": []
-        },
-        {
           "id": "1884",
           "title": "Empangheni Primary",
           "stage": "46",
@@ -1256,11 +1234,11 @@
         }
       ]
     },
-    "total_in_conversion": 51
+    "total_in_conversion": 49
   },
   "conversion_rates": {
-    "lead_to_demo_pct": 45.9,
-    "demo_to_nego_pct": 59
+    "lead_to_demo_pct": 44.1,
+    "demo_to_nego_pct": 57
   },
   "stuck_summary": {
     "conversion_over_60": 3,
