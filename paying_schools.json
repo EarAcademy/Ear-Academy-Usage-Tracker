@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-04T11:13:37",
-  "generated_label": "04 Sep 2026 at 11:13",
+  "generated_at": "2026-09-09T11:48:09",
+  "generated_label": "09 Sep 2026 at 11:48",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 53,
+  "count": 57,
   "schools": [
     {
       "deal_id": "1586",
@@ -294,6 +294,15 @@
       "account_name": "Koa Academy"
     },
     {
+      "deal_id": "1735",
+      "title": "Kranskop Primary School",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 12000,
+      "account_id": "11680",
+      "account_name": "Kranskop Primary School"
+    },
+    {
       "deal_id": "1478",
       "title": "Lebone II College (Primary)",
       "stage": "Upcoming Renewal",
@@ -485,6 +494,33 @@
     {
       "deal_id": "1827",
       "title": "Xero Test",
+      "stage": "Renewed",
+      "stage_id": "70",
+      "value_zar": 100,
+      "account_id": "11744",
+      "account_name": "Xero Test"
+    },
+    {
+      "deal_id": "1866",
+      "title": "Xero Test — 2028 Renewal",
+      "stage": "Renewed",
+      "stage_id": "70",
+      "value_zar": 100,
+      "account_id": "11744",
+      "account_name": "Xero Test"
+    },
+    {
+      "deal_id": "1879",
+      "title": "Xero Test — 2028 Renewal",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 100,
+      "account_id": "11744",
+      "account_name": "Xero Test"
+    },
+    {
+      "deal_id": "1880",
+      "title": "Xero Test — 2028 Renewal",
       "stage": "Activated",
       "stage_id": "51",
       "value_zar": 100,
