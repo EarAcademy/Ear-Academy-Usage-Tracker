@@ -85,8 +85,21 @@ def get(endpoint, params=None):
     return r.json()
 
 
+def _is_test_deal(title):
+    """True for automation/debug deals, which must never count in pipeline
+    metrics. Matches the 'ZZZ ...' convention used elsewhere (see
+    update_sales_dashboard.py's _is_test_deal) plus the 'Automation Test'
+    naming seen from Xero-integration testing (e.g. 'Kerry Automation Test',
+    'Quote Automation Test 2') -- neither convention alone is reliable since
+    test deals get renamed per-scenario.
+    """
+    t = (title or "").strip().upper()
+    return t.startswith("ZZZ") or "AUTOMATION TEST" in t
+
+
 def fetch_all_deals(pipeline_id):
-    """Paginate through all deals in a pipeline, return ZAR open deals only."""
+    """Paginate through all deals in a pipeline, return ZAR open deals only,
+    excluding automation/test deals (see _is_test_deal)."""
     deals = []
     offset = 0
     while True:
@@ -103,7 +116,8 @@ def fetch_all_deals(pipeline_id):
         if offset >= total or not batch:
             break
 
-    zar = [d for d in deals if d.get("currency", "").lower() == "zar"]
+    zar = [d for d in deals
+           if d.get("currency", "").lower() == "zar" and not _is_test_deal(d.get("title"))]
     return zar
 
 

@@ -1229,21 +1229,3 @@
           "total_age_days": 36,
           "value_zar": 7800,
           "edate": "2026-09-09",
-          "cdate": "2026-08-04",
-          "stage_history": []
-        }
-      ]
-    },
-    "total_in_conversion": 49
-  },
-  "conversion_rates": {
-    "lead_to_demo_pct": 44.1,
-    "demo_to_nego_pct": 57
-  },
-  "stuck_summary": {
-    "conversion_over_60": 3,
-    "conversion_over_90": 0,
-    "new_leads_over_180": 0,
-    "all_stages_over_90": 29
-  }
-}
