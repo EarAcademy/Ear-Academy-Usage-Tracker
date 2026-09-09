@@ -1,36 +1,27 @@
 {
   "schema_version": 1,
   "cleanup_window_start": "2026-08-17T08:30:18Z",
-  "last_run": "2026-09-04T09:23:33Z",
+  "last_run": "2026-09-09T09:55:06Z",
   "last_full_reverify": "2026-09-01T13:38:13Z",
   "last_seen_stale_ids": [
     30,
-    35,
     251,
     618,
     635,
     647,
-    1181,
-    1235,
-    1240,
-    1305,
+    1207,
+    1256,
     1314,
-    1421,
-    1532,
-    1660,
+    1423,
     1672,
     1675,
     1684,
-    1688,
     1699,
-    1711,
-    1713,
     1714,
-    1716,
     1717,
-    1719,
     1721,
     1722,
+    1723,
     1725,
     1726,
     1727,
@@ -40,6 +31,7 @@
     1737,
     1745,
     1753,
+    1775,
     1792,
     1794
   ],
@@ -1885,6 +1877,111 @@
       "classification": "progressed_demo",
       "last_verified": "2026-09-03",
       "first_dropped_seen": "2026-09-03"
+    },
+    "35": {
+      "title": "BMS: Clarendon Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1235": {
+      "title": "Regio independent school",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1305": {
+      "title": "American International School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1421": {
+      "title": "Parklands College Junior",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 8050,
+      "classification": "lost",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1532": {
+      "title": "Wynberg Boys' High School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1660": {
+      "title": "The Grove Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1688": {
+      "classification": "not_found",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1711": {
+      "title": "Clarendon Primary School for Girls",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1713": {
+      "title": "Westering High School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1716": {
+      "title": "Jeffreys Bay Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
+    },
+    "1719": {
+      "title": "Collegiate Junior School for Girls",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-09",
+      "first_dropped_seen": "2026-09-09"
     }
   }
 }
