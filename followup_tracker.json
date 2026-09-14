@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "cleanup_window_start": "2026-08-17T08:30:18Z",
-  "last_run": "2026-09-09T09:55:06Z",
+  "last_run": "2026-09-14T14:10:25Z",
   "last_full_reverify": "2026-09-01T13:38:13Z",
   "last_seen_stale_ids": [
     30,
@@ -9,19 +9,13 @@
     618,
     635,
     647,
-    1207,
-    1256,
     1314,
-    1423,
-    1672,
     1675,
     1684,
     1699,
-    1714,
     1717,
     1721,
     1722,
-    1723,
     1725,
     1726,
     1727,
@@ -31,7 +25,6 @@
     1737,
     1745,
     1753,
-    1775,
     1792,
     1794
   ],
@@ -1982,6 +1975,76 @@
       "classification": "refreshed_new_lead",
       "last_verified": "2026-09-09",
       "first_dropped_seen": "2026-09-09"
+    },
+    "1207": {
+      "title": "Philasande Angel Mbemne - Umqhele secondary school - 14 DAY TRIAL",
+      "group": "10",
+      "stage": "67",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "sponsorships",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
+    },
+    "1256": {
+      "title": "Drakensberg boys choir",
+      "group": "8",
+      "stage": "61",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
+    },
+    "1423": {
+      "title": "Hillcrest Collegiate",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
+    },
+    "1672": {
+      "title": "Westerford High School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
+    },
+    "1714": {
+      "title": "Summerwood Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
+    },
+    "1723": {
+      "title": "Global Leadership Academy",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
+    },
+    "1775": {
+      "title": "York High George",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "last_verified": "2026-09-14",
+      "first_dropped_seen": "2026-09-14"
     }
   }
 }
