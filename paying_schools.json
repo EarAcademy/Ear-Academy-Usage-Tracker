@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-09T11:48:09",
-  "generated_label": "09 Sep 2026 at 11:48",
+  "generated_at": "2026-09-14T15:55:42",
+  "generated_label": "14 Sep 2026 at 15:55",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 57,
+  "count": 53,
   "schools": [
     {
       "deal_id": "1586",
@@ -98,8 +98,8 @@
     {
       "deal_id": "1698",
       "title": "Cambridge Academy Ethiopia",
-      "stage": "Onboarding",
-      "stage_id": "50",
+      "stage": "Activated",
+      "stage_id": "51",
       "value_zar": 12000,
       "account_id": "11622",
       "account_name": "Cambridge Academy Ethiopia"
@@ -490,42 +490,6 @@
       "value_zar": 4750,
       "account_id": "9889",
       "account_name": "Welwitschia - C5"
-    },
-    {
-      "deal_id": "1827",
-      "title": "Xero Test",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 100,
-      "account_id": "11744",
-      "account_name": "Xero Test"
-    },
-    {
-      "deal_id": "1866",
-      "title": "Xero Test — 2028 Renewal",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 100,
-      "account_id": "11744",
-      "account_name": "Xero Test"
-    },
-    {
-      "deal_id": "1879",
-      "title": "Xero Test — 2028 Renewal",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 100,
-      "account_id": "11744",
-      "account_name": "Xero Test"
-    },
-    {
-      "deal_id": "1880",
-      "title": "Xero Test — 2028 Renewal",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 100,
-      "account_id": "11744",
-      "account_name": "Xero Test"
     }
   ]
 }
