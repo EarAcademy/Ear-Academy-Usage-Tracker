@@ -2,7 +2,7 @@
   "pipeline": {
     "qualification": 99,
     "demo": 25,
-    "negotiation": 32,
+    "negotiation": 30,
     "customers": 54
   },
   "monthly": {
@@ -51,14 +51,14 @@
     "count": 18,
     "total_value": 147101.0
   },
-  "last_updated": "18 Sep 2026 at 14:45",
+  "last_updated": "18 Sep 2026 at 14:49",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (3) + Activated (22) + Upcoming Renewal (31) + Renewed (4) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "customers": "Onboarding (3) + Activated (22) + Upcoming Renewal (31) + Renewed (0) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }
