@@ -1,18 +1,17 @@
 {
   "schema_version": 1,
   "cleanup_window_start": "2026-08-17T08:30:18Z",
-  "last_run": "2026-09-14T14:10:25Z",
+  "last_run": "2026-09-18T12:37:06Z",
   "last_full_reverify": "2026-09-01T13:38:13Z",
   "last_seen_stale_ids": [
-    30,
-    251,
-    618,
+    621,
+    631,
+    633,
     635,
     647,
-    1314,
+    1190,
     1675,
-    1684,
-    1699,
+    1710,
     1717,
     1721,
     1722,
@@ -20,13 +19,12 @@
     1726,
     1727,
     1728,
-    1730,
     1734,
+    1736,
     1737,
-    1745,
+    1746,
     1753,
-    1792,
-    1794
+    1792
   ],
   "tracked": {
     "559": {
@@ -2045,6 +2043,96 @@
       "classification": "progressed_demo",
       "last_verified": "2026-09-14",
       "first_dropped_seen": "2026-09-14"
+    },
+    "30": {
+      "title": "BMS: Somerset College",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "progressed_demo",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "251": {
+      "title": "Wynberg Girls Junior School",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "progressed_demo",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "618": {
+      "title": "Sasolburg High School  Willem de Wit - Schoolscape Event",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 20000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "1314": {
+      "title": "Deira International School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "1684": {
+      "title": "Paarl school of skills",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "1699": {
+      "title": "Great Minds Learning Academy",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "1730": {
+      "title": "Dr Macken Mistry Primary",
+      "group": "5",
+      "stage": "43",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "progressed_demo",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "1745": {
+      "title": "Golden Steps",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
+    },
+    "1794": {
+      "title": "Hillview Primary",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-18",
+      "first_dropped_seen": "2026-09-18"
     }
   }
 }
