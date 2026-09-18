@@ -1,9 +1,9 @@
 {
   "pipeline": {
-    "qualification": 106,
-    "demo": 23,
-    "negotiation": 30,
-    "customers": 53
+    "qualification": 99,
+    "demo": 25,
+    "negotiation": 32,
+    "customers": 54
   },
   "monthly": {
     "jan": {
@@ -16,14 +16,14 @@
     },
     "mar": {
       "new_leads": "162",
-      "new_deals": "5"
+      "new_deals": "4"
     }
   },
   "email": {
     "sent": "2067",
-    "replied": "1494",
-    "rate": "72.3%",
-    "new_contacts": "14"
+    "replied": "1571",
+    "rate": "76.0%",
+    "new_contacts": "18"
   },
   "arr_tiers": {
     "tier1": {
@@ -38,8 +38,8 @@
     },
     "tier3": {
       "label": "R10\u201320k",
-      "count": 22,
-      "revenue": 264000.0
+      "count": 23,
+      "revenue": 276000.0
     },
     "tier4": {
       "label": "R20k+",
@@ -51,14 +51,14 @@
     "count": 18,
     "total_value": 147101.0
   },
-  "last_updated": "14 Sep 2026 at 15:55",
+  "last_updated": "18 Sep 2026 at 14:28",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (2) + Activated (22) + Upcoming Renewal (31) + Renewed (4) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "customers": "Onboarding (3) + Activated (22) + Upcoming Renewal (31) + Renewed (4) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }

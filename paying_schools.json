@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-14T15:55:42",
-  "generated_label": "14 Sep 2026 at 15:55",
+  "generated_at": "2026-09-18T14:28:41",
+  "generated_label": "18 Sep 2026 at 14:28",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 53,
+  "count": 54,
   "schools": [
     {
       "deal_id": "1586",
@@ -319,6 +319,15 @@
       "value_zar": 8050,
       "account_id": "11621",
       "account_name": "Nguzo Saba School"
+    },
+    {
+      "deal_id": "1859",
+      "title": "Northland School",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 12000,
+      "account_id": "11653",
+      "account_name": "Northland School"
     },
     {
       "deal_id": "1561",
