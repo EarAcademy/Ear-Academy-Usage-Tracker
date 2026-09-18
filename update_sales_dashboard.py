@@ -77,13 +77,15 @@ TEST_ACCOUNT_IDS = {"11752"}
 
 def _is_test_deal(title, account_id=None):
     """True for automation/debug deals, which must never be counted as
-    real paying schools or real revenue. Matches either the 'ZZZ ...'
-    title convention OR the known test account -- title alone isn't
-    reliable since test deals get renamed per-scenario (e.g. 'Bob Test
-    1'), but they're always created under the same test account."""
+    real paying schools or real revenue. Matches the 'ZZZ ...' title
+    convention, the known test account, or the 'Automation Test' naming
+    seen from Xero-integration testing (e.g. 'Kerry Automation Test') --
+    title alone isn't reliable since test deals get renamed per-scenario,
+    and those Xero test deals aren't created under TEST_ACCOUNT_IDS."""
     if account_id is not None and str(account_id) in TEST_ACCOUNT_IDS:
         return True
-    return (title or "").strip().upper().startswith("ZZZ")
+    t = (title or "").strip().upper()
+    return t.startswith("ZZZ") or "AUTOMATION TEST" in t
 
 
 # ── AC API helpers ─────────────────────────────────────────────────────────────
@@ -178,8 +180,13 @@ def fetch_deals_for_pipeline(pipeline_id, status_filter=OPEN):
 
 
 def count_by_stage(deals, stage_id):
-    """Count deals in a specific stage."""
-    return sum(1 for d in deals if str(d.get("stage")) == stage_id)
+    """Count deals in a specific stage, excluding automation/test deals
+    (see _is_test_deal) -- these headline pipeline counts feed investor.html
+    directly and must never include Xero-automation or ZZZ-prefixed fixtures.
+    """
+    return sum(1 for d in deals
+               if str(d.get("stage")) == stage_id
+               and not _is_test_deal(d.get("title"), d.get("account")))
 
 
 def count_new_contacts_this_month():
