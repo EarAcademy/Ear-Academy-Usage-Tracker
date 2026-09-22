@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-18T14:49:53",
-  "generated_label": "18 Sep 2026 at 14:49",
+  "generated_at": "2026-09-22T12:55:44",
+  "generated_label": "22 Sep 2026 at 12:55",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -64,8 +64,8 @@
       "currency": "zar",
       "note": "Renewal cycle approaching but NOT yet confirmed -- these schools are still active paying customers."
     },
-    "count": 31,
-    "total_value_zar": 278330,
+    "count": 40,
+    "total_value_zar": 389480,
     "schools": [
       {
         "deal_id": "1555",
@@ -79,19 +79,8 @@
         "since": "2027-09-03"
       },
       {
-        "deal_id": "778",
-        "title": "Herzlia Renewal 2025",
-        "account_id": "218",
-        "account_name": "United Herzlia Schools",
-        "value_zar": 24000,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
         "deal_id": "1550",
-        "title": "TrinityHouse",
+        "title": "Trinity House",
         "account_id": "11408",
         "account_name": "TRINITYHOUSE GLENVISTA",
         "value_zar": 20050,
@@ -112,10 +101,153 @@
         "since": "2026-10-12"
       },
       {
+        "deal_id": "1590",
+        "title": "Canaan College - Core Education Group",
+        "account_id": "9591",
+        "account_name": "Canaan College",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "143",
+        "title": "Brescia House - 2026",
+        "account_id": "276",
+        "account_name": "Brescia House School",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1582",
+        "title": "Royal Schools Princess Park - Core Education Group",
+        "account_id": "9992",
+        "account_name": "Royal Schools Princess Park",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
         "deal_id": "1539",
         "title": "Calling Academy",
         "account_id": "3450",
-        "account_name": "Calling Academy",
+        "account_name": "Calling Education NPC",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1589",
+        "title": "Etham College - Core Education Group",
+        "account_id": "10332",
+        "account_name": "Etham College",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1581",
+        "title": "Amberfield College-Core Education",
+        "account_id": "362",
+        "account_name": "Amberfield College",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1223",
+        "title": "Acudeo College Protea Glen - Core Education Group",
+        "account_id": "8783",
+        "account_name": "Acudeo College Protea Glen",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1222",
+        "title": "Royal Schools Starlight Academy - Core Education Group",
+        "account_id": "8782",
+        "account_name": "Royal Schools Starlight Academy",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1583",
+        "title": "Queens Private School - Core Education Group",
+        "account_id": "9833",
+        "account_name": "Queens Private School",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1584",
+        "title": "Royal Schools Sky City - Core Education Group",
+        "account_id": "9862",
+        "account_name": "Royal Schools Sky City",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1585",
+        "title": "Royal Schools Alberton-Core Education Group",
+        "account_id": "10328",
+        "account_name": "Royal Schools Alberton",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1586",
+        "title": "Acudeo College Kirkney - Core Education Group",
+        "account_id": "10329",
+        "account_name": "Acudeo College Kirkney",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1587",
+        "title": "Acudeo Crystal Park - Core Education Group",
+        "account_id": "10330",
+        "account_name": "Acudeo Crystal Park",
+        "value_zar": 12000,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "778",
+        "title": "United Herzlia Schools - 2026",
+        "account_id": "218",
+        "account_name": "United Herzlia Schools",
         "value_zar": 12000,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -134,10 +266,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "143",
-        "title": "Brescia House",
-        "account_id": "276",
-        "account_name": "Brescia House School",
+        "deal_id": "1588",
+        "title": "Acudeo Thornview - Core Education Group",
+        "account_id": "10331",
+        "account_name": "Acudeo Thornview",
         "value_zar": 12000,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -178,10 +310,21 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1487",
-        "title": "Curro Langebaan",
-        "account_id": "9570",
-        "account_name": "Curro Langebaan Primary School",
+        "deal_id": "584",
+        "title": "Reddam House Helderfontein",
+        "account_id": "244",
+        "account_name": "Reddam House Helderfontein",
+        "value_zar": 8050,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1543",
+        "title": "St Martin's Preparatory School",
+        "account_id": "9829",
+        "account_name": "St Martin's Preparatory School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -200,32 +343,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "1616",
-        "title": "Sun Valley",
-        "account_id": "427",
-        "account_name": "SUN VALLEY PRIMARY SCHOOL",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
         "deal_id": "1626",
         "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
         "account_id": "10960",
         "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1543",
-        "title": "St Martin's Prep",
-        "account_id": "9829",
-        "account_name": "St Martin's Preparatory School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -245,20 +366,9 @@
       },
       {
         "deal_id": "1559",
-        "title": "Hazyview Primary School",
+        "title": "Hazyview Private Primary School",
         "account_id": "9936",
         "account_name": "Hazyview Private Primary School",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1561",
-        "title": "PBC",
-        "account_id": "9964",
-        "account_name": "Plettenberg Bay Christian Primary School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -270,6 +380,17 @@
         "title": "Herzlia Weizmann",
         "account_id": "9631",
         "account_name": "Herzlia Weizman Primary School",
+        "value_zar": 8050,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1561",
+        "title": "Plettenberg Bay Christian Primary School (PBC)",
+        "account_id": "9964",
+        "account_name": "Plettenberg Bay Christian Primary School",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -289,7 +410,7 @@
       },
       {
         "deal_id": "1577",
-        "title": "East Side",
+        "title": "Eastside Primary School",
         "account_id": "9854",
         "account_name": "Eastside Primary School",
         "value_zar": 8050,
@@ -310,21 +431,10 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "584",
-        "title": "Reddam House Helderfontein",
-        "account_id": "244",
-        "account_name": "Reddam House Helderfontein",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
         "deal_id": "1478",
         "title": "Lebone II College (Primary)",
-        "account_id": "9665",
-        "account_name": "Lebone II College (Primary)",
+        "account_id": "268",
+        "account_name": "Lebone ll – College of Royal Bafokeng NPC",
         "value_zar": 8050,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -343,43 +453,21 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "824",
-        "title": "Early Learning Centre",
-        "account_id": "9927",
-        "account_name": "Early Learning Centre",
-        "value_zar": 4750,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1536",
-        "title": "Vergenoegd PS - C5",
-        "account_id": "9888",
-        "account_name": "Vergenoegd - C5",
-        "value_zar": 4750,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
-        "deal_id": "1535",
-        "title": "Welwitschia PS - C5",
-        "account_id": "9889",
-        "account_name": "Welwitschia - C5",
-        "value_zar": 4750,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "since": "2026-10-12"
-      },
-      {
         "deal_id": "1537",
         "title": "Dr. V.D.Ross - C5",
         "account_id": "9887",
         "account_name": "DR. Van Der Ross - C5",
+        "value_zar": 4750,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1487",
+        "title": "Curro Langebaan",
+        "account_id": "9570",
+        "account_name": "Curro Langebaan Primary School",
         "value_zar": 4750,
         "is_test": false,
         "renewal_date": "2026-10-12",
@@ -398,10 +486,21 @@
         "since": "2026-10-12"
       },
       {
-        "deal_id": "255",
-        "title": "Danie Ackermann Primary",
-        "account_id": "422",
-        "account_name": "Danie Ackermann Primary",
+        "deal_id": "1535",
+        "title": "Welwitschia PS - C5",
+        "account_id": "9889",
+        "account_name": "Welwitschia - C5",
+        "value_zar": 4750,
+        "is_test": false,
+        "renewal_date": "2026-10-12",
+        "access_end_date": "2026-12-31",
+        "since": "2026-10-12"
+      },
+      {
+        "deal_id": "1536",
+        "title": "Vergenoegd PS - C5",
+        "account_id": "9888",
+        "account_name": "Vergenoegd - C5",
         "value_zar": 4750,
         "is_test": false,
         "renewal_date": "2026-10-12",

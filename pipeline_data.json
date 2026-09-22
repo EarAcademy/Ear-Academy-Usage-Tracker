@@ -1,9 +1,9 @@
 {
   "pipeline": {
-    "qualification": 99,
+    "qualification": 92,
     "demo": 25,
     "negotiation": 30,
-    "customers": 54
+    "customers": 50
   },
   "monthly": {
     "jan": {
@@ -16,49 +16,49 @@
     },
     "mar": {
       "new_leads": "162",
-      "new_deals": "4"
+      "new_deals": "3"
     }
   },
   "email": {
-    "sent": "2067",
-    "replied": "1571",
-    "rate": "76.0%",
-    "new_contacts": "18"
+    "sent": "1796",
+    "replied": "1498",
+    "rate": "83.4%",
+    "new_contacts": "20"
   },
   "arr_tiers": {
     "tier1": {
       "label": "R1\u20135k",
-      "count": 9,
-      "revenue": 41730.0
+      "count": 8,
+      "revenue": 36980.0
     },
     "tier2": {
       "label": "R5\u201310k",
-      "count": 21,
-      "revenue": 169050.0
+      "count": 18,
+      "revenue": 144900.0
     },
     "tier3": {
       "label": "R10\u201320k",
-      "count": 23,
-      "revenue": 276000.0
+      "count": 24,
+      "revenue": 288000.0
     },
     "tier4": {
       "label": "R20k+",
-      "count": 3,
-      "revenue": 64100.0
+      "count": 2,
+      "revenue": 40100.0
     }
   },
   "lost_deals": {
     "count": 18,
     "total_value": 147101.0
   },
-  "last_updated": "18 Sep 2026 at 14:49",
+  "last_updated": "22 Sep 2026 at 12:55",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (3) + Activated (22) + Upcoming Renewal (31) + Renewed (0) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "customers": "Onboarding (3) + Activated (9) + Upcoming Renewal (40) + Renewed (0) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }

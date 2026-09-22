@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-18T14:49:53",
-  "generated_label": "18 Sep 2026 at 14:49",
+  "generated_at": "2026-09-22T12:55:44",
+  "generated_label": "22 Sep 2026 at 12:55",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,13 +12,13 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 54,
+  "count": 50,
   "schools": [
     {
       "deal_id": "1586",
       "title": "Acudeo College Kirkney - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "10329",
       "account_name": "Acudeo College Kirkney"
@@ -26,8 +26,8 @@
     {
       "deal_id": "1223",
       "title": "Acudeo College Protea Glen - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "8783",
       "account_name": "Acudeo College Protea Glen"
@@ -35,8 +35,8 @@
     {
       "deal_id": "1587",
       "title": "Acudeo Crystal Park - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "10330",
       "account_name": "Acudeo Crystal Park"
@@ -44,8 +44,8 @@
     {
       "deal_id": "1588",
       "title": "Acudeo Thornview - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "10331",
       "account_name": "Acudeo Thornview"
@@ -53,8 +53,8 @@
     {
       "deal_id": "1581",
       "title": "Amberfield College-Core Education",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "362",
       "account_name": "Amberfield College"
@@ -79,7 +79,7 @@
     },
     {
       "deal_id": "143",
-      "title": "Brescia House",
+      "title": "Brescia House - 2026",
       "stage": "Upcoming Renewal",
       "stage_id": "52",
       "value_zar": 12000,
@@ -93,7 +93,7 @@
       "stage_id": "52",
       "value_zar": 12000,
       "account_id": "3450",
-      "account_name": "Calling Academy"
+      "account_name": "Calling Education NPC"
     },
     {
       "deal_id": "1698",
@@ -107,8 +107,8 @@
     {
       "deal_id": "1590",
       "title": "Canaan College - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "9591",
       "account_name": "Canaan College"
@@ -136,18 +136,9 @@
       "title": "Curro Langebaan",
       "stage": "Upcoming Renewal",
       "stage_id": "52",
-      "value_zar": 8050,
+      "value_zar": 4750,
       "account_id": "9570",
       "account_name": "Curro Langebaan Primary School"
-    },
-    {
-      "deal_id": "255",
-      "title": "Danie Ackermann Primary",
-      "stage": "Upcoming Renewal",
-      "stage_id": "52",
-      "value_zar": 4750,
-      "account_id": "422",
-      "account_name": "Danie Ackermann Primary"
     },
     {
       "deal_id": "1537",
@@ -159,17 +150,8 @@
       "account_name": "DR. Van Der Ross - C5"
     },
     {
-      "deal_id": "824",
-      "title": "Early Learning Centre",
-      "stage": "Upcoming Renewal",
-      "stage_id": "52",
-      "value_zar": 4750,
-      "account_id": "9927",
-      "account_name": "Early Learning Centre"
-    },
-    {
       "deal_id": "1577",
-      "title": "East Side",
+      "title": "Eastside Primary School",
       "stage": "Upcoming Renewal",
       "stage_id": "52",
       "value_zar": 8050,
@@ -188,8 +170,8 @@
     {
       "deal_id": "1589",
       "title": "Etham College - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "10332",
       "account_name": "Etham College"
@@ -214,7 +196,7 @@
     },
     {
       "deal_id": "1559",
-      "title": "Hazyview Primary School",
+      "title": "Hazyview Private Primary School",
       "stage": "Upcoming Renewal",
       "stage_id": "52",
       "value_zar": 8050,
@@ -240,15 +222,6 @@
       "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL"
     },
     {
-      "deal_id": "778",
-      "title": "Herzlia Renewal 2025",
-      "stage": "Upcoming Renewal",
-      "stage_id": "52",
-      "value_zar": 24000,
-      "account_id": "218",
-      "account_name": "United Herzlia Schools"
-    },
-    {
       "deal_id": "1647",
       "title": "Herzlia Weizmann",
       "stage": "Upcoming Renewal",
@@ -265,15 +238,6 @@
       "value_zar": 12000,
       "account_id": "9740",
       "account_name": "HILLCREST PRIMARY SCHOOL"
-    },
-    {
-      "deal_id": "1191",
-      "title": "Holy Cross R C Primary",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 8050,
-      "account_id": "8728",
-      "account_name": "Holy Cross R C Primary"
     },
     {
       "deal_id": "1498",
@@ -308,8 +272,8 @@
       "stage": "Upcoming Renewal",
       "stage_id": "52",
       "value_zar": 8050,
-      "account_id": "9665",
-      "account_name": "Lebone II College (Primary)"
+      "account_id": "268",
+      "account_name": "Lebone ll – College of Royal Bafokeng NPC"
     },
     {
       "deal_id": "1697",
@@ -330,15 +294,6 @@
       "account_name": "Northland School"
     },
     {
-      "deal_id": "1561",
-      "title": "PBC",
-      "stage": "Upcoming Renewal",
-      "stage_id": "52",
-      "value_zar": 8050,
-      "account_id": "9964",
-      "account_name": "Plettenberg Bay Christian Primary School"
-    },
-    {
       "deal_id": "1183",
       "title": "Pinelands High School",
       "stage": "Activated",
@@ -357,6 +312,15 @@
       "account_name": "Pinelands North Primary"
     },
     {
+      "deal_id": "1561",
+      "title": "Plettenberg Bay Christian Primary School (PBC)",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
+      "value_zar": 8050,
+      "account_id": "9964",
+      "account_name": "Plettenberg Bay Christian Primary School"
+    },
+    {
       "deal_id": "1298",
       "title": "Prescient Primary",
       "stage": "Upcoming Renewal",
@@ -368,8 +332,8 @@
     {
       "deal_id": "1583",
       "title": "Queens Private School - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "9833",
       "account_name": "Queens Private School"
@@ -404,8 +368,8 @@
     {
       "deal_id": "1585",
       "title": "Royal Schools Alberton-Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "10328",
       "account_name": "Royal Schools Alberton"
@@ -413,8 +377,8 @@
     {
       "deal_id": "1582",
       "title": "Royal Schools Princess Park - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "9992",
       "account_name": "Royal Schools Princess Park"
@@ -422,8 +386,8 @@
     {
       "deal_id": "1584",
       "title": "Royal Schools Sky City - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "9862",
       "account_name": "Royal Schools Sky City"
@@ -431,8 +395,8 @@
     {
       "deal_id": "1222",
       "title": "Royal Schools Starlight Academy - Core Education Group",
-      "stage": "Activated",
-      "stage_id": "51",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
       "value_zar": 12000,
       "account_id": "8782",
       "account_name": "Royal Schools Starlight Academy"
@@ -457,7 +421,7 @@
     },
     {
       "deal_id": "1543",
-      "title": "St Martin's Prep",
+      "title": "St Martin's Preparatory School",
       "stage": "Upcoming Renewal",
       "stage_id": "52",
       "value_zar": 8050,
@@ -465,22 +429,22 @@
       "account_name": "St Martin's Preparatory School"
     },
     {
-      "deal_id": "1616",
-      "title": "Sun Valley",
-      "stage": "Upcoming Renewal",
-      "stage_id": "52",
-      "value_zar": 8050,
-      "account_id": "427",
-      "account_name": "SUN VALLEY PRIMARY SCHOOL"
-    },
-    {
       "deal_id": "1550",
-      "title": "TrinityHouse",
+      "title": "Trinity House",
       "stage": "Upcoming Renewal",
       "stage_id": "52",
       "value_zar": 20050,
       "account_id": "11408",
       "account_name": "TRINITYHOUSE GLENVISTA"
+    },
+    {
+      "deal_id": "778",
+      "title": "United Herzlia Schools - 2026",
+      "stage": "Upcoming Renewal",
+      "stage_id": "52",
+      "value_zar": 12000,
+      "account_id": "218",
+      "account_name": "United Herzlia Schools"
     },
     {
       "deal_id": "1536",
