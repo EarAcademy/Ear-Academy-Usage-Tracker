@@ -2129,4 +2129,123 @@
     },
     "635": {
       "title": "Hurlyvale Primary School",
-      "group": "8
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 8050,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1675": {
+      "title": "PARKVIEW PRIMARY SCHOOL",
+      "group": "7",
+      "stage": "56",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1717": {
+      "title": "Stulting Primary School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1721": {
+      "title": "Clarendon Preparatory",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1722": {
+      "title": "Hudson Park Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1725": {
+      "title": "Happy Home Academy",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1726": {
+      "title": "Laerskool Mount Pleasant Primary School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1728": {
+      "title": "Mamba Primary School",
+      "group": "4",
+      "stage": "41",
+      "status": "2",
+      "value_zar": 12000,
+      "classification": "lost",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1734": {
+      "title": "Open Air School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1737": {
+      "title": "Inanda Seminary Girls School",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1753": {
+      "title": "Pretoria Chinese Private School",
+      "group": "8",
+      "stage": "61",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "long_term_interest",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    },
+    "1792": {
+      "title": "Victory CS",
+      "group": "4",
+      "stage": "36",
+      "status": "0",
+      "value_zar": 12000,
+      "classification": "refreshed_new_lead",
+      "last_verified": "2026-09-22",
+      "first_dropped_seen": "2026-09-22"
+    }
+  }
+}

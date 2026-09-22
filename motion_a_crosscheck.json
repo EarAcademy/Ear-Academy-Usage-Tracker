@@ -1,0 +1,212 @@
+{
+  "generated_at": "2026-09-22T12:30:02.593687+00:00",
+  "stale_deal_count": 14,
+  "motion_a_school_count": 166,
+  "verified_matches": [
+    {
+      "stale_deal": {
+        "id": "631",
+        "title": "The Glen High School",
+        "days_in_stage": 96
+      },
+      "motion_a": {
+        "school_name": "The Glen High School",
+        "status": "t1-sent",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "The Glen High School",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1710",
+        "title": "St. Augustine's Primary School",
+        "days_in_stage": 96
+      },
+      "motion_a": {
+        "school_name": "St. Augustine's Primary School",
+        "status": "negotiation",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "St. Augustine's Primary School",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1746",
+        "title": "Northwood High School",
+        "days_in_stage": 96
+      },
+      "motion_a": {
+        "school_name": "Northwood High School",
+        "status": "negotiation",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "Northwood High School",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1190",
+        "title": "Lisa Thomas - Timour Hall - Two Term Deal",
+        "days_in_stage": 95
+      },
+      "motion_a": {
+        "school_name": "Lisa Thomas - Timour Hall - Two Term Deal",
+        "status": "t1-sent",
+        "ac_deal_id": 1190
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "ac_deal_id lookup",
+      "live_title": "Lisa Thomas - Timour Hall - Two Term Deal",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1771",
+        "title": "Buccleuch Primary School",
+        "days_in_stage": 91
+      },
+      "motion_a": {
+        "school_name": "Buccleuch Primary School",
+        "status": "t1-sent",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "Buccleuch Primary School",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1718",
+        "title": "Uitenhage Primary School",
+        "days_in_stage": 90
+      },
+      "motion_a": {
+        "school_name": "Uitenhage Primary School",
+        "status": "negotiation",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "Uitenhage Primary School",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1747",
+        "title": "Sastri High School",
+        "days_in_stage": 90
+      },
+      "motion_a": {
+        "school_name": "Sastri High School",
+        "status": "t2-sent",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "Sastri High School",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    },
+    {
+      "stale_deal": {
+        "id": "1749",
+        "title": "Excelsior Academic College",
+        "days_in_stage": 90
+      },
+      "motion_a": {
+        "school_name": "Excelsior Academic College",
+        "status": "t1-sent",
+        "ac_deal_id": null
+      },
+      "match_score": 1.0,
+      "verified": true,
+      "method": "title search",
+      "live_title": "Excelsior Academic College",
+      "live_group": "4",
+      "live_stage": "36",
+      "note": null
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "stale_deal": {
+        "id": "1736",
+        "title": "Parlock Primary School",
+        "days_in_stage": 97
+      },
+      "motion_a": {
+        "school_name": "Avoca Primary School",
+        "status": "t1-sent",
+        "ac_deal_id": null
+      },
+      "match_score": 0.857,
+      "verified": false,
+      "method": "title search",
+      "live_title": null,
+      "live_group": null,
+      "live_stage": null,
+      "note": "No live AC deal matching this title/id combination was found"
+    }
+  ],
+  "untouched_stale_deals": [
+    {
+      "id": "647",
+      "title": "Eagles Nest Christian School  Lucky Baloyi - Schoolscape Event",
+      "days_in_stage": 119
+    },
+    {
+      "id": "1727",
+      "title": "Orient High School",
+      "days_in_stage": 117
+    },
+    {
+      "id": "621",
+      "title": "Cedarhood School  YVONNE MAPONGA - Schoolscape Event",
+      "days_in_stage": 97
+    },
+    {
+      "id": "1736",
+      "title": "Parlock Primary School",
+      "days_in_stage": 97
+    },
+    {
+      "id": "633",
+      "title": "Northwest Christian School",
+      "days_in_stage": 96
+    },
+    {
+      "id": "1744",
+      "title": "Jeppe High School for Girls",
+      "days_in_stage": 90
+    }
+  ]
+}
