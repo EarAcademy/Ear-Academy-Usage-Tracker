@@ -230,7 +230,7 @@ SCHOOL_NAME_ALIASES = {
     "dr.vanderross":                        "Dr. V.D.Ross - C5",
     "Harriston Primary School":             "Harriston School (Primary)",
     "Hermannsburg School":                  "Hermannsburg School (Primary)",
-    "Herzlia High School":                  "Herzlia Renewal 2025",
+    "Herzlia High School":                  "United Herzlia Schools",
     "Herzlia Highlands":                    "Herzlia Highlands Primary School",
     "Herzlia Weitzman Primary School":      "Herzlia Weizmann",
     "Holy Cross RC Primary":                "Holy Cross R C Primary",
