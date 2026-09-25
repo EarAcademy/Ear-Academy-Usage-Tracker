@@ -173,6 +173,15 @@ UK_PILOT_SCHOOLS = {
     'steeton primary school',
 }
 
+# UK Pilots tab: which of the above are actual schools vs. music education
+# "Hubs" (multi-school music services, not a single school). Drives the
+# split display on the UK Pilots tab. Anything in UK_PILOT_SCHOOLS not
+# listed here defaults to 'hub'.
+UK_PILOT_TYPE = {
+    'steeton primary school':        'school',
+    'beckfoot priestthorpe school':  'school',
+}
+
 # B2C Clients tab — individuals to hide (Brandon's request, 2026-09-25).
 # Matched case-insensitively against the client's email. Edit this set to
 # add or remove someone from the B2C Clients tab.
@@ -1907,9 +1916,10 @@ def calc_uk_pilots(combined):
     uk_norm = {_norm_name(s) for s in UK_PILOT_SCHOOLS}
     df = df[df['SchoolNorm'].isin(uk_norm)]
     if df.empty:
+        n_schools = sum(1 for s in UK_PILOT_SCHOOLS if UK_PILOT_TYPE.get(s, 'hub') == 'school')
         return {'weeks': [], 'schools': [], 'totals': {
-            'schools_tracked': len(UK_PILOT_SCHOOLS), 'total_logins': 0,
-            'weeks_of_data': 0, 'active_recently': 0, 'dormant': 0}}
+            'schools_tracked': n_schools, 'hubs_tracked': len(UK_PILOT_SCHOOLS) - n_schools,
+            'total_logins': 0, 'weeks_of_data': 0, 'active_recently': 0, 'dormant': 0}}
 
     df['WeekStart'] = (df['Date'] - pd.to_timedelta(df['Date'].dt.weekday, unit='D')).dt.normalize()
 
@@ -1937,10 +1947,11 @@ def calc_uk_pilots(combined):
         last_week = pd.Timestamp(rows['WeekStart'].max())
         weeks_since_last = int((latest_week - last_week).days // 7)
         last_seen = strf(pd.Timestamp(rows['Date'].max()), '%-d %b %Y')
+        grp = UK_PILOT_TYPE.get(_norm_name(school), 'hub')
         schools_out.append({
             's': school, 'tl': tl, 'uw': uw, 'tc': int(tc), 'sc': int(sc),
             'last': last_seen, 'dormant': weeks_since_last >= 6,
-            'd': d_map,
+            'grp': grp, 'd': d_map,
         })
 
     schools_out.sort(key=lambda x: (-x['tl'], x['s'].lower()))
@@ -1949,7 +1960,8 @@ def calc_uk_pilots(combined):
         'weeks': weeks_iso,
         'schools': schools_out,
         'totals': {
-            'schools_tracked': len(schools_out),
+            'schools_tracked': sum(1 for s in schools_out if s['grp'] == 'school'),
+            'hubs_tracked':    sum(1 for s in schools_out if s['grp'] == 'hub'),
             'total_logins':    sum(s['tl'] for s in schools_out),
             'weeks_of_data':   len(weeks_iso),
             'active_recently': sum(1 for s in schools_out if not s['dormant']),
@@ -1966,18 +1978,21 @@ def build_uk_pilots_html(p):
         return ('<h2 class="section-title pacific">🇬🇧 UK Pilots</h2>\n'
                 '<p class="section-desc">No UK pilot activity found in the snapshots yet.</p>')
     t = p['totals']
+    n_schools = t['schools_tracked']
+    n_hubs    = t['hubs_tracked']
     return f'''<h2 class="section-title pacific">🇬🇧 UK Pilots — {p['date_range_label']}</h2>
-        <p class="section-desc">Non-paying UK pilot schools (not in ActiveCampaign Pipeline 6) · tracked separately from paying customers</p>
+        <p class="section-desc">Non-paying UK pilot schools and music-education hubs (not in ActiveCampaign Pipeline 6) · tracked separately from paying customers</p>
 
         <div class="pt-summary-grid">
-            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{t['schools_tracked']}</div><div class="pt-card-label">UK pilot schools</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{n_schools}</div><div class="pt-card-label">Schools</div></div>
+            <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--lapis)"></div><div class="pt-card-num">{n_hubs}</div><div class="pt-card-label">Hubs</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--sky)"></div><div class="pt-card-num">{t['total_logins']}</div><div class="pt-card-label">Total logins</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:var(--green)"></div><div class="pt-card-num">{t['active_recently']}</div><div class="pt-card-label">Active (last 6 wks)</div></div>
             <div class="pt-summary-card"><div class="pt-card-top" style="background:#b91c1c"></div><div class="pt-card-num" style="color:#b91c1c">{t['dormant']}</div><div class="pt-card-label">Dormant 6+ wks</div></div>
         </div>
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
-            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{len(p['schools'])}</strong> UK pilot schools &nbsp;·&nbsp; Heatmap: {p['date_range_label']}</div>
+            <div style="font-size:0.8rem;color:var(--gray);">Showing <strong>{n_schools}</strong> schools and <strong>{n_hubs}</strong> hubs &nbsp;·&nbsp; Heatmap: {p['date_range_label']}</div>
             <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--gray);align-items:center;">
                 <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#0F6E56;vertical-align:middle;margin-right:3px;"></span>High</span>
                 <span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#5DCAA5;vertical-align:middle;margin-right:3px;"></span>Med</span>
@@ -1986,12 +2001,21 @@ def build_uk_pilots_html(p):
             </div>
         </div>
 
+        <h3 style="font-size:0.95rem;color:var(--lapis);margin:0 0 0.5rem;">Schools</h3>
         <div class="pt-table-header">
             <div>School</div>
-            <div id="uk-week-headers" style="display:flex;gap:3px;"></div>
+            <div id="uk-week-headers-schools" style="display:flex;gap:3px;"></div>
             <div>Last seen</div>
         </div>
-        <div class="pt-school-list" id="uk-school-list"></div>'''
+        <div class="pt-school-list" id="uk-school-list-schools"></div>
+
+        <h3 style="font-size:0.95rem;color:var(--lapis);margin:1.5rem 0 0.5rem;">Hubs</h3>
+        <div class="pt-table-header">
+            <div>Hub</div>
+            <div id="uk-week-headers-hubs" style="display:flex;gap:3px;"></div>
+            <div>Last seen</div>
+        </div>
+        <div class="pt-school-list" id="uk-school-list-hubs"></div>'''
 
 
 def build_uk_pilots_js(p):
