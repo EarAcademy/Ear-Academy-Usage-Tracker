@@ -173,6 +173,14 @@ UK_PILOT_SCHOOLS = {
     'steeton primary school',
 }
 
+# B2C Clients tab — individuals to hide (Brandon's request, 2026-09-25).
+# Matched case-insensitively against the client's email. Edit this set to
+# add or remove someone from the B2C Clients tab.
+B2C_EXCLUDED_CLIENTS = {
+    'alonbedell@gmail.com',
+    'jkaminer+22@gmail.com',   # George WElliot
+}
+
 
 def should_exclude_school(school_name, billing_status=None):
     """Return True if school should be excluded from dashboard."""
@@ -2085,6 +2093,8 @@ def load_b2c_data():
     combined = pd.concat(rows, ignore_index=True)
     combined['Date'] = pd.to_datetime(combined['Date'])
     combined = combined.drop_duplicates(subset=['Email', 'Date'])
+    combined = combined[~combined['Email'].astype(str).str.strip().str.lower()
+                         .isin(B2C_EXCLUDED_CLIENTS)]
     return combined
 
 
