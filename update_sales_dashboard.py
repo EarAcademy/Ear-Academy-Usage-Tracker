@@ -449,12 +449,11 @@ def build_paying_schools_roster(cam_deals):
     return roster
 
 
-# TEMPORARY (added 2026-08-31, Brandon's request): the renewal automation has no
-# real "Renewed" deals yet, so show its "ZZZ TEST..." fixtures as placeholder
-# data to demo the page. Flip back to False once real renewals start landing --
-# ZZZ-test deals must NEVER count in the roster/ARR/customer numbers (those
-# still exclude them via _is_test_deal(), unaffected by this flag).
-RENEWALS_INCLUDE_TEST_DEALS = True
+# Flipped back to False 2026-09-25 (Brandon's request) -- real renewals are
+# landing now, so the "ZZZ TEST..." / "Bob Test..." placeholder fixtures no
+# longer belong on the Renewals page. ZZZ-test deals never counted in the
+# roster/ARR/customer numbers regardless of this flag (see _is_test_deal()).
+RENEWALS_INCLUDE_TEST_DEALS = False
 
 
 def _build_stage_deal_list(cam_all, stage_id, date_field):

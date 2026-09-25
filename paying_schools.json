@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-22T12:55:44",
-  "generated_label": "22 Sep 2026 at 12:55",
+  "generated_at": "2026-09-25T10:36:19",
+  "generated_label": "25 Sep 2026 at 10:36",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 50,
+  "count": 48,
   "schools": [
     {
       "deal_id": "1586",
@@ -121,15 +121,6 @@
       "value_zar": 4750,
       "account_id": "9592",
       "account_name": "CBC Mount Edmund (Christian Brothers' College Mount Edmund)"
-    },
-    {
-      "deal_id": "1526",
-      "title": "Cheré Botha School",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 8050,
-      "account_id": "9735",
-      "account_name": "Cheré Botha School"
     },
     {
       "deal_id": "1487",
@@ -292,15 +283,6 @@
       "value_zar": 12000,
       "account_id": "11653",
       "account_name": "Northland School"
-    },
-    {
-      "deal_id": "1183",
-      "title": "Pinelands High School",
-      "stage": "Activated",
-      "stage_id": "51",
-      "value_zar": 12000,
-      "account_id": "509",
-      "account_name": "PINELANDS HIGH SCHOOL"
     },
     {
       "deal_id": "359",
