@@ -73,9 +73,17 @@
   },
   "lost_deals": {
     "count": 18,
-    "total_value": 147101.0
+    "total_value": 147101.0,
+    "by_reason": {
+      "Existing Solution": 1,
+      "Bad Fit": 2,
+      "Insufficient need": 2,
+      "Non Responsive": 4,
+      "Not recorded": 8,
+      "Lack of Interest": 1
+    }
   },
-  "last_updated": "25 Sep 2026 at 13:20",
+  "last_updated": "25 Sep 2026 at 15:55",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",

@@ -27,6 +27,7 @@ import json
 import sys
 import subprocess
 import requests
+from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -48,6 +49,8 @@ RENEWALS_FILE = SCRIPT_DIR / "renewals_data.json"    # confirmed-renewals list
 P_QUAL = "4"   # Sales Qualification
 P_CONV = "5"   # Sales Conversion
 P_CAM  = "6"   # Customer Account Management
+
+LOST_REASON_FIELD_ID = "81"   # "Closed Lost Reason" custom field
 
 # Stage IDs (confirmed from memory)
 S_NEW_LEAD    = "36"   # Pipeline 4 → New Lead
@@ -342,6 +345,23 @@ def calculate_arr_tiers(won_deals):
     return tiers
 
 
+def fetch_lost_reason(deal_id):
+    """Look up one deal's 'Closed Lost Reason' custom field. One AC call per
+    deal — fine at Pipeline 5's Lost volume (well under 50), same technique
+    proven in board_deep_dive.py."""
+    headers = {"Api-Token": AC_API_KEY}
+    try:
+        r = requests.get(f"{AC_BASE_URL}/api/3/deals/{deal_id}/dealCustomFieldData",
+                          headers=headers, timeout=30)
+        r.raise_for_status()
+        for f in r.json().get("dealCustomFieldData", []):
+            if str(f.get("customFieldId")) == LOST_REASON_FIELD_ID:
+                return f.get("fieldValue") or None
+    except requests.RequestException:
+        pass
+    return None
+
+
 def fetch_lost_deals_pipeline5():
     """Fetch Lost deals from Pipeline 5 (Sales Conversion) only.
 
@@ -356,10 +376,16 @@ def fetch_lost_deals_pipeline5():
     })
     zar = [d for d in deals if d.get("currency", "").lower() == "zar"]
     total_value = sum(int(d.get("value", 0)) / 100 for d in zar)
+
+    reasons = defaultdict(int)
+    for d in zar:
+        reasons[fetch_lost_reason(d.get("id")) or "Not recorded"] += 1
+
     print(f"    → {len(zar)} lost deals, total value R{total_value:,.0f}")
     return {
         "count":       len(zar),
         "total_value": round(total_value, 2),
+        "by_reason":   dict(reasons),
     }
 
 

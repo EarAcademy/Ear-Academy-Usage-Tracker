@@ -902,32 +902,8 @@ body {
     <!-- Lost Deal Breakdown -->
     <div class="card">
       <p class="card-title">Lost Deal Analysis</p>
-      <div class="lost-items">
-        <div class="lost-row">
-          <span class="lost-label">No Response</span>
-          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 100%;"></div></div>
-          <span class="lost-count">31</span>
-        </div>
-        <div class="lost-row">
-          <span class="lost-label">Not Interested</span>
-          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 55%;"></div></div>
-          <span class="lost-count">17</span>
-        </div>
-        <div class="lost-row">
-          <span class="lost-label">Budget / Price</span>
-          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 35%;"></div></div>
-          <span class="lost-count">11</span>
-        </div>
-        <div class="lost-row">
-          <span class="lost-label">Timing</span>
-          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 19%;"></div></div>
-          <span class="lost-count">6</span>
-        </div>
-        <div class="lost-row">
-          <span class="lost-label">Other / Unknown</span>
-          <div class="lost-bar-wrap"><div class="lost-bar" style="width: 10%;"></div></div>
-          <span class="lost-count">3</span>
-        </div>
+      <div class="lost-items" id="lost-items">
+        <p style="font-size: 0.8rem; color: var(--gray);">Loading…</p>
       </div>
       <p style="font-size: 0.78rem; color: var(--gray); margin-top: 1rem; line-height: 1.6;" id="lost-summary">
         Total 21 lost deals (Sales Conversion pipeline only). Top opportunity: "No Response" deals may be re-engageable with a new touch.
@@ -1287,11 +1263,32 @@ var MONTH_KEYS = ['jan','feb','mar','apr','may','jun','jul','aug','sep'];
           + ' paying schools. Data sourced live from ActiveCampaign.');
       }
 
-      // Lost deals summary line
+      // Lost deal reason breakdown — bars built live, real category names,
+      // sorted by count. Replaces what used to be hardcoded sample rows.
+      const byReason = ld.by_reason || {};
+      const reasonEntries = Object.entries(byReason).sort((a, b) => b[1] - a[1]);
+      const li = document.getElementById('lost-items');
+      if (li && reasonEntries.length) {
+        const maxReason = Math.max(...reasonEntries.map(e => e[1]), 1);
+        li.innerHTML = reasonEntries.map(([reason, n]) => `
+          <div class="lost-row">
+            <span class="lost-label">${reason}</span>
+            <div class="lost-bar-wrap"><div class="lost-bar" style="width: ${Math.max(4, Math.round(n / maxReason * 100))}%;"></div></div>
+            <span class="lost-count">${n}</span>
+          </div>`).join('');
+      }
+
+      // Lost deals summary line — names the real top reason, not a fixed guess
       if (lostCount > 0) {
+        let insight = '';
+        if (reasonEntries.length) {
+          const [topReason, topN] = reasonEntries[0];
+          insight = topReason === 'Not recorded'
+            ? ' No reason logged for ' + topN + ' of ' + lostCount + ' — worth capturing at the point a deal is marked lost.'
+            : ' Top reason: "' + topReason + '" (' + topN + ') — worth a second look for re-engagement.';
+        }
         set('lost-summary', 'Total ' + lostCount + ' lost deals (Sales Conversion pipeline only). '
-          + 'Total value R' + Math.round(ld.total_value).toLocaleString()
-          + '. Top opportunity: "No Response" deals may be re-engageable with a new touch.');
+          + 'Total value R' + Math.round(ld.total_value).toLocaleString() + '.' + insight);
       }
 
       // Last updated badge
