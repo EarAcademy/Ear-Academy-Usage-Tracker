@@ -11,7 +11,7 @@ Usage (run from Terminal or via Claude):
 
 What it does:
     1. Pulls deal counts from AC Pipelines 4, 5, 6 (ZAR only)
-    2. Pulls monthly new lead counts (Jan, Feb, Mar)
+    2. Pulls monthly new lead counts (Jan-Sep)
     3. Pulls email campaign stats
     4. Writes ONLY to pipeline_data.json
     5. Commits and pushes to GitHub (live within ~60 seconds)
@@ -593,15 +593,14 @@ def main(no_push=False):
 
     # ── 2. Monthly new leads & deals ─────────────────────────────────────────
     print("\n📅  Monthly activity (leads & deals from AC — Product Demos stay in HTML):")
-    jan_leads = count_new_leads_for_month(2026, 1)
-    feb_leads = count_new_leads_for_month(2026, 2)
-    mar_leads = count_new_leads_for_month(2026, 3)
-    jan_deals = count_new_deals_for_month(2026, 1)
-    feb_deals = count_new_deals_for_month(2026, 2)
-    mar_deals = count_new_deals_for_month(2026, 3)
-    print(f"    Jan — leads: {jan_leads}, deals: {jan_deals}")
-    print(f"    Feb — leads: {feb_leads}, deals: {feb_deals}")
-    print(f"    Mar — leads: {mar_leads}, deals: {mar_deals}")
+    MONTH_KEYS = [(1, "jan"), (2, "feb"), (3, "mar"), (4, "apr"),
+                  (5, "may"), (6, "jun"), (7, "jul"), (8, "aug"), (9, "sep")]
+    monthly_counts = {}
+    for mnum, mkey in MONTH_KEYS:
+        leads = count_new_leads_for_month(2026, mnum)
+        deals = count_new_deals_for_month(2026, mnum)
+        monthly_counts[mkey] = {"new_leads": leads, "new_deals": deals}
+        print(f"    {mkey.title()} — leads: {leads}, deals: {deals}")
 
     # ── 3. Email stats ───────────────────────────────────────────────────────
     print("\n📧  Email stats:")
@@ -645,9 +644,8 @@ def main(no_push=False):
             "customers":     customers,
         },
         "monthly": {
-            "jan": {"new_leads": str(jan_leads), "new_deals": str(jan_deals)},
-            "feb": {"new_leads": str(feb_leads), "new_deals": str(feb_deals)},
-            "mar": {"new_leads": str(mar_leads), "new_deals": str(mar_deals)},
+            mkey: {"new_leads": str(v["new_leads"]), "new_deals": str(v["new_deals"])}
+            for mkey, v in monthly_counts.items()
         },
         "email": email,
         "arr_tiers": {

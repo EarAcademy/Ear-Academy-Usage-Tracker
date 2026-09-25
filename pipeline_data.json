@@ -17,6 +17,30 @@
     "mar": {
       "new_leads": "162",
       "new_deals": "3"
+    },
+    "apr": {
+      "new_leads": "44",
+      "new_deals": "37"
+    },
+    "may": {
+      "new_leads": "10",
+      "new_deals": "0"
+    },
+    "jun": {
+      "new_leads": "19",
+      "new_deals": "0"
+    },
+    "jul": {
+      "new_leads": "143",
+      "new_deals": "0"
+    },
+    "aug": {
+      "new_leads": "37",
+      "new_deals": "0"
+    },
+    "sep": {
+      "new_leads": "21",
+      "new_deals": "0"
     }
   },
   "email": {
@@ -51,7 +75,7 @@
     "count": 18,
     "total_value": 147101.0
   },
-  "last_updated": "25 Sep 2026 at 10:36",
+  "last_updated": "25 Sep 2026 at 13:20",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
