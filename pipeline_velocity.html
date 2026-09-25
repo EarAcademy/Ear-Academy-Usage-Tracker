@@ -288,6 +288,7 @@ function renderDashboard(vd) {
   if(fd) fd.textContent = vd.generated_label || 'snapshot';
 
   // Hero
+  document.getElementById('h1').textContent=P4.total;
   document.getElementById('h1s').textContent=`Avg ${P4.avg_days_in_stage||P4.avg||0}d in stage · ${P4.buckets.over180||0} stuck 180d+`;
   document.getElementById('h2').textContent=DEMO.length;
   document.getElementById('h2s').textContent=`Avg ${avgD}d in stage`;
