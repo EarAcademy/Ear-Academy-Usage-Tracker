@@ -1,127 +1,127 @@
 {
-  "generated_at": "2026-09-22T11:38:34Z",
-  "generated_label": "22 Sep 2026 at 11:38",
+  "generated_at": "2026-10-05T07:45:49Z",
+  "generated_label": "5 Oct 2026 at 07:45",
   "pipeline4": {
     "total": 92,
-    "avg_days_in_stage": 34,
+    "avg_days_in_stage": 47,
     "total_value_zar": 1018094,
     "buckets": {
-      "u30": 56,
-      "u60": 22,
-      "u90": 4,
-      "u180": 10,
+      "u30": 21,
+      "u60": 52,
+      "u90": 5,
+      "u180": 14,
       "over180": 0
     },
     "stale_deals": [
       {
         "id": "647",
         "title": "Eagles Nest Christian School  Lucky Baloyi - Schoolscape Event",
-        "days_in_stage": 119,
-        "total_age_days": 749,
+        "days_in_stage": 132,
+        "total_age_days": 762,
         "value_zar": 20000,
         "cdate": "2024-09-03"
       },
       {
         "id": "1727",
         "title": "Orient High School",
-        "days_in_stage": 117,
-        "total_age_days": 168,
+        "days_in_stage": 129,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       },
       {
         "id": "621",
         "title": "Cedarhood School  YVONNE MAPONGA - Schoolscape Event",
-        "days_in_stage": 97,
-        "total_age_days": 749,
+        "days_in_stage": 110,
+        "total_age_days": 762,
         "value_zar": 20000,
         "cdate": "2024-09-03"
       },
       {
         "id": "1736",
         "title": "Parlock Primary School",
-        "days_in_stage": 97,
-        "total_age_days": 168,
+        "days_in_stage": 110,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       },
       {
         "id": "631",
         "title": "The Glen High School",
-        "days_in_stage": 96,
-        "total_age_days": 749,
+        "days_in_stage": 109,
+        "total_age_days": 762,
         "value_zar": 12000,
+        "cdate": "2024-09-03"
+      },
+      {
+        "id": "633",
+        "title": "Northwest Christian School",
+        "days_in_stage": 109,
+        "total_age_days": 762,
+        "value_zar": 8050,
         "cdate": "2024-09-03"
       },
       {
         "id": "1710",
         "title": "St. Augustine's Primary School",
-        "days_in_stage": 96,
-        "total_age_days": 168,
+        "days_in_stage": 108,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-06"
       },
       {
         "id": "1746",
         "title": "Northwood High School",
-        "days_in_stage": 96,
-        "total_age_days": 168,
+        "days_in_stage": 108,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       },
       {
-        "id": "633",
-        "title": "Northwest Christian School",
-        "days_in_stage": 96,
-        "total_age_days": 749,
-        "value_zar": 8050,
-        "cdate": "2024-09-03"
-      },
-      {
         "id": "1190",
         "title": "Lisa Thomas - Timour Hall - Two Term Deal",
-        "days_in_stage": 95,
-        "total_age_days": 567,
+        "days_in_stage": 108,
+        "total_age_days": 579,
         "value_zar": 8050,
         "cdate": "2025-03-04"
       },
       {
         "id": "1771",
         "title": "Buccleuch Primary School",
-        "days_in_stage": 91,
-        "total_age_days": 168,
+        "days_in_stage": 104,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       },
       {
         "id": "1718",
         "title": "Uitenhage Primary School",
-        "days_in_stage": 90,
-        "total_age_days": 168,
-        "value_zar": 12000,
-        "cdate": "2026-04-07"
-      },
-      {
-        "id": "1744",
-        "title": "Jeppe High School for Girls",
-        "days_in_stage": 90,
-        "total_age_days": 168,
+        "days_in_stage": 103,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       },
       {
         "id": "1747",
         "title": "Sastri High School",
-        "days_in_stage": 90,
-        "total_age_days": 168,
+        "days_in_stage": 103,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       },
       {
         "id": "1749",
         "title": "Excelsior Academic College",
-        "days_in_stage": 90,
-        "total_age_days": 168,
+        "days_in_stage": 103,
+        "total_age_days": 181,
+        "value_zar": 12000,
+        "cdate": "2026-04-07"
+      },
+      {
+        "id": "1744",
+        "title": "Jeppe High School for Girls",
+        "days_in_stage": 102,
+        "total_age_days": 181,
         "value_zar": 12000,
         "cdate": "2026-04-07"
       }
@@ -130,11 +130,11 @@
   "pipeline5": {
     "demo": {
       "count": 25,
-      "avg_days_in_stage": 24,
-      "total_value_zar": 256644,
+      "avg_days_in_stage": 35,
+      "total_value_zar": 268644,
       "buckets": {
-        "u30": 14,
-        "u60": 11,
+        "u30": 10,
+        "u60": 15,
         "u90": 0,
         "u180": 0,
         "over180": 0
@@ -144,8 +144,8 @@
           "id": "1743",
           "title": "St Catherine’s School",
           "stage": "43",
-          "days_in_stage": 39,
-          "total_age_days": 168,
+          "days_in_stage": 51,
+          "total_age_days": 181,
           "value_zar": 12000,
           "edate": "2026-08-14",
           "cdate": "2026-04-07",
@@ -154,7 +154,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-04-30",
-              "days": 145
+              "days": 158
             }
           ]
         },
@@ -162,8 +162,8 @@
           "id": "1801",
           "title": "Kokstad Junior",
           "stage": "43",
-          "days_in_stage": 39,
-          "total_age_days": 138,
+          "days_in_stage": 51,
+          "total_age_days": 151,
           "value_zar": 12000,
           "edate": "2026-08-14",
           "cdate": "2026-05-07",
@@ -173,8 +173,8 @@
           "id": "1802",
           "title": "Bloubergrant High",
           "stage": "43",
-          "days_in_stage": 39,
-          "total_age_days": 125,
+          "days_in_stage": 51,
+          "total_age_days": 138,
           "value_zar": 12000,
           "edate": "2026-08-14",
           "cdate": "2026-05-20",
@@ -183,7 +183,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-06-19",
-              "days": 95
+              "days": 108
             }
           ]
         },
@@ -191,8 +191,8 @@
           "id": "859",
           "title": "Africa House college",
           "stage": "43",
-          "days_in_stage": 36,
-          "total_age_days": 690,
+          "days_in_stage": 49,
+          "total_age_days": 703,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2024-10-31",
@@ -201,7 +201,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-02-20",
-              "days": 214
+              "days": 226
             }
           ]
         },
@@ -209,8 +209,8 @@
           "id": "1665",
           "title": "Generations Somerset West",
           "stage": "43",
-          "days_in_stage": 36,
-          "total_age_days": 210,
+          "days_in_stage": 49,
+          "total_age_days": 222,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2026-02-24",
@@ -219,7 +219,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-02-24",
-              "days": 210
+              "days": 222
             }
           ]
         },
@@ -227,8 +227,8 @@
           "id": "1612",
           "title": "Growing Minds",
           "stage": "43",
-          "days_in_stage": 36,
-          "total_age_days": 362,
+          "days_in_stage": 49,
+          "total_age_days": 375,
           "value_zar": 8050,
           "edate": "2026-08-17",
           "cdate": "2025-09-25",
@@ -243,7 +243,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-05-25",
-              "days": 120
+              "days": 133
             }
           ]
         },
@@ -251,8 +251,8 @@
           "id": "1709",
           "title": "Greenwood School",
           "stage": "43",
-          "days_in_stage": 35,
-          "total_age_days": 180,
+          "days_in_stage": 48,
+          "total_age_days": 192,
           "value_zar": 12000,
           "edate": "2026-08-18",
           "cdate": "2026-03-26",
@@ -261,7 +261,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-04-21",
-              "days": 154
+              "days": 167
             }
           ]
         },
@@ -269,8 +269,8 @@
           "id": "1825",
           "title": "Springfield primary school",
           "stage": "43",
-          "days_in_stage": 35,
-          "total_age_days": 36,
+          "days_in_stage": 48,
+          "total_age_days": 49,
           "value_zar": 12000,
           "edate": "2026-08-18",
           "cdate": "2026-08-17",
@@ -280,8 +280,8 @@
           "id": "1239",
           "title": "HMS La Rochelle - Melina Smit",
           "stage": "43",
-          "days_in_stage": 35,
-          "total_age_days": 559,
+          "days_in_stage": 48,
+          "total_age_days": 571,
           "value_zar": 8050,
           "edate": "2026-08-18",
           "cdate": "2025-03-12",
@@ -302,7 +302,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-08-18",
-              "days": 35
+              "days": 48
             }
           ]
         },
@@ -310,8 +310,8 @@
           "id": "1828",
           "title": "Grantleigh Schools Curro",
           "stage": "43",
-          "days_in_stage": 34,
-          "total_age_days": 34,
+          "days_in_stage": 47,
+          "total_age_days": 47,
           "value_zar": 11999,
           "edate": "2026-08-19",
           "cdate": "2026-08-19",
@@ -321,8 +321,8 @@
           "id": "612",
           "title": "Dowerglen High School",
           "stage": "43",
-          "days_in_stage": 33,
-          "total_age_days": 749,
+          "days_in_stage": 46,
+          "total_age_days": 762,
           "value_zar": 12000,
           "edate": "2026-08-20",
           "cdate": "2024-09-03",
@@ -337,7 +337,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-08-20",
-              "days": 33
+              "days": 46
             }
           ]
         },
@@ -345,8 +345,8 @@
           "id": "1829",
           "title": "Deutsche Schule Durban",
           "stage": "43",
-          "days_in_stage": 29,
-          "total_age_days": 29,
+          "days_in_stage": 42,
+          "total_age_days": 42,
           "value_zar": 12000,
           "edate": "2026-08-24",
           "cdate": "2026-08-24",
@@ -356,30 +356,19 @@
           "id": "1832",
           "title": "Spark Rosslyn Hub",
           "stage": "43",
-          "days_in_stage": 26,
-          "total_age_days": 29,
+          "days_in_stage": 39,
+          "total_age_days": 42,
           "value_zar": 12000,
           "edate": "2026-08-27",
           "cdate": "2026-08-24",
           "stage_history": []
         },
         {
-          "id": "1862",
-          "title": "African School For Excellence",
-          "stage": "43",
-          "days_in_stage": 21,
-          "total_age_days": 21,
-          "value_zar": 12000,
-          "edate": "2026-09-01",
-          "cdate": "2026-09-01",
-          "stage_history": []
-        },
-        {
           "id": "1776",
           "title": "Whale Coast Academy",
           "stage": "43",
-          "days_in_stage": 19,
-          "total_age_days": 168,
+          "days_in_stage": 32,
+          "total_age_days": 181,
           "value_zar": 12000,
           "edate": "2026-09-03",
           "cdate": "2026-04-07",
@@ -388,7 +377,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-09-03",
-              "days": 19
+              "days": 32
             }
           ]
         },
@@ -396,8 +385,8 @@
           "id": "1194",
           "title": "Wiehan Smit -",
           "stage": "43",
-          "days_in_stage": 19,
-          "total_age_days": 567,
+          "days_in_stage": 32,
+          "total_age_days": 579,
           "value_zar": 8050,
           "edate": "2026-09-03",
           "cdate": "2025-03-04",
@@ -412,29 +401,29 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-08-21",
-              "days": 32
+              "days": 45
             }
           ]
-        },
-        {
-          "id": "1865",
-          "title": "Roedean School Senior Primary",
-          "stage": "43",
-          "days_in_stage": 15,
-          "total_age_days": 15,
-          "value_zar": 12000,
-          "edate": "2026-09-07",
-          "cdate": "2026-09-07",
-          "stage_history": []
         },
         {
           "id": "1864",
           "title": "Bridgewater Primary School Pilot",
           "stage": "43",
-          "days_in_stage": 15,
-          "total_age_days": 15,
+          "days_in_stage": 28,
+          "total_age_days": 28,
           "value_zar": 395,
           "edate": "",
+          "cdate": "2026-09-07",
+          "stage_history": []
+        },
+        {
+          "id": "1865",
+          "title": "Roedean School Senior Primary",
+          "stage": "43",
+          "days_in_stage": 27,
+          "total_age_days": 27,
+          "value_zar": 12000,
+          "edate": "2026-09-07",
           "cdate": "2026-09-07",
           "stage_history": []
         },
@@ -442,8 +431,8 @@
           "id": "637",
           "title": "Acts House of Education",
           "stage": "43",
-          "days_in_stage": 14,
-          "total_age_days": 749,
+          "days_in_stage": 26,
+          "total_age_days": 762,
           "value_zar": 12000,
           "edate": "2026-09-08",
           "cdate": "2024-09-03",
@@ -458,7 +447,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-08-18",
-              "days": 35
+              "days": 48
             }
           ]
         },
@@ -466,8 +455,8 @@
           "id": "557",
           "title": "Lorette John  Rondebosch Prep",
           "stage": "43",
-          "days_in_stage": 8,
-          "total_age_days": 761,
+          "days_in_stage": 21,
+          "total_age_days": 774,
           "value_zar": 12000,
           "edate": "2026-09-14",
           "cdate": "2024-08-22",
@@ -488,25 +477,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-09-14",
-              "days": 8
-            }
-          ]
-        },
-        {
-          "id": "1730",
-          "title": "Dr Macken Mistry Primary",
-          "stage": "43",
-          "days_in_stage": 7,
-          "total_age_days": 168,
-          "value_zar": 12000,
-          "edate": "2026-09-15",
-          "cdate": "2026-04-07",
-          "stage_history": [
-            {
-              "stage_id": "43",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-09-15",
-              "days": 7
+              "days": 21
             }
           ]
         },
@@ -514,8 +485,8 @@
           "id": "30",
           "title": "BMS: Somerset College",
           "stage": "43",
-          "days_in_stage": 7,
-          "total_age_days": 980,
+          "days_in_stage": 20,
+          "total_age_days": 992,
           "value_zar": 8050,
           "edate": "2026-09-15",
           "cdate": "2024-01-16",
@@ -530,7 +501,7 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-09-15",
-              "days": 7
+              "days": 20
             }
           ]
         },
@@ -538,8 +509,8 @@
           "id": "251",
           "title": "Wynberg Girls Junior School",
           "stage": "43",
-          "days_in_stage": 7,
-          "total_age_days": 922,
+          "days_in_stage": 20,
+          "total_age_days": 935,
           "value_zar": 8050,
           "edate": "2026-09-15",
           "cdate": "2024-03-14",
@@ -554,7 +525,25 @@
               "stage_id": "43",
               "stage_name": "Demo/Pilot",
               "entered": "2026-09-15",
-              "days": 7
+              "days": 20
+            }
+          ]
+        },
+        {
+          "id": "1730",
+          "title": "Dr Macken Mistry Primary",
+          "stage": "43",
+          "days_in_stage": 19,
+          "total_age_days": 181,
+          "value_zar": 12000,
+          "edate": "2026-09-15",
+          "cdate": "2026-04-07",
+          "stage_history": [
+            {
+              "stage_id": "43",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-09-15",
+              "days": 19
             }
           ]
         },
@@ -562,34 +551,45 @@
           "id": "1887",
           "title": "Curro Heritage house",
           "stage": "43",
-          "days_in_stage": 6,
-          "total_age_days": 6,
+          "days_in_stage": 19,
+          "total_age_days": 19,
           "value_zar": 12000,
           "edate": "2026-09-16",
           "cdate": "2026-09-16",
           "stage_history": []
         },
         {
-          "id": "1889",
-          "title": "Brandon Quotation School (Test)",
+          "id": "1862",
+          "title": "African School For Excellence",
           "stage": "43",
-          "days_in_stage": 4,
-          "total_age_days": 4,
-          "value_zar": 0,
+          "days_in_stage": 12,
+          "total_age_days": 33,
+          "value_zar": 12000,
+          "edate": "2026-09-23",
+          "cdate": "2026-09-01",
+          "stage_history": []
+        },
+        {
+          "id": "1890",
+          "title": "Curro Clayville",
+          "stage": "43",
+          "days_in_stage": 12,
+          "total_age_days": 12,
+          "value_zar": 12000,
           "edate": "",
-          "cdate": "2026-09-18",
+          "cdate": "2026-09-22",
           "stage_history": []
         }
       ]
     },
     "nego": {
-      "count": 30,
-      "avg_days_in_stage": 28,
+      "count": 29,
+      "avg_days_in_stage": 37,
       "total_value_zar": 361600,
       "buckets": {
-        "u30": 16,
-        "u60": 12,
-        "u90": 1,
+        "u30": 13,
+        "u60": 15,
+        "u90": 0,
         "u180": 1,
         "over180": 0
       },
@@ -598,8 +598,8 @@
           "id": "1810",
           "title": "Falcon College",
           "stage": "46",
-          "days_in_stage": 97,
-          "total_age_days": 99,
+          "days_in_stage": 110,
+          "total_age_days": 112,
           "value_zar": 12000,
           "edate": "2026-06-17",
           "cdate": "2026-06-15",
@@ -608,27 +608,16 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-06-16",
-              "days": 98
+              "days": 111
             }
           ]
-        },
-        {
-          "id": "1813",
-          "title": "guitar of school",
-          "stage": "46",
-          "days_in_stage": 90,
-          "total_age_days": 90,
-          "value_zar": 0,
-          "edate": "2026-06-24",
-          "cdate": "2026-06-24",
-          "stage_history": []
         },
         {
           "id": "1824",
           "title": "Curro Northriding",
           "stage": "46",
-          "days_in_stage": 46,
-          "total_age_days": 46,
+          "days_in_stage": 59,
+          "total_age_days": 59,
           "value_zar": 12000,
           "edate": "2026-08-07",
           "cdate": "2026-08-07",
@@ -638,8 +627,8 @@
           "id": "50",
           "title": "Online(SA): Teneo Education",
           "stage": "46",
-          "days_in_stage": 39,
-          "total_age_days": 980,
+          "days_in_stage": 51,
+          "total_age_days": 992,
           "value_zar": 36000,
           "edate": "2026-08-14",
           "cdate": "2024-01-16",
@@ -678,7 +667,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
-              "days": 213
+              "days": 226
             }
           ]
         },
@@ -686,8 +675,8 @@
           "id": "1525",
           "title": "Camps Bay Primary",
           "stage": "46",
-          "days_in_stage": 39,
-          "total_age_days": 428,
+          "days_in_stage": 51,
+          "total_age_days": 440,
           "value_zar": 12000,
           "edate": "2026-08-14",
           "cdate": "2025-07-21",
@@ -714,7 +703,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-05-05",
-              "days": 140
+              "days": 153
             }
           ]
         },
@@ -722,8 +711,8 @@
           "id": "1418",
           "title": "Elsen Academy",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 480,
+          "days_in_stage": 49,
+          "total_age_days": 492,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2025-05-30",
@@ -732,7 +721,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-04-20",
-              "days": 155
+              "days": 167
             }
           ]
         },
@@ -740,8 +729,8 @@
           "id": "1483",
           "title": "Pinnacle College Kyalami",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 470,
+          "days_in_stage": 49,
+          "total_age_days": 483,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2025-06-09",
@@ -750,7 +739,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2025-08-04",
-              "days": 414
+              "days": 426
             }
           ]
         },
@@ -758,8 +747,8 @@
           "id": "1623",
           "title": "Ayanda Junior Academy",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 336,
+          "days_in_stage": 49,
+          "total_age_days": 349,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2025-10-21",
@@ -774,25 +763,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-06-03",
-              "days": 111
-            }
-          ]
-        },
-        {
-          "id": "1634",
-          "title": "Courtney House",
-          "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 323,
-          "value_zar": 12000,
-          "edate": "2026-08-17",
-          "cdate": "2025-11-03",
-          "stage_history": [
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2025-11-03",
-              "days": 323
+              "days": 124
             }
           ]
         },
@@ -800,8 +771,8 @@
           "id": "1657",
           "title": "Mpaka High School",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 235,
+          "days_in_stage": 49,
+          "total_age_days": 248,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2026-01-30",
@@ -828,7 +799,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-06-03",
-              "days": 110
+              "days": 123
             }
           ]
         },
@@ -836,8 +807,8 @@
           "id": "1658",
           "title": "Cedar House",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 217,
+          "days_in_stage": 49,
+          "total_age_days": 229,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2026-02-17",
@@ -852,7 +823,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-02-20",
-              "days": 213
+              "days": 226
             }
           ]
         },
@@ -860,8 +831,8 @@
           "id": "1731",
           "title": "Joyhouse Private School",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 168,
+          "days_in_stage": 49,
+          "total_age_days": 181,
           "value_zar": 12000,
           "edate": "2026-08-17",
           "cdate": "2026-04-07",
@@ -876,7 +847,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-06-22",
-              "days": 92
+              "days": 105
             }
           ]
         },
@@ -884,8 +855,8 @@
           "id": "1822",
           "title": "Jens Primary School",
           "stage": "46",
-          "days_in_stage": 36,
-          "total_age_days": 49,
+          "days_in_stage": 49,
+          "total_age_days": 61,
           "value_zar": 7800,
           "edate": "2026-08-17",
           "cdate": "2026-08-04",
@@ -894,7 +865,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-08-05",
-              "days": 48
+              "days": 61
             }
           ]
         },
@@ -902,8 +873,8 @@
           "id": "1826",
           "title": "Wembly College",
           "stage": "46",
-          "days_in_stage": 33,
-          "total_age_days": 36,
+          "days_in_stage": 46,
+          "total_age_days": 48,
           "value_zar": 12000,
           "edate": "2026-08-20",
           "cdate": "2026-08-17",
@@ -912,7 +883,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-08-20",
-              "days": 33
+              "days": 46
             }
           ]
         },
@@ -920,8 +891,8 @@
           "id": "1303",
           "title": "Curro Academy Wilgeheuwel",
           "stage": "46",
-          "days_in_stage": 29,
-          "total_age_days": 518,
+          "days_in_stage": 42,
+          "total_age_days": 531,
           "value_zar": 12000,
           "edate": "2026-08-24",
           "cdate": "2025-04-22",
@@ -942,7 +913,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-08-24",
-              "days": 29
+              "days": 42
             }
           ]
         },
@@ -950,8 +921,8 @@
           "id": "254",
           "title": "Gateway High",
           "stage": "46",
-          "days_in_stage": 26,
-          "total_age_days": 922,
+          "days_in_stage": 39,
+          "total_age_days": 935,
           "value_zar": 12000,
           "edate": "2026-08-27",
           "cdate": "2024-03-14",
@@ -972,7 +943,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-05-19",
-              "days": 126
+              "days": 138
             }
           ]
         },
@@ -980,8 +951,8 @@
           "id": "1426",
           "title": "Flamboyant School",
           "stage": "46",
-          "days_in_stage": 26,
-          "total_age_days": 480,
+          "days_in_stage": 39,
+          "total_age_days": 492,
           "value_zar": 12000,
           "edate": "2026-08-27",
           "cdate": "2025-05-30",
@@ -996,7 +967,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-08-26",
-              "days": 27
+              "days": 40
             }
           ]
         },
@@ -1004,8 +975,8 @@
           "id": "1846",
           "title": "Curro Hillcrest Christian Academy",
           "stage": "46",
-          "days_in_stage": 25,
-          "total_age_days": 25,
+          "days_in_stage": 38,
+          "total_age_days": 38,
           "value_zar": 12000,
           "edate": "2026-08-28",
           "cdate": "2026-08-28",
@@ -1015,8 +986,8 @@
           "id": "1868",
           "title": "Spark Theresa Park",
           "stage": "46",
-          "days_in_stage": 14,
-          "total_age_days": 14,
+          "days_in_stage": 26,
+          "total_age_days": 27,
           "value_zar": 12000,
           "edate": "2026-09-08",
           "cdate": "2026-09-08",
@@ -1026,8 +997,8 @@
           "id": "1881",
           "title": "Kranskop Primary School",
           "stage": "46",
-          "days_in_stage": 14,
-          "total_age_days": 14,
+          "days_in_stage": 26,
+          "total_age_days": 26,
           "value_zar": 12000,
           "edate": "2026-09-08",
           "cdate": "2026-09-08",
@@ -1036,7 +1007,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-09-08",
-              "days": 14
+              "days": 26
             }
           ]
         },
@@ -1044,8 +1015,8 @@
           "id": "1884",
           "title": "Empangheni Primary",
           "stage": "46",
-          "days_in_stage": 13,
-          "total_age_days": 13,
+          "days_in_stage": 26,
+          "total_age_days": 26,
           "value_zar": 12000,
           "edate": "2026-09-09",
           "cdate": "2026-09-09",
@@ -1055,8 +1026,8 @@
           "id": "1560",
           "title": "Curro Sandown Primary School",
           "stage": "46",
-          "days_in_stage": 12,
-          "total_age_days": 397,
+          "days_in_stage": 25,
+          "total_age_days": 410,
           "value_zar": 12000,
           "edate": "2026-09-10",
           "cdate": "2025-08-21",
@@ -1077,7 +1048,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-08-31",
-              "days": 22
+              "days": 34
             }
           ]
         },
@@ -1085,8 +1056,8 @@
           "id": "1885",
           "title": "Academy of excellence",
           "stage": "46",
-          "days_in_stage": 12,
-          "total_age_days": 12,
+          "days_in_stage": 24,
+          "total_age_days": 24,
           "value_zar": 12000,
           "edate": "2026-09-10",
           "cdate": "2026-09-10",
@@ -1096,8 +1067,8 @@
           "id": "1662",
           "title": "St Cyprian's School",
           "stage": "46",
-          "days_in_stage": 8,
-          "total_age_days": 216,
+          "days_in_stage": 21,
+          "total_age_days": 229,
           "value_zar": 12000,
           "edate": "2026-09-14",
           "cdate": "2026-02-18",
@@ -1106,31 +1077,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-03-02",
-              "days": 204
-            }
-          ]
-        },
-        {
-          "id": "1775",
-          "title": "York High George",
-          "stage": "46",
-          "days_in_stage": 6,
-          "total_age_days": 168,
-          "value_zar": 12000,
-          "edate": "2026-09-16",
-          "cdate": "2026-04-07",
-          "stage_history": [
-            {
-              "stage_id": "43",
-              "stage_name": "Demo/Pilot",
-              "entered": "2026-09-14",
-              "days": 2
-            },
-            {
-              "stage_id": "46",
-              "stage_name": "Negotiation",
-              "entered": "2026-09-16",
-              "days": 6
+              "days": 217
             }
           ]
         },
@@ -1138,8 +1085,8 @@
           "id": "628",
           "title": "The Kings School Robin Hills  Heather Staples - Schoolscape Event",
           "stage": "46",
-          "days_in_stage": 6,
-          "total_age_days": 749,
+          "days_in_stage": 19,
+          "total_age_days": 762,
           "value_zar": 10000,
           "edate": "2026-09-16",
           "cdate": "2024-09-03",
@@ -1160,16 +1107,51 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-09-16",
-              "days": 6
+              "days": 19
             }
           ]
+        },
+        {
+          "id": "1775",
+          "title": "York High George",
+          "stage": "46",
+          "days_in_stage": 18,
+          "total_age_days": 181,
+          "value_zar": 12000,
+          "edate": "2026-09-16",
+          "cdate": "2026-04-07",
+          "stage_history": [
+            {
+              "stage_id": "43",
+              "stage_name": "Demo/Pilot",
+              "entered": "2026-09-14",
+              "days": 2
+            },
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2026-09-16",
+              "days": 19
+            }
+          ]
+        },
+        {
+          "id": "1886",
+          "title": "St Charles College",
+          "stage": "46",
+          "days_in_stage": 18,
+          "total_age_days": 21,
+          "value_zar": 12000,
+          "edate": "2026-09-17",
+          "cdate": "2026-09-14",
+          "stage_history": []
         },
         {
           "id": "1847",
           "title": "Curro Savanna City",
           "stage": "46",
-          "days_in_stage": 5,
-          "total_age_days": 21,
+          "days_in_stage": 17,
+          "total_age_days": 34,
           "value_zar": 12000,
           "edate": "2026-09-17",
           "cdate": "2026-09-01",
@@ -1178,27 +1160,16 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-09-07",
-              "days": 15
+              "days": 28
             }
           ]
-        },
-        {
-          "id": "1886",
-          "title": "St Charles College",
-          "stage": "46",
-          "days_in_stage": 5,
-          "total_age_days": 8,
-          "value_zar": 12000,
-          "edate": "2026-09-17",
-          "cdate": "2026-09-14",
-          "stage_history": []
         },
         {
           "id": "1883",
           "title": "St James Primary",
           "stage": "46",
-          "days_in_stage": 4,
-          "total_age_days": 14,
+          "days_in_stage": 17,
+          "total_age_days": 26,
           "value_zar": 12000,
           "edate": "2026-09-18",
           "cdate": "2026-09-08",
@@ -1207,7 +1178,7 @@
               "stage_id": "46",
               "stage_name": "Negotiation",
               "entered": "2026-09-17",
-              "days": 5
+              "days": 18
             }
           ]
         },
@@ -1215,25 +1186,43 @@
           "id": "1820",
           "title": "St Francis College",
           "stage": "46",
-          "days_in_stage": 4,
-          "total_age_days": 49,
+          "days_in_stage": 17,
+          "total_age_days": 62,
           "value_zar": 7800,
           "edate": "2026-09-18",
           "cdate": "2026-08-04",
           "stage_history": []
+        },
+        {
+          "id": "1634",
+          "title": "Courtney House",
+          "stage": "46",
+          "days_in_stage": 12,
+          "total_age_days": 336,
+          "value_zar": 12000,
+          "edate": "2026-09-23",
+          "cdate": "2025-11-03",
+          "stage_history": [
+            {
+              "stage_id": "46",
+              "stage_name": "Negotiation",
+              "entered": "2025-11-03",
+              "days": 335
+            }
+          ]
         }
       ]
     },
-    "total_in_conversion": 55
+    "total_in_conversion": 54
   },
   "conversion_rates": {
-    "lead_to_demo_pct": 59.8,
-    "demo_to_nego_pct": 55
+    "lead_to_demo_pct": 58.7,
+    "demo_to_nego_pct": 54
   },
   "stuck_summary": {
-    "conversion_over_60": 2,
+    "conversion_over_60": 1,
     "conversion_over_90": 1,
     "new_leads_over_180": 0,
-    "all_stages_over_90": 11
+    "all_stages_over_90": 15
   }
 }

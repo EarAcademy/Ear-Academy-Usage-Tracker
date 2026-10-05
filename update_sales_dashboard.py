@@ -77,8 +77,15 @@ WON  = "1"
 # this test account -- title-only matching missed it).
 TEST_ACCOUNT_IDS = {"11752"}
 
+# Individual test deals that don't follow any naming convention -- keep in
+# sync with TEST_DEAL_IDS in update_velocity.py.
+TEST_DEAL_IDS = {
+    "1813",   # "guitar of school"
+    "1889",   # "Brandon Quotation School (Test)"
+}
 
-def _is_test_deal(title, account_id=None):
+
+def _is_test_deal(title, account_id=None, deal_id=None):
     """True for automation/debug deals, which must never be counted as
     real paying schools or real revenue. Matches the 'ZZZ ...' title
     convention, the known test account, or the 'Automation Test' naming
@@ -87,8 +94,10 @@ def _is_test_deal(title, account_id=None):
     and those Xero test deals aren't created under TEST_ACCOUNT_IDS."""
     if account_id is not None and str(account_id) in TEST_ACCOUNT_IDS:
         return True
+    if deal_id is not None and str(deal_id) in TEST_DEAL_IDS:
+        return True
     t = (title or "").strip().upper()
-    return t.startswith("ZZZ") or "AUTOMATION TEST" in t
+    return t.startswith("ZZZ") or "AUTOMATION TEST" in t or "(TEST)" in t
 
 
 # ── AC API helpers ─────────────────────────────────────────────────────────────
@@ -189,7 +198,7 @@ def count_by_stage(deals, stage_id):
     """
     return sum(1 for d in deals
                if str(d.get("stage")) == stage_id
-               and not _is_test_deal(d.get("title"), d.get("account")))
+               and not _is_test_deal(d.get("title"), d.get("account"), d.get("id")))
 
 
 def count_new_contacts_this_month():
@@ -319,7 +328,7 @@ def calculate_arr_tiers(won_deals):
     }
 
     for deal in won_deals:
-        if _is_test_deal(deal.get("title"), deal.get("account")):
+        if _is_test_deal(deal.get("title"), deal.get("account"), deal.get("id")):
             continue
         try:
             value_zar = int(deal.get("value", 0)) / 100  # cents → ZAR
@@ -432,7 +441,7 @@ def build_paying_schools_roster(cam_deals):
         if str(d.get("stage")) not in PAYING_STAGES:
             continue
         title = (d.get("title") or "").strip()
-        if "b2c" in title.lower() or _is_test_deal(title, d.get("account")):
+        if "b2c" in title.lower() or _is_test_deal(title, d.get("account"), d.get("id")):
             continue
         matching.append(d)
 
@@ -504,7 +513,7 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
         title = (d.get("title") or "").strip()
         if "b2c" in title.lower():
             continue
-        if _is_test_deal(title, d.get("account")) and not RENEWALS_INCLUDE_TEST_DEALS:
+        if _is_test_deal(title, d.get("account"), d.get("id")) and not RENEWALS_INCLUDE_TEST_DEALS:
             continue
         matching.append(d)
 
@@ -536,7 +545,7 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
             "account_id":      aid,
             "account_name":    aname or None,
             "value_zar":       int(value_zar),
-            "is_test":         _is_test_deal(title, aid),
+            "is_test":         _is_test_deal(title, aid, deal_id),
             "renewal_date":    renewal_date,
             "access_end_date": access_end_date,
             date_field:        renewal_date or (d.get("mdate") or "")[:10] or None,

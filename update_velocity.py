@@ -85,7 +85,15 @@ def get(endpoint, params=None):
     return r.json()
 
 
-def _is_test_deal(title):
+# Individual test deals that don't follow any naming convention -- keep in
+# sync with TEST_DEAL_IDS in update_sales_dashboard.py.
+TEST_DEAL_IDS = {
+    "1813",   # "guitar of school"
+    "1889",   # "Brandon Quotation School (Test)"
+}
+
+
+def _is_test_deal(title, deal_id=None):
     """True for automation/debug deals, which must never count in pipeline
     metrics. Matches the 'ZZZ ...' convention used elsewhere (see
     update_sales_dashboard.py's _is_test_deal) plus the 'Automation Test'
@@ -93,8 +101,10 @@ def _is_test_deal(title):
     'Quote Automation Test 2') -- neither convention alone is reliable since
     test deals get renamed per-scenario.
     """
+    if deal_id is not None and str(deal_id) in TEST_DEAL_IDS:
+        return True
     t = (title or "").strip().upper()
-    return t.startswith("ZZZ") or "AUTOMATION TEST" in t
+    return t.startswith("ZZZ") or "AUTOMATION TEST" in t or "(TEST)" in t
 
 
 def fetch_all_deals(pipeline_id):
@@ -117,7 +127,7 @@ def fetch_all_deals(pipeline_id):
             break
 
     zar = [d for d in deals
-           if d.get("currency", "").lower() == "zar" and not _is_test_deal(d.get("title"))]
+           if d.get("currency", "").lower() == "zar" and not _is_test_deal(d.get("title"), d.get("id"))]
     return zar
 
 
