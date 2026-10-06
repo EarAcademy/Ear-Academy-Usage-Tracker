@@ -140,6 +140,7 @@ EXCLUDED_SCHOOLS = [
     'Oldham Music Service',
     'Salford Community Leisure',
     'Steeton Primary School',
+    'Bridgewater Primary School',
 ]
 
 # Snapshot names we already KNOW are not ZAR paying customers (UK music services,
@@ -152,6 +153,7 @@ KNOWN_NON_PAYING = {
     'bradford music and arts service', 'bury music', 'collingwood college',
     'salford community leisure', 'oldham music service',
     'beckfoot priestthorpe school', 'steeton primary school',
+    'bridgewater primary school',
     # NOTE: 'range high school' was removed — it is a South African school, not a
     # UK music service. It has snapshot usage but no ActiveCampaign deal, so it
     # belongs in INVESTIGATE (a real school that may need a deal created) rather
@@ -171,6 +173,7 @@ UK_PILOT_SCHOOLS = {
     'salford community leisure',
     'beckfoot priestthorpe school',
     'steeton primary school',
+    'bridgewater primary school',
 }
 
 # UK Pilots tab: which of the above are actual schools vs. music education
@@ -180,6 +183,7 @@ UK_PILOT_SCHOOLS = {
 UK_PILOT_TYPE = {
     'steeton primary school':        'school',
     'beckfoot priestthorpe school':  'school',
+    'bridgewater primary school':    'school',
 }
 
 # B2C Clients tab — individuals to hide (Brandon's request, 2026-09-25).
@@ -1954,6 +1958,16 @@ def calc_uk_pilots(combined):
             'grp': grp, 'd': d_map,
         })
 
+    # Configured pilots with no snapshot logins yet still get a row.
+    seen = {_norm_name(s['s']) for s in schools_out}
+    for name in sorted(UK_PILOT_SCHOOLS):
+        if _norm_name(name) not in seen:
+            schools_out.append({
+                's': name.title(), 'tl': 0, 'uw': 0, 'tc': 0, 'sc': 0,
+                'last': 'No logins yet', 'dormant': False, 'inactive': True,
+                'grp': UK_PILOT_TYPE.get(name, 'hub'), 'd': {},
+            })
+
     schools_out.sort(key=lambda x: (-x['tl'], x['s'].lower()))
 
     return {
@@ -1964,7 +1978,7 @@ def calc_uk_pilots(combined):
             'hubs_tracked':    sum(1 for s in schools_out if s['grp'] == 'hub'),
             'total_logins':    sum(s['tl'] for s in schools_out),
             'weeks_of_data':   len(weeks_iso),
-            'active_recently': sum(1 for s in schools_out if not s['dormant']),
+            'active_recently': sum(1 for s in schools_out if not s['dormant'] and s['tl'] > 0),
             'dormant':         sum(1 for s in schools_out if s['dormant']),
         },
         'date_range_label': f"{strf(pd.Timestamp(combined['Date'].min()), '%-d %b')} – "
