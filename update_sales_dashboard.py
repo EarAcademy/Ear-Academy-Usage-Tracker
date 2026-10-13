@@ -100,6 +100,22 @@ def _is_test_deal(title, account_id=None, deal_id=None):
     return t.startswith("ZZZ") or "AUTOMATION TEST" in t or "(TEST)" in t
 
 
+def _one_deal_per_school(deals, keep):
+    """Collapse to one deal per AC account. The renewal automation moves the
+    current-year deal to 'Renewed' and opens a new '— 2027 Renewal' deal in
+    'Activated', so a renewed school has two live deals. keep='earliest'
+    holds the original deal (stable title, which SCHOOL_NAME_ALIASES target);
+    keep='latest' holds the newest contract (current price, for ARR)."""
+    best = {}
+    for d in deals:
+        key = str(d.get("account") or "") or (d.get("title") or "").strip().lower()
+        cur = best.get(key)
+        newer = cur is not None and (d.get("cdate") or "") > (cur.get("cdate") or "")
+        if cur is None or newer == (keep == "latest"):
+            best[key] = d
+    return list(best.values())
+
+
 # ── AC API helpers ─────────────────────────────────────────────────────────────
 def ac_get(endpoint, params=None):
     """Fetch all results from an AC API endpoint, handling pagination."""
@@ -308,6 +324,8 @@ def fetch_won_zar_deals():
     })
     zar = [d for d in deals if d.get("currency", "").lower() == "zar"]
     print(f"    → {len(zar)} won ZAR deals found")
+    zar = _one_deal_per_school(zar, keep="latest")
+    print(f"    → {len(zar)} after collapsing renewals to one deal per school")
     return zar
 
 
@@ -444,6 +462,7 @@ def build_paying_schools_roster(cam_deals):
         if "b2c" in title.lower() or _is_test_deal(title, d.get("account"), d.get("id")):
             continue
         matching.append(d)
+    matching = _one_deal_per_school(matching, keep="earliest")
 
     # Look up account names so the roster has both AC-side identifiers.
     account_ids   = {str(d.get("account")) for d in matching if d.get("account")}
