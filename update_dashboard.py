@@ -240,6 +240,7 @@ SCHOOL_NAME_ALIASES = {
     "Holy Cross RC Primary":                "Holy Cross R C Primary",
     "Lebone II College":                    "Lebone II College (Primary)",
     "Princess Park College":                "Royal Schools Princess Park",
+    "Queens Private School":                "Royal Schools Queens Private School",
     "Sky City Primary School":              "Royal Schools Sky City",
     "St Catherines":                        "ST CATHERINE'S DOMINICAN CONVENT- SA",
     "St Martin Preparatory School":         "St Martin's Preparatory School",
