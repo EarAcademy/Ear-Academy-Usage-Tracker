@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-13T09:32:18",
-  "generated_label": "13 Oct 2026 at 09:32",
+  "generated_at": "2026-10-13T10:54:49",
+  "generated_label": "13 Oct 2026 at 10:54",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -170,8 +170,8 @@
     {
       "deal_id": "1555",
       "title": "Generation Schools Hermanus",
-      "stage": "Upcoming Renewal",
-      "stage_id": "52",
+      "stage": "Renewed",
+      "stage_id": "70",
       "value_zar": 8050,
       "account_id": "2392",
       "account_name": "Generation Schools Hermanus"
@@ -264,7 +264,7 @@
       "stage_id": "70",
       "value_zar": 12000,
       "account_id": "9833",
-      "account_name": "Queens Private School"
+      "account_name": "Royal Schools Queens Private School"
     },
     {
       "deal_id": "584",

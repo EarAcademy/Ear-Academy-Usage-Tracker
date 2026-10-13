@@ -97,7 +97,8 @@ def _is_test_deal(title, account_id=None, deal_id=None):
     if deal_id is not None and str(deal_id) in TEST_DEAL_IDS:
         return True
     t = (title or "").strip().upper()
-    return t.startswith("ZZZ") or "AUTOMATION TEST" in t or "(TEST)" in t
+    return (t.startswith("ZZZ") or t.startswith("XERO TEST")
+            or "AUTOMATION TEST" in t or "(TEST)" in t)
 
 
 def _one_deal_per_school(deals, keep):
@@ -164,15 +165,25 @@ def ac_get(endpoint, params=None):
 # the AC UI's "Renewal Date" and "Deal Access End Date" fields).
 CF_RENEWAL_DATE    = "95"
 CF_ACCESS_END_DATE = "99"
+# Written by the renewal automation from Xero onto the next-cycle deal.
+CF_INVOICE_NO      = "94"
+CF_INVOICE_DUE     = "97"
+CF_PAYMENT_STATUS  = "98"   # Awaiting Payment / Paid / Overdue / Sponsored
+CF_NEXT_CYCLE_DEAL = "103"
 
 
-def fetch_deal_custom_dates(deal_ids):
-    """Fetch the real 'Renewal Date' and 'Deal Access End Date' custom
-    field values for each deal, via /api/3/deals/{id}/dealCustomFieldData.
-    One API call per deal -- fine for the renewals lists (tens of deals,
-    not hundreds). Returns {deal_id: {'renewal_date': str|None,
-    'access_end_date': str|None}}.
-    """
+def _cf_value(v):
+    if isinstance(v, list):
+        v = ", ".join(str(x) for x in v)
+    if isinstance(v, str):
+        v = v.strip().strip("|").replace("||", ", ")
+    return v or None
+
+
+def fetch_deal_custom_fields(deal_ids):
+    """Fetch the renewal/invoice custom fields for each deal, via
+    /api/3/deals/{id}/dealCustomFieldData. One API call per deal -- fine for
+    the renewals lists (tens of deals, not hundreds)."""
     headers = {"Api-Token": AC_API_KEY}
     out = {}
     for deal_id in deal_ids:
@@ -184,15 +195,26 @@ def fetch_deal_custom_dates(deal_ids):
         except requests.RequestException as e:
             print(f"  ⚠️  AC API error fetching custom fields for deal {deal_id}: {e}")
             fields = []
-        vals = {}
-        for f in fields:
-            v = f.get("fieldValue")
-            vals[str(f.get("customFieldId"))] = v.strip() if isinstance(v, str) else v
+        vals = {str(f.get("customFieldId")): _cf_value(f.get("fieldValue")) for f in fields}
         out[deal_id] = {
-            "renewal_date":    vals.get(CF_RENEWAL_DATE) or None,
-            "access_end_date": vals.get(CF_ACCESS_END_DATE) or None,
+            "renewal_date":     vals.get(CF_RENEWAL_DATE),
+            "access_end_date":  vals.get(CF_ACCESS_END_DATE),
+            "invoice_no":       vals.get(CF_INVOICE_NO),
+            "invoice_due_date": vals.get(CF_INVOICE_DUE),
+            "payment_status":   vals.get(CF_PAYMENT_STATUS),
+            "next_cycle_deal":  vals.get(CF_NEXT_CYCLE_DEAL),
+            "lost_reason":      vals.get(LOST_REASON_FIELD_ID),
         }
     return out
+
+
+def _invoice_status(inv):
+    """Renewal-invoice status from the Xero fields the automation writes to AC.
+    Payment Status wins when set; otherwise an invoice number means invoiced."""
+    ps = (inv.get("payment_status") or "").strip()
+    if ps in ("Paid", "Overdue", "Sponsored"):
+        return ps
+    return "Invoiced" if inv.get("invoice_no") else "No invoice"
 
 
 def fetch_deals_for_pipeline(pipeline_id, status_filter=OPEN):
@@ -538,7 +560,10 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
 
     account_ids   = {str(d.get("account")) for d in matching if d.get("account")}
     account_names = fetch_account_names(account_ids)
-    custom_dates  = fetch_deal_custom_dates([str(d.get("id", "")) for d in matching])
+    custom_dates  = fetch_deal_custom_fields([str(d.get("id", "")) for d in matching])
+    # The renewal invoice lives on the next-cycle ("— 2027 Renewal") deal.
+    next_ids      = {v["next_cycle_deal"] for v in custom_dates.values() if v.get("next_cycle_deal")}
+    next_fields   = fetch_deal_custom_fields(sorted(next_ids))
 
     out = []
     for d in matching:
@@ -557,17 +582,22 @@ def _build_stage_deal_list(cam_all, stage_id, date_field):
         dates = custom_dates.get(deal_id, {})
         renewal_date    = dates.get("renewal_date")
         access_end_date = dates.get("access_end_date")
+        inv = next_fields.get(dates.get("next_cycle_deal") or "", dates)
 
         out.append({
-            "deal_id":         deal_id,
-            "title":           title,
-            "account_id":      aid,
-            "account_name":    aname or None,
-            "value_zar":       int(value_zar),
-            "is_test":         _is_test_deal(title, aid, deal_id),
-            "renewal_date":    renewal_date,
-            "access_end_date": access_end_date,
-            date_field:        renewal_date or (d.get("mdate") or "")[:10] or None,
+            "deal_id":          deal_id,
+            "title":            title,
+            "account_id":       aid,
+            "account_name":     aname or None,
+            "value_zar":        int(value_zar),
+            "is_test":          _is_test_deal(title, aid, deal_id),
+            "renewal_date":     renewal_date,
+            "access_end_date":  access_end_date,
+            "next_cycle_deal":  dates.get("next_cycle_deal"),
+            "invoice_no":       inv.get("invoice_no"),
+            "invoice_due_date": inv.get("invoice_due_date"),
+            "invoice_status":   _invoice_status(inv),
+            date_field:         renewal_date or (d.get("mdate") or "")[:10] or None,
         })
 
     out.sort(key=lambda r: r[date_field] or "", reverse=True)
@@ -587,6 +617,39 @@ def build_upcoming_renewals_data(cam_all):
     deal was last modified (proxy for when it entered this stage), not an
     actual renewal due-date -- AC doesn't expose one on these deals."""
     return _build_stage_deal_list(cam_all, S_UPCOMING_RENEWAL, "since")
+
+
+def build_churned_data():
+    """Churned schools: Pipeline 6 deals marked Lost (excludes B2C and test
+    deals). All currencies -- UK schools are GBP. Newest first."""
+    lost = [d for d in ac_get("deals", {"filters[pipeline]": P_CAM, "filters[status]": "2"})
+            if "b2c" not in (d.get("title") or "").lower()
+            and not _is_test_deal(d.get("title"), d.get("account"), d.get("id"))]
+    account_names = fetch_account_names({str(d.get("account")) for d in lost if d.get("account")})
+    fields = fetch_deal_custom_fields([str(d.get("id", "")) for d in lost])
+    out = []
+    for d in lost:
+        aid = str(d.get("account")) if d.get("account") else None
+        aname = account_names.get(aid, "") if aid else ""
+        if "b2c" in aname.lower():
+            continue
+        f = fields.get(str(d.get("id", "")), {})
+        try:
+            value = int(d.get("value", 0)) / 100
+        except (ValueError, TypeError):
+            value = 0
+        out.append({
+            "deal_id":         str(d.get("id", "")),
+            "title":           (d.get("title") or "").strip(),
+            "account_name":    aname or None,
+            "value":           int(value),
+            "currency":        (d.get("currency") or "").upper(),
+            "lost_on":         (d.get("edate") or d.get("mdate") or "")[:10] or None,
+            "lost_reason":     f.get("lost_reason"),
+            "access_end_date": f.get("access_end_date"),
+        })
+    out.sort(key=lambda r: r["lost_on"] or "", reverse=True)
+    return out
 
 
 # ── Main ───────────────────────────────────────────────────────────────────────
@@ -687,6 +750,10 @@ def main(no_push=False):
     print("⏳  Building upcoming-renewals list (Pipeline 6, stage 52 'Upcoming Renewal')…")
     upcoming_renewals = build_upcoming_renewals_data(cam_all)
     print(f"    → {len(upcoming_renewals)} due for renewal")
+
+    print("📉  Building churned list (Pipeline 6, Lost)…")
+    churned = build_churned_data()
+    print(f"    → {len(churned)} churned")
 
     # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
@@ -796,6 +863,16 @@ def main(no_push=False):
             "count":           len(upcoming_renewals),
             "total_value_zar": sum(r["value_zar"] for r in upcoming_renewals),
             "schools":         upcoming_renewals,
+        },
+        "churned": {
+            "filter": {
+                "pipeline": P_CAM,
+                "status":   "Lost",
+                "note":     "All currencies; B2C and test deals excluded.",
+            },
+            "count":           len(churned),
+            "total_value_zar": sum(r["value"] for r in churned if r["currency"] == "ZAR"),
+            "schools":         churned,
         },
     }
     with open(RENEWALS_FILE, "w", encoding="utf-8") as f:

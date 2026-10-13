@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-13T09:32:18",
-  "generated_label": "13 Oct 2026 at 09:32",
+  "generated_at": "2026-10-13T10:54:49",
+  "generated_label": "13 Oct 2026 at 10:54",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,8 +9,8 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": false,
-  "count": 34,
-  "total_value_zar": 325080,
+  "count": 35,
+  "total_value_zar": 333130,
   "renewals": [
     {
       "deal_id": "143",
@@ -21,6 +21,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1908",
+      "invoice_no": "INV-0361",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -32,6 +36,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1907",
+      "invoice_no": "INV-0334",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -43,6 +51,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1909",
+      "invoice_no": "INV-0362",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -54,6 +66,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1911",
+      "invoice_no": "INV-0335",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -65,6 +81,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1910",
+      "invoice_no": "INV-0363",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -76,6 +96,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1916",
+      "invoice_no": "INV-0364",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -87,6 +111,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1905",
+      "invoice_no": "INV-0360",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -98,6 +126,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1906",
+      "invoice_no": "INV-0359",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -109,6 +141,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1904",
+      "invoice_no": "INV-0358",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -120,17 +156,25 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1901",
+      "invoice_no": "INV-0357",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
       "deal_id": "1583",
       "title": "Queens Private School - Core Education Group",
       "account_id": "9833",
-      "account_name": "Queens Private School",
+      "account_name": "Royal Schools Queens Private School",
       "value_zar": 12000,
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1902",
+      "invoice_no": "INV-0367",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -142,6 +186,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1899",
+      "invoice_no": "INV-0356",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -153,6 +201,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1903",
+      "invoice_no": "INV-0355",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -164,6 +216,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1898",
+      "invoice_no": "INV-0354",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -175,6 +231,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1900",
+      "invoice_no": "INV-0353",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -186,6 +246,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1896",
+      "invoice_no": "INV-0352",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -197,6 +261,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1895",
+      "invoice_no": "INV-0351",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -208,6 +276,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1897",
+      "invoice_no": "INV-0350",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -219,6 +291,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1913",
+      "invoice_no": "INV-0336",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -230,6 +306,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1912",
+      "invoice_no": "INV-0365",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -241,6 +321,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1917",
+      "invoice_no": "INV-0366",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -252,6 +336,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1918",
+      "invoice_no": "INV-0339",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -263,6 +351,25 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1921",
+      "invoice_no": "INV-0343",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
+      "renewed_on": "2026-10-12"
+    },
+    {
+      "deal_id": "1555",
+      "title": "Generation Schools Hermanus",
+      "account_id": "2392",
+      "account_name": "Generation Schools Hermanus",
+      "value_zar": 8050,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": null,
+      "next_cycle_deal": "1929",
+      "invoice_no": "INV-0368",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -274,6 +381,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1926",
+      "invoice_no": "INV-0342",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -285,6 +396,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1919",
+      "invoice_no": "INV-0341",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -296,6 +411,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1920",
+      "invoice_no": "INV-0340",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -307,6 +426,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1914",
+      "invoice_no": "INV-0338",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -318,6 +441,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1915",
+      "invoice_no": "INV-0337",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -329,6 +456,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1923",
+      "invoice_no": "INV-0344",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -340,6 +471,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1924",
+      "invoice_no": "INV-0346",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -351,6 +486,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1925",
+      "invoice_no": "INV-0347",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -362,6 +501,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1928",
+      "invoice_no": "INV-0348",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -373,6 +516,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1922",
+      "invoice_no": "INV-0345",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -384,6 +531,10 @@
       "is_test": false,
       "renewal_date": "2026-10-12",
       "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1927",
+      "invoice_no": "INV-0349",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     }
   ],
@@ -394,19 +545,88 @@
       "currency": "zar",
       "note": "Renewal cycle approaching but NOT yet confirmed -- these schools are still active paying customers."
     },
-    "count": 1,
-    "total_value_zar": 8050,
+    "count": 0,
+    "total_value_zar": 0,
+    "schools": []
+  },
+  "churned": {
+    "filter": {
+      "pipeline": "6",
+      "status": "Lost",
+      "note": "All currencies; B2C and test deals excluded."
+    },
+    "count": 7,
+    "total_value_zar": 102570,
     "schools": [
       {
-        "deal_id": "1555",
-        "title": "Generation Schools Hermanus",
-        "account_id": "2392",
-        "account_name": "Generation Schools Hermanus",
-        "value_zar": 8050,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": null,
-        "since": "2026-10-12"
+        "deal_id": "1595",
+        "title": "Herzlia Highlands Primary School",
+        "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-12",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1562",
+        "title": "Raff Home School",
+        "account_name": "Raff Home School",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-12",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "56",
+        "title": "Assitej - Y2",
+        "account_name": "ASSITEJ SA",
+        "value": 70000,
+        "currency": "ZAR",
+        "lost_on": "2026-05-13",
+        "lost_reason": null,
+        "access_end_date": null
+      },
+      {
+        "deal_id": "770",
+        "title": "Academie Orfeus",
+        "account_name": "State school",
+        "value": 250,
+        "currency": "GBP",
+        "lost_on": "2026-05-13",
+        "lost_reason": null,
+        "access_end_date": null
+      },
+      {
+        "deal_id": "48",
+        "title": "King David Schools",
+        "account_name": "King David Victory Park Primary",
+        "value": 16470,
+        "currency": "ZAR",
+        "lost_on": "2026-04-07",
+        "lost_reason": null,
+        "access_end_date": null
+      },
+      {
+        "deal_id": "49",
+        "title": "Hybrid: Brave Generation Academy",
+        "account_name": "Brave Generation Academy",
+        "value": 1180,
+        "currency": "GBP",
+        "lost_on": "2026-04-07",
+        "lost_reason": null,
+        "access_end_date": null
+      },
+      {
+        "deal_id": "283",
+        "title": "The Lighthouse Learning Hub",
+        "account_name": "The Lighthouse Learning Hub",
+        "value": 0,
+        "currency": "GBP",
+        "lost_on": "2026-04-07",
+        "lost_reason": null,
+        "access_end_date": null
       }
     ]
   }

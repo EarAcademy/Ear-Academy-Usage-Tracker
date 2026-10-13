@@ -45,8 +45,8 @@
   },
   "email": {
     "sent": "1860",
-    "replied": "1601",
-    "rate": "86.1%",
+    "replied": "1604",
+    "rate": "86.2%",
     "new_contacts": "14"
   },
   "arr_tiers": {
@@ -83,14 +83,14 @@
       "Lack of Interest": 1
     }
   },
-  "last_updated": "13 Oct 2026 at 09:32",
+  "last_updated": "13 Oct 2026 at 10:54",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (1) + Activated (39) + Upcoming Renewal (1) + Renewed (34) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "customers": "Onboarding (1) + Activated (40) + Upcoming Renewal (0) + Renewed (35) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }
