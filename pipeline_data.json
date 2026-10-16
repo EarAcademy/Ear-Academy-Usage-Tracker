@@ -1,9 +1,9 @@
 {
   "pipeline": {
-    "qualification": 92,
-    "demo": 24,
-    "negotiation": 29,
-    "customers": 41
+    "qualification": 93,
+    "demo": 25,
+    "negotiation": 26,
+    "customers": 38
   },
   "monthly": {
     "jan": {
@@ -44,26 +44,26 @@
     }
   },
   "email": {
-    "sent": "1860",
-    "replied": "1604",
-    "rate": "86.2%",
-    "new_contacts": "14"
+    "sent": "1829",
+    "replied": "1583",
+    "rate": "86.6%",
+    "new_contacts": "27"
   },
   "arr_tiers": {
     "tier1": {
       "label": "R1\u20135k",
-      "count": 8,
-      "revenue": 36980.0
+      "count": 7,
+      "revenue": 32230.0
     },
     "tier2": {
       "label": "R5\u201310k",
-      "count": 12,
-      "revenue": 96600.0
+      "count": 11,
+      "revenue": 88050.0
     },
     "tier3": {
       "label": "R10\u201320k",
-      "count": 23,
-      "revenue": 276000.0
+      "count": 21,
+      "revenue": 252000.0
     },
     "tier4": {
       "label": "R20k+",
@@ -83,14 +83,14 @@
       "Lack of Interest": 1
     }
   },
-  "last_updated": "13 Oct 2026 at 10:54",
+  "last_updated": "16 Oct 2026 at 14:11",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (1) + Activated (40) + Upcoming Renewal (0) + Renewed (35) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "customers": "Onboarding (1) + Activated (37) + Upcoming Renewal (0) + Renewed (32) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }

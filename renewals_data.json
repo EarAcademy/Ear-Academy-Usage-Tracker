@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-13T10:54:49",
-  "generated_label": "13 Oct 2026 at 10:54",
+  "generated_at": "2026-10-16T14:11:11",
+  "generated_label": "16 Oct 2026 at 14:11",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,8 +9,8 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": false,
-  "count": 35,
-  "total_value_zar": 333130,
+  "count": 32,
+  "total_value_zar": 301080,
   "renewals": [
     {
       "deal_id": "143",
@@ -103,21 +103,6 @@
       "renewed_on": "2026-10-12"
     },
     {
-      "deal_id": "1539",
-      "title": "Calling Academy",
-      "account_id": "3450",
-      "account_name": "Calling Education NPC",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1905",
-      "invoice_no": "INV-0360",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
       "deal_id": "1550",
       "title": "Trinity House",
       "account_id": "11408",
@@ -143,21 +128,6 @@
       "access_end_date": "2026-12-31",
       "next_cycle_deal": "1904",
       "invoice_no": "INV-0358",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1582",
-      "title": "Royal Schools Princess Park - Core Education Group",
-      "account_id": "9992",
-      "account_name": "Royal Schools Princess Park",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1901",
-      "invoice_no": "INV-0357",
       "invoice_due_date": "2026-11-11",
       "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
@@ -283,6 +253,21 @@
       "renewed_on": "2026-10-12"
     },
     {
+      "deal_id": "1647",
+      "title": "Herzlia Weizmann",
+      "account_id": "9631",
+      "account_name": "Herzlia Weizman Primary School",
+      "value_zar": 8050,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1915",
+      "invoice_no": "INV-0337",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Invoiced",
+      "renewed_on": "2026-10-12"
+    },
+    {
       "deal_id": "584",
       "title": "Reddam House Helderfontein",
       "account_id": "244",
@@ -293,21 +278,6 @@
       "access_end_date": "2026-12-31",
       "next_cycle_deal": "1913",
       "invoice_no": "INV-0336",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1298",
-      "title": "Prescient Primary",
-      "account_id": "8807",
-      "account_name": "Prescient Primary",
-      "value_zar": 8050,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1912",
-      "invoice_no": "INV-0365",
       "invoice_due_date": "2026-11-11",
       "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
@@ -388,6 +358,21 @@
       "renewed_on": "2026-10-12"
     },
     {
+      "deal_id": "1559",
+      "title": "Hazyview Private Primary School",
+      "account_id": "9936",
+      "account_name": "Hazyview Private Primary School",
+      "value_zar": 8050,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": "2026-12-31",
+      "next_cycle_deal": null,
+      "invoice_no": "INV-0275",
+      "invoice_due_date": null,
+      "invoice_status": "Paid",
+      "renewed_on": "2026-10-12"
+    },
+    {
       "deal_id": "1561",
       "title": "Plettenberg Bay Christian Primary School (PBC)",
       "account_id": "9964",
@@ -413,36 +398,6 @@
       "access_end_date": "2026-12-31",
       "next_cycle_deal": "1920",
       "invoice_no": "INV-0340",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1626",
-      "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-      "account_id": "10960",
-      "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-      "value_zar": 8050,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1914",
-      "invoice_no": "INV-0338",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1647",
-      "title": "Herzlia Weizmann",
-      "account_id": "9631",
-      "account_name": "Herzlia Weizman Primary School",
-      "value_zar": 8050,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1915",
-      "invoice_no": "INV-0337",
       "invoice_due_date": "2026-11-11",
       "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
@@ -555,26 +510,66 @@
       "status": "Lost",
       "note": "All currencies; B2C and test deals excluded."
     },
-    "count": 7,
-    "total_value_zar": 102570,
+    "count": 11,
+    "total_value_zar": 142670,
     "schools": [
       {
+        "deal_id": "1582",
+        "title": "Royal Schools Princess Park - Core Education Group",
+        "account_name": "Royal Schools Princess Park",
+        "value": 12000,
+        "currency": "ZAR",
+        "lost_on": "2026-10-16",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1298",
+        "title": "Prescient Primary",
+        "account_name": "Prescient Primary",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-15",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1539",
+        "title": "Calling Academy",
+        "account_name": "Calling Education NPC",
+        "value": 12000,
+        "currency": "ZAR",
+        "lost_on": "2026-10-14",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
         "deal_id": "1595",
-        "title": "Herzlia Highlands Primary School",
+        "title": "Herzlia Highlands Primary School - 2026",
         "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
         "value": 8050,
         "currency": "ZAR",
-        "lost_on": "2026-10-12",
+        "lost_on": "2026-10-14",
         "lost_reason": null,
         "access_end_date": "2026-12-31"
       },
       {
         "deal_id": "1562",
-        "title": "Raff Home School",
+        "title": "Raff Home School - 2026",
         "account_name": "Raff Home School",
         "value": 8050,
         "currency": "ZAR",
-        "lost_on": "2026-10-12",
+        "lost_on": "2026-10-14",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1626",
+        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-14",
         "lost_reason": null,
         "access_end_date": "2026-12-31"
       },

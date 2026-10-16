@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-13T10:54:49",
-  "generated_label": "13 Oct 2026 at 10:54",
+  "generated_at": "2026-10-16T14:11:11",
+  "generated_label": "16 Oct 2026 at 14:11",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 41,
+  "count": 38,
   "schools": [
     {
       "deal_id": "1586",
@@ -85,15 +85,6 @@
       "value_zar": 12000,
       "account_id": "276",
       "account_name": "Brescia House School"
-    },
-    {
-      "deal_id": "1539",
-      "title": "Calling Academy",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 12000,
-      "account_id": "3450",
-      "account_name": "Calling Education NPC"
     },
     {
       "deal_id": "1698",
@@ -177,6 +168,15 @@
       "account_name": "Generation Schools Hermanus"
     },
     {
+      "deal_id": "1559",
+      "title": "Hazyview Private Primary School",
+      "stage": "Renewed",
+      "stage_id": "70",
+      "value_zar": 8050,
+      "account_id": "9936",
+      "account_name": "Hazyview Private Primary School"
+    },
+    {
       "deal_id": "1647",
       "title": "Herzlia Weizmann",
       "stage": "Renewed",
@@ -249,15 +249,6 @@
       "account_name": "Plettenberg Bay Christian Primary School"
     },
     {
-      "deal_id": "1298",
-      "title": "Prescient Primary",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 8050,
-      "account_id": "8807",
-      "account_name": "Prescient Primary"
-    },
-    {
       "deal_id": "1583",
       "title": "Queens Private School - Core Education Group",
       "stage": "Renewed",
@@ -294,15 +285,6 @@
       "account_name": "Royal Schools Alberton"
     },
     {
-      "deal_id": "1582",
-      "title": "Royal Schools Princess Park - Core Education Group",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 12000,
-      "account_id": "9992",
-      "account_name": "Royal Schools Princess Park"
-    },
-    {
       "deal_id": "1584",
       "title": "Royal Schools Sky City - Core Education Group",
       "stage": "Renewed",
@@ -328,15 +310,6 @@
       "value_zar": 12000,
       "account_id": "8781",
       "account_name": "Soofia International School"
-    },
-    {
-      "deal_id": "1626",
-      "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 8050,
-      "account_id": "10960",
-      "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA"
     },
     {
       "deal_id": "1543",
