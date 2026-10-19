@@ -153,7 +153,7 @@ KNOWN_NON_PAYING = {
     'bradford music and arts service', 'bury music', 'collingwood college',
     'salford community leisure', 'oldham music service',
     'beckfoot priestthorpe school', 'steeton primary school',
-    'bridgewater primary school',
+    'bridgewater primary school', 'bridgewater primary',
     # NOTE: 'range high school' was removed — it is a South African school, not a
     # UK music service. It has snapshot usage but no ActiveCampaign deal, so it
     # belongs in INVESTIGATE (a real school that may need a deal created) rather
@@ -174,6 +174,7 @@ UK_PILOT_SCHOOLS = {
     'beckfoot priestthorpe school',
     'steeton primary school',
     'bridgewater primary school',
+    'bridgewater primary',
 }
 
 # UK Pilots tab: which of the above are actual schools vs. music education
@@ -184,6 +185,7 @@ UK_PILOT_TYPE = {
     'steeton primary school':        'school',
     'beckfoot priestthorpe school':  'school',
     'bridgewater primary school':    'school',
+    'bridgewater primary':           'school',
 }
 
 # B2C Clients tab — individuals to hide (Brandon's request, 2026-09-25).
