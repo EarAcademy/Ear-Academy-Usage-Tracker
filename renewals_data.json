@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-19T11:21:31",
-  "generated_label": "19 Oct 2026 at 11:21",
+  "generated_at": "2026-10-20T16:16:39",
+  "generated_label": "20 Oct 2026 at 16:16",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,8 +9,8 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": false,
-  "count": 32,
-  "total_value_zar": 301080,
+  "count": 31,
+  "total_value_zar": 289080,
   "renewals": [
     {
       "deal_id": "143",
@@ -238,21 +238,6 @@
       "renewed_on": "2026-10-12"
     },
     {
-      "deal_id": "1590",
-      "title": "Canaan College - Core Education Group",
-      "account_id": "9591",
-      "account_name": "Canaan College",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1897",
-      "invoice_no": "INV-0350",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
       "deal_id": "1647",
       "title": "Herzlia Weizmann",
       "account_id": "9631",
@@ -354,7 +339,7 @@
       "next_cycle_deal": "1926",
       "invoice_no": "INV-0342",
       "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
+      "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
     {
@@ -510,9 +495,19 @@
       "status": "Lost",
       "note": "All currencies; B2C and test deals excluded."
     },
-    "count": 11,
-    "total_value_zar": 142670,
+    "count": 12,
+    "total_value_zar": 154670,
     "schools": [
+      {
+        "deal_id": "1590",
+        "title": "Canaan College - Core Education Group",
+        "account_name": "Canaan College",
+        "value": 12000,
+        "currency": "ZAR",
+        "lost_on": "2026-10-19",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
       {
         "deal_id": "1582",
         "title": "Royal Schools Princess Park - Core Education Group",

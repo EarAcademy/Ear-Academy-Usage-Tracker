@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-19T11:21:31",
-  "generated_label": "19 Oct 2026 at 11:21",
+  "generated_at": "2026-10-20T16:16:39",
+  "generated_label": "20 Oct 2026 at 16:16",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 38,
+  "count": 37,
   "schools": [
     {
       "deal_id": "1586",
@@ -94,15 +94,6 @@
       "value_zar": 12000,
       "account_id": "11622",
       "account_name": "Cambridge Academy Ethiopia"
-    },
-    {
-      "deal_id": "1590",
-      "title": "Canaan College - Core Education Group",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 12000,
-      "account_id": "9591",
-      "account_name": "Canaan College"
     },
     {
       "deal_id": "1506",
