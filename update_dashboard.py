@@ -2093,9 +2093,10 @@ def load_b2c_data():
             first_col, _ = find_column(df.columns, ['first', 'name'], 'First Name')
             last_col,  _ = find_column(df.columns, ['surname'], 'Surname')
             course_cols = [c for c in df.columns if 'course' in str(c).lower()]
-            if not email_col or not date_col or not course_cols:
-                print(f"  ⚠️  B2C: missing Email/Date/Course column(s): {file_path.name}")
+            if not email_col or not date_col:
+                print(f"  ⚠️  B2C: missing Email/Date column(s): {file_path.name}")
                 continue
+            # Some exports omit Course; courses are unioned per client across files.
 
             df = df.copy()
             df['Email']     = df[email_col]
