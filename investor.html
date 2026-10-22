@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Ear Academy – Sales Activity Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g" crossorigin="anonymous"></script>
 <style>
 :root {
   --sky:    #38aae1;
@@ -1272,7 +1274,7 @@ var MONTH_KEYS = ['jan','feb','mar','apr','may','jun','jul','aug','sep'];
         const maxReason = Math.max(...reasonEntries.map(e => e[1]), 1);
         li.innerHTML = reasonEntries.map(([reason, n]) => `
           <div class="lost-row">
-            <span class="lost-label">${reason}</span>
+            <span class="lost-label">${String(reason).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</span>
             <div class="lost-bar-wrap"><div class="lost-bar" style="width: ${Math.max(4, Math.round(n / maxReason * 100))}%;"></div></div>
             <span class="lost-count">${n}</span>
           </div>`).join('');
