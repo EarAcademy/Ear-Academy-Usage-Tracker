@@ -55,6 +55,10 @@ if %ERRORLEVEL%==0 (
 )
 
 echo.
+echo Publishing public site (pages + aggregate JSON only)...
+"%PY%" publish_site.py
+
+echo.
 echo ============================================================
 echo  Done. Read the "DAILY LOAD ^& MATCH REPORT" above:
 echo    - FRESHNESS should show today's date (not STALE)

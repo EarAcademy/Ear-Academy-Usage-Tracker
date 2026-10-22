@@ -2,6 +2,9 @@
 __pycache__/
 *.pyc
 
+# Raw exports moved off the Desktop after loading (already in daily_snapshots/)
+desktop_exports_archive/
+
 # Credentials — never commit these
 config.py
 supabase_config.py
