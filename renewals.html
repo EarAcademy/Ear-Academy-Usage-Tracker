@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex,nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Renewals — Ear Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
@@ -122,7 +120,6 @@ function fmtDate(iso){
   if(isNaN(d)) return '—';
   return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 }
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function emptyRow(msg, cols){
   return `<tr><td colspan="${cols||4}" style="color:var(--gray);font-size:.82rem;text-align:center;padding:1.6rem">${msg}</td></tr>`;
 }
@@ -133,17 +130,17 @@ function dateCell(iso){
   return iso ? `<span class="bdg">${fmtDate(iso)}</span>` : '<span style="color:var(--gray);font-size:.8rem">—</span>';
 }
 const ST_CLASS={'No invoice':'st-none','Invoiced':'st-inv','Paid':'st-paid','Overdue':'st-over','Sponsored':'st-spon'};
-function stPill(s){s=s||'No invoice';return `<span class="st ${ST_CLASS[s]||'st-none'}">${esc(s)}</span>`;}
-function invCell(r){return r.invoice_no?`<span class="mono">${esc(r.invoice_no)}</span>`:'<span style="color:var(--gray);font-size:.8rem">—</span>';}
+function stPill(s){s=s||'No invoice';return `<span class="st ${ST_CLASS[s]||'st-none'}">${s}</span>`;}
+function invCell(r){return r.invoice_no?`<span class="mono">${r.invoice_no}</span>`:'<span style="color:var(--gray);font-size:.8rem">—</span>';}
 function money(v,cur){if(cur&&cur!=='ZAR'){const sym={GBP:'£',USD:'$',EUR:'€'}[cur]||(cur+' ');return sym+Math.round(v||0).toLocaleString('en-GB');}return zarRand(v);}
 function renewalRow(r){
-  return `<tr><td><div class="dn">${esc(r.title||r.account_name||'—')}${testTag(r)}</div></td><td>${dateCell(r.renewal_date)}</td><td>${dateCell(r.access_end_date)}</td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td><td>${invCell(r)}</td><td>${dateCell(r.invoice_due_date)}</td><td>${stPill(r.invoice_status)}</td></tr>`;
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td>${dateCell(r.renewal_date)}</td><td>${dateCell(r.access_end_date)}</td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td><td>${invCell(r)}</td><td>${dateCell(r.invoice_due_date)}</td><td>${stPill(r.invoice_status)}</td></tr>`;
 }
 function upcomingRow(r){
-  return `<tr><td><div class="dn">${esc(r.title||r.account_name||'—')}${testTag(r)}</div></td><td>${dateCell(r.renewal_date)}</td><td>${dateCell(r.access_end_date)}</td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td><td>${invCell(r)}</td><td>${stPill(r.invoice_status)}</td></tr>`;
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}${testTag(r)}</div></td><td>${dateCell(r.renewal_date)}</td><td>${dateCell(r.access_end_date)}</td><td><span style="color:var(--gray);font-size:.8rem">${zarRand(r.value_zar)}</span></td><td>${invCell(r)}</td><td>${stPill(r.invoice_status)}</td></tr>`;
 }
 function churnRow(r){
-  return `<tr><td><div class="dn">${esc(r.title||r.account_name||'—')}</div></td><td>${dateCell(r.lost_on)}</td><td><span style="color:var(--gray);font-size:.8rem">${esc(r.lost_reason||'Not recorded')}</span></td><td><span style="color:var(--gray);font-size:.8rem">${money(r.value,r.currency)}</span></td></tr>`;
+  return `<tr><td><div class="dn">${r.title||r.account_name||'—'}</div></td><td>${dateCell(r.lost_on)}</td><td><span style="color:var(--gray);font-size:.8rem">${r.lost_reason||'Not recorded'}</span></td><td><span style="color:var(--gray);font-size:.8rem">${money(r.value,r.currency)}</span></td></tr>`;
 }
 
 fetch('renewals_data.json?v=' + Date.now())

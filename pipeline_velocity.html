@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex,nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Pipeline Velocity — Ear Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
@@ -179,8 +177,7 @@ function zarCents(c){return'R'+Math.round(parseInt(c||0)/100).toLocaleString('en
 function zarRand(r){return'R'+Math.round(r||0).toLocaleString('en-ZA')}
 function bc(n){return n<=30?'bg':n<=60?'bs':n<=90?'ba':'br'}
 function bl(n){return`${n}d ${n<=30?'✓':n<=60?'':n<=90?'⚠':'🔴'}`.trim()}
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function clean(t){return esc(t.replace(/^Online\(SA\):\s*/i,'').replace(/\s*-\s*TRAILBLAZER SA$/i,'').replace(/\s*-\s*(Free trial|Two Term.*|14 DAY TRIAL|Schoolscape Event.*|2 term.*)/i,'').trim())}
+function clean(t){return t.replace(/^Online\(SA\):\s*/i,'').replace(/\s*-\s*TRAILBLAZER SA$/i,'').replace(/\s*-\s*(Free trial|Two Term.*|14 DAY TRIAL|Schoolscape Event.*|2 term.*)/i,'').trim()}
 function statusLabel(n){return n>90?'Critical':n>60?'At risk':n>30?'Watch':'Healthy'}
 function statusColor(n){return n>90?'var(--red)':n>60?'var(--amber)':n>30?'var(--sky)':'var(--green)'}
 

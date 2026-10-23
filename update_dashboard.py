@@ -10,7 +10,6 @@ Old files (no Product Type / Billing Status cols) default to Paying + Classroom 
 """
 
 import difflib
-import html
 import json
 import pandas as pd
 import re
@@ -18,18 +17,6 @@ import unicodedata
 from collections import Counter
 from pathlib import Path
 from datetime import datetime, timedelta
-
-
-def esc(value):
-    """HTML-escape any text that came from a snapshot or the CRM."""
-    return html.escape(str(value), quote=True)
-
-
-def js_json(obj):
-    """json.dumps that is safe to place inside a <script> block."""
-    return (json.dumps(obj, ensure_ascii=False)
-            .replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
-            .replace('\u2028', '\\u2028').replace('\u2029', '\\u2029'))
 
 
 def strf(dt, fmt):
@@ -749,7 +736,7 @@ def load_all_data():
                         continue
                     nm = str(raw.get(name_col, '')).strip() if name_col else ''
                     if nm.lower() in ('', 'nan'):
-                        nm = 'Unnamed trial user'
+                        nm = email
                     _TRIAL_ROWS.append({
                         'name':  nm,
                         'email': email,
@@ -1141,7 +1128,7 @@ def build_daily_pulse_html(dp):
 
     new_html = ''
     if dp['new_schools']:
-        badges = ''.join(f'<span class="school-badge new-badge">{esc(s)}</span>'
+        badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
                          for s in dp['new_schools'])
         new_html = f'<div class="pulse-new-schools"><div class="pulse-new-label">🆕 New today vs yesterday</div><div class="badge-row">{badges}</div></div>'
     else:
@@ -1191,11 +1178,11 @@ def build_weekly_snapshot_html(snap):
                      else '<span class="delta flat">→ no new activations</span>')
     cons_delta    = pct_change_html(snap['consistent_count'], snap['prev_consistent'])
 
-    cons_badges = ''.join(f'<span class="school-badge cons-badge">{esc(s)}</span>'
+    cons_badges = ''.join(f'<span class="school-badge cons-badge">{s}</span>'
                           for s in snap['consistent_schools']) or '<em style="color:var(--gray)">None yet</em>'
-    quiet_7_badges = ''.join(f'<span class="school-badge quiet-badge">{esc(s)}</span>'
+    quiet_7_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                              for s in snap['quiet_7_schools']) or '<em style="color:var(--gray)">All schools active this week!</em>'
-    quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{esc(s)}</span>'
+    quiet_badges = ''.join(f'<span class="school-badge quiet-badge">{s}</span>'
                            for s in snap['quiet_30_schools']) or '<em style="color:var(--gray)">All schools active!</em>'
 
     return f'''
@@ -1299,7 +1286,7 @@ def build_uk_pilot_html(uk):
     if not uk['has_data']:
         schools_html = '<div class="pilot-empty">No Demo/Pilot schools have logged in yet.</div>'
     else:
-        badges = ''.join(f'<span class="school-badge new-badge">{esc(s)}</span>'
+        badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
                          for s in uk['school_list'])
         schools_html = f'<div class="badge-row">{badges}</div>'
 
@@ -1335,7 +1322,7 @@ def build_patterns_html(patterns, snap):
     mw = snap['max_week']
 
     if patterns['new_this_week']:
-        new_badges = ''.join(f'<span class="school-badge new-badge">{esc(s)}</span>'
+        new_badges = ''.join(f'<span class="school-badge new-badge">{s}</span>'
                              for s in patterns['new_this_week'])
         new_html = f'<div class="pattern-count-badge">{len(patterns["new_this_week"])}</div><div class="badge-row">{new_badges}</div>'
     else:
@@ -1493,7 +1480,7 @@ def build_top10_html(top10):
                 <li class="top-school-item">
                     <div class="rank-number">{i+1}</div>
                     <div class="school-info">
-                        <div class="school-name">{esc(s['name'])}</div>
+                        <div class="school-name">{s['name']}</div>
                         <div class="school-stats">{s['logins']} logins{user_part} · {s['weeks']}{product_part}</div>
                     </div>
                     <span class="pattern-badge {badge_class}">{badge_text}</span>
@@ -1598,7 +1585,7 @@ def build_lifetime_logins_html(lifetime_data):
 
         bars_html += f'''
                 <div class="lifetime-bar-item{' lifetime-bar-item-silent' if is_silent else ''}">
-                    <div class="lifetime-school-name">{esc(s['School'])}</div>
+                    <div class="lifetime-school-name">{s['School']}</div>
                     <div class="lifetime-bar-wrap">
                         <div class="lifetime-bar-track"{cap_attr}>
                             <div class="{fill_cls}" style="width:{pct}%"></div>
@@ -1906,10 +1893,10 @@ def build_usage_patterns_js(p):
     if not p:
         return 'var WEEKS=[];var SCHOOLS=[];var PC={};var DESC={};'
 
-    weeks_js   = js_json(p['weeks'])
-    schools_js = js_json(p['schools'])
-    pc_js      = js_json(PATTERN_COLORS)
-    desc_js    = js_json(PATTERN_DESCRIPTIONS)
+    weeks_js   = json.dumps(p['weeks'])
+    schools_js = json.dumps(p['schools'], ensure_ascii=False)
+    pc_js      = json.dumps(PATTERN_COLORS, ensure_ascii=False)
+    desc_js    = json.dumps(PATTERN_DESCRIPTIONS, ensure_ascii=False)
 
     return (f'var WEEKS={weeks_js};\n'
             f'var SCHOOLS={schools_js};\n'
@@ -2050,8 +2037,8 @@ def build_uk_pilots_js(p):
     """JS data block for the UK Pilots heatmap (between UK_PILOTS_DATA markers)."""
     if not p:
         return 'var UK_WEEKS=[];var UK_SCHOOLS=[];'
-    return (f"var UK_WEEKS={js_json(p['weeks'])};\n"
-            f"var UK_SCHOOLS={js_json(p['schools'])};")
+    return (f"var UK_WEEKS={json.dumps(p['weeks'])};\n"
+            f"var UK_SCHOOLS={json.dumps(p['schools'], ensure_ascii=False)};")
 
 
 # ── B2C Clients tab ──────────────────────────────────────────────────────────
@@ -2123,7 +2110,7 @@ def load_b2c_data():
                 df['Name'] = (first + ' ' + last).str.strip()
             else:
                 df['Name'] = ''
-            df.loc[df['Name'].isin(['', 'nan', 'nan nan']), 'Name'] = 'Unnamed client'
+            df.loc[df['Name'].isin(['', 'nan', 'nan nan']), 'Name'] = df['Email']
 
             def _courses(row):
                 vals = []
@@ -2248,8 +2235,8 @@ def build_b2c_js(b):
     """JS data block for the B2C Clients heatmap (between B2C_DATA markers)."""
     if not b:
         return 'var B2C_WEEKS=[];var B2C_COURSES=[];'
-    return (f"var B2C_WEEKS={js_json(b['weeks'])};\n"
-            f"var B2C_COURSES={js_json(b['clients'])};")
+    return (f"var B2C_WEEKS={json.dumps(b['weeks'])};\n"
+            f"var B2C_COURSES={json.dumps(b['clients'], ensure_ascii=False)};")
 
 
 # ── Trials tab ─────────────────────────────────────────────────────────────────
@@ -2290,7 +2277,7 @@ def calc_trials(trial_rows):
         weeks_since_last = int((latest_week - last_week).days // 7)
         last_seen = strf(pd.Timestamp(rows['Date'].max()), '%-d %b %Y')
         people.append({
-            'n': name, 'role': role, 'tl': tl, 'uw': uw,
+            'n': name, 'email': email, 'role': role, 'tl': tl, 'uw': uw,
             'last': last_seen, 'dormant': weeks_since_last >= 6, 'd': d_map,
         })
 
@@ -2349,8 +2336,8 @@ def build_trials_js(t):
     """JS data block for the Trials heatmap (between TRIALS_DATA markers)."""
     if not t:
         return 'var TRIALS_WEEKS=[];var TRIALS_PEOPLE=[];'
-    return (f"var TRIALS_WEEKS={js_json(t['weeks'])};\n"
-            f"var TRIALS_PEOPLE={js_json(t['people'])};")
+    return (f"var TRIALS_WEEKS={json.dumps(t['weeks'])};\n"
+            f"var TRIALS_PEOPLE={json.dumps(t['people'], ensure_ascii=False)};")
 
 
 # ── End-of-run "what happened" report ──────────────────────────────────────────

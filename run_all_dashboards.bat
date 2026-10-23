@@ -79,10 +79,6 @@ if %ERRORLEVEL%==0 (
 )
 
 echo.
-echo Publishing public site (pages + aggregate JSON only)...
-"%PY%" publish_site.py
-
-echo.
 echo ==========================================================
 echo   SUMMARY   Sales=%SALES_OK%  Usage=%USAGE_OK%  Velocity=%VELOCITY_OK%   (1 = ok, 0 = failed)
 echo   Read the DAILY LOAD ^& MATCH REPORT above for the usage dashboard.

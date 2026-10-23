@@ -173,10 +173,6 @@ else
   fi
 fi
 
-echo ""
-echo "Publishing public site (pages + aggregate JSON only)..."
-python3 publish_site.py
-
 # ─── Summary ────────────────────────────────────────────────
 echo ""
 echo "=========================================================="
