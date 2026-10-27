@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-20T16:16:39",
-  "generated_label": "20 Oct 2026 at 16:16",
+  "generated_at": "2026-10-27T10:33:55",
+  "generated_label": "27 Oct 2026 at 10:33",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -99,7 +99,7 @@
       "next_cycle_deal": "1916",
       "invoice_no": "INV-0364",
       "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
+      "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
     {
@@ -204,7 +204,7 @@
       "next_cycle_deal": "1900",
       "invoice_no": "INV-0353",
       "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
+      "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
     {
