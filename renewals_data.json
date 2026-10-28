@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-27T10:33:55",
-  "generated_label": "27 Oct 2026 at 10:33",
+  "generated_at": "2026-10-28T10:11:17",
+  "generated_label": "28 Oct 2026 at 10:11",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,8 +9,8 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": false,
-  "count": 31,
-  "total_value_zar": 289080,
+  "count": 29,
+  "total_value_zar": 272980,
   "renewals": [
     {
       "deal_id": "143",
@@ -238,21 +238,6 @@
       "renewed_on": "2026-10-12"
     },
     {
-      "deal_id": "1647",
-      "title": "Herzlia Weizmann",
-      "account_id": "9631",
-      "account_name": "Herzlia Weizman Primary School",
-      "value_zar": 8050,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1915",
-      "invoice_no": "INV-0337",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
       "deal_id": "584",
       "title": "Reddam House Helderfontein",
       "account_id": "244",
@@ -355,21 +340,6 @@
       "invoice_no": "INV-0275",
       "invoice_due_date": null,
       "invoice_status": "Paid",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1561",
-      "title": "Plettenberg Bay Christian Primary School (PBC)",
-      "account_id": "9964",
-      "account_name": "Plettenberg Bay Christian Primary School",
-      "value_zar": 8050,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1919",
-      "invoice_no": "INV-0341",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
       "renewed_on": "2026-10-12"
     },
     {
@@ -495,9 +465,29 @@
       "status": "Lost",
       "note": "All currencies; B2C and test deals excluded."
     },
-    "count": 12,
-    "total_value_zar": 154670,
+    "count": 14,
+    "total_value_zar": 170770,
     "schools": [
+      {
+        "deal_id": "1647",
+        "title": "Herzlia Weizmann",
+        "account_name": "Herzlia Weizman Primary School",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-27",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1561",
+        "title": "Plettenberg Bay Christian Primary School (PBC)",
+        "account_name": "Plettenberg Bay Christian Primary School",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-27",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
       {
         "deal_id": "1590",
         "title": "Canaan College - Core Education Group",
@@ -539,9 +529,9 @@
         "access_end_date": "2026-12-31"
       },
       {
-        "deal_id": "1595",
-        "title": "Herzlia Highlands Primary School - 2026",
-        "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
+        "deal_id": "1562",
+        "title": "Raff Home School - 2026",
+        "account_name": "Raff Home School",
         "value": 8050,
         "currency": "ZAR",
         "lost_on": "2026-10-14",
@@ -549,9 +539,9 @@
         "access_end_date": "2026-12-31"
       },
       {
-        "deal_id": "1562",
-        "title": "Raff Home School - 2026",
-        "account_name": "Raff Home School",
+        "deal_id": "1595",
+        "title": "Herzlia Highlands Primary School - 2026",
+        "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
         "value": 8050,
         "currency": "ZAR",
         "lost_on": "2026-10-14",

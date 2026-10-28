@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-27T10:33:55",
-  "generated_label": "27 Oct 2026 at 10:33",
+  "generated_at": "2026-10-28T10:11:17",
+  "generated_label": "28 Oct 2026 at 10:11",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 37,
+  "count": 35,
   "schools": [
     {
       "deal_id": "1586",
@@ -168,15 +168,6 @@
       "account_name": "Hazyview Private Primary School"
     },
     {
-      "deal_id": "1647",
-      "title": "Herzlia Weizmann",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 8050,
-      "account_id": "9631",
-      "account_name": "Herzlia Weizman Primary School"
-    },
-    {
       "deal_id": "1498",
       "title": "Kammaland Primary School",
       "stage": "Renewed",
@@ -229,15 +220,6 @@
       "value_zar": 12000,
       "account_id": "8752",
       "account_name": "Pinelands North Primary"
-    },
-    {
-      "deal_id": "1561",
-      "title": "Plettenberg Bay Christian Primary School (PBC)",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 8050,
-      "account_id": "9964",
-      "account_name": "Plettenberg Bay Christian Primary School"
     },
     {
       "deal_id": "1583",
