@@ -1,0 +1,98 @@
+{
+  "generated_at": "2026-10-30T10:14:58",
+  "generated_label": "30 Oct 2026 at 10:14",
+  "filter": {
+    "pipeline": "10",
+    "stages": [
+      "68 (Approved – Onboarding)",
+      "71 (Renewal Review)",
+      "72 (Active – Sponsored)"
+    ],
+    "currency": "zar",
+    "exclude": "lost deals; automation test deals"
+  },
+  "count": 9,
+  "schools": [
+    {
+      "deal_id": "255",
+      "title": "Danie Ackermann Primary",
+      "stage": "Renewal Review",
+      "stage_id": "71",
+      "value_zar": 4750,
+      "account_id": "422",
+      "account_name": "Danie Ackermann Primary"
+    },
+    {
+      "deal_id": "824",
+      "title": "Early Learning Centre",
+      "stage": "Renewal Review",
+      "stage_id": "71",
+      "value_zar": 4750,
+      "account_id": "9927",
+      "account_name": "Early Learning Centre"
+    },
+    {
+      "deal_id": "1413",
+      "title": "Harriston School (Primary)",
+      "stage": "Renewal Review",
+      "stage_id": "71",
+      "value_zar": 8050,
+      "account_id": "9627",
+      "account_name": "Harriston School (Primary)"
+    },
+    {
+      "deal_id": "1412",
+      "title": "Hermannsburg School (Primary)",
+      "stage": "Renewal Review",
+      "stage_id": "71",
+      "value_zar": 8050,
+      "account_id": "11178",
+      "account_name": "DEUTSCHE SCHULE HERMANNSBURG - SA"
+    },
+    {
+      "deal_id": "1695",
+      "title": "HILLCREST PRIMARY SCHOOL",
+      "stage": "Approved – Onboarding",
+      "stage_id": "68",
+      "value_zar": 12000,
+      "account_id": "9740",
+      "account_name": "HILLCREST PRIMARY SCHOOL"
+    },
+    {
+      "deal_id": "1191",
+      "title": "Holy Cross R C Primary",
+      "stage": "Renewal Review",
+      "stage_id": "71",
+      "value_zar": 8050,
+      "account_id": "8728",
+      "account_name": "Holy Cross R C Primary"
+    },
+    {
+      "deal_id": "1735",
+      "title": "Kranskop Primary School",
+      "stage": "Approved – Onboarding",
+      "stage_id": "68",
+      "value_zar": 12000,
+      "account_id": "11680",
+      "account_name": "Kranskop Primary School"
+    },
+    {
+      "deal_id": "1616",
+      "title": "Sun Valley Primary School",
+      "stage": "Renewal Review",
+      "stage_id": "71",
+      "value_zar": 8050,
+      "account_id": "427",
+      "account_name": "SUN VALLEY PRIMARY SCHOOL"
+    },
+    {
+      "deal_id": "1775",
+      "title": "York High George",
+      "stage": "Approved – Onboarding",
+      "stage_id": "68",
+      "value_zar": 12000,
+      "account_id": "11615",
+      "account_name": "York High George"
+    }
+  ]
+}

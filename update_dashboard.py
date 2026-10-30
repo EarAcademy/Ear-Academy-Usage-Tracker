@@ -39,6 +39,7 @@ DATA_FOLDER     = Path("daily_snapshots")
 B2C_FOLDER      = Path("b2c_snapshots")      # individual-client (non-school) usage exports
 OUTPUT_FILE     = Path("index.html")
 ROSTER_FILE     = Path("paying_schools.json")    # written by update_sales_dashboard.py
+SPONSORED_FILE  = Path("sponsored_schools.json") # written by update_sales_dashboard.py (AC Pipeline 10)
 REPORT_FILE     = Path("daily_report.txt")       # human-readable "what happened" log
 WEEK1_START     = datetime(2026, 1, 19)
 TOTAL_CUSTOMERS = 49          # set from AC roster in main() — fallback to 49
@@ -245,8 +246,9 @@ SCHOOL_NAME_ALIASES = {
     "St Catherines":                        "ST CATHERINE'S DOMINICAN CONVENT- SA",
     "St Martin Preparatory School":         "St Martin's Preparatory School",
     "St Martins Preparatory School":        "St Martin's Preparatory School",
-    "Sunvalley Primary School":             "Sun Valley",
+    "Sunvalley Primary School":             "Sun Valley Primary School",
     "Trinity House":                        "TrinityHouse",
+    "York High School":                     "York High George",
 }
 
 
@@ -346,6 +348,54 @@ def load_paying_schools_roster():
             lookup[pretty_low] = lookup[shown_low]
 
     return roster, lookup
+
+
+_SPONSORED        = None
+_SPONSORED_LOOKUP = None
+_SPONSORED_CACHE  = {}
+
+
+def load_sponsored_roster():
+    """Load sponsored_schools.json → (roster_list, lookup_dict), or (None, None).
+    Indexed the same way as the paying roster, including SCHOOL_NAME_ALIASES."""
+    if not SPONSORED_FILE.exists():
+        return None, None
+    try:
+        with open(SPONSORED_FILE, encoding='utf-8') as f:
+            roster = json.load(f).get("schools", []) or []
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"  ⚠️  Could not load {SPONSORED_FILE}: {e}")
+        return None, None
+    if not roster:
+        return None, None
+    lookup = {}
+    for entry in roster:
+        for key_field in ("title", "account_name"):
+            key = (entry.get(key_field) or "").strip().lower()
+            if key and key not in lookup:
+                lookup[key] = entry
+    for snap_name, target in SCHOOL_NAME_ALIASES.items():
+        target_low = (target or "").strip().lower()
+        snap_low   = (snap_name or "").strip().lower()
+        if target_low in lookup and snap_low:
+            lookup[snap_low] = lookup[target_low]
+    return roster, lookup
+
+
+def resolve_to_sponsored(name):
+    """Sponsored roster entry for a snapshot school name, or None. A name that
+    resolves to the paying roster is never treated as sponsored."""
+    if not _SPONSORED_LOOKUP or not name:
+        return None
+    key = str(name).strip().lower()
+    if not key:
+        return None
+    if key in _SPONSORED_LOOKUP:
+        return _SPONSORED_LOOKUP[key]
+    if key not in _SPONSORED_CACHE:
+        _SPONSORED_CACHE[key] = (None if resolve_to_roster(name) is not None
+                                 else _fuzzy_resolve_roster(key, _SPONSORED_LOOKUP))
+    return _SPONSORED_CACHE[key]
 
 
 def resolve_to_roster(name, lookup=None):
@@ -1550,11 +1600,39 @@ def calc_lifetime_logins(combined):
     return records
 
 
+def calc_sponsored_lifetime_logins(combined):
+    """Total logins per sponsored school (AC Pipeline 10), including sponsored
+    schools with no logins yet. Same shape as calc_lifetime_logins()."""
+    if not _SPONSORED:
+        return []
+    base = total_logins(combined).copy()
+    base['deal_id'] = base['School'].apply(lambda n: (resolve_to_sponsored(n) or {}).get('deal_id'))
+    base = base.dropna(subset=['deal_id'])
+    counted = base.groupby('deal_id')['Email'].count().to_dict()
+    name_counter = {}
+    for sname, did in base[['School', 'deal_id']].itertuples(index=False):
+        name_counter.setdefault(did, Counter())[sname] += 1
+
+    records = []
+    for entry in _SPONSORED:
+        did = entry['deal_id']
+        n   = int(counted.get(did, 0))
+        display = (apply_display_override(name_counter[did].most_common(1)[0][0])
+                   if did in name_counter else clean_roster_display_name(entry))
+        records.append({'School': display, 'total_logins': n,
+                        'stage': entry.get('stage', ''), 'silent': n == 0})
+    records.sort(key=lambda r: (r['silent'], -r['total_logins'], r['School'].lower()))
+    return records
+
+
 CAP_SCHOOL = 'Koa Academy'
 CAP_AT     = 200   # display cap for bar width only — actual count still shown
 
 
-def build_lifetime_logins_html(lifetime_data):
+def build_lifetime_logins_html(lifetime_data,
+                               title='📊 All Paying Schools — Lifetime Activity',
+                               population='AC paying schools',
+                               section_id='section-lifetime'):
     if not lifetime_data:
         return ''
 
@@ -1597,9 +1675,9 @@ def build_lifetime_logins_html(lifetime_data):
     school_count = len(lifetime_data)
     return f'''
         <!-- ════════════════════ ALL SCHOOLS LIFETIME LOGINS ════════════════════════ -->
-        <section class="dashboard-section" id="section-lifetime">
-            <h2 class="section-title pacific">📊 All Paying Schools — Lifetime Activity</h2>
-            <p class="section-desc">All {school_count} AC paying schools · {active_count} active · {silent_count} not yet active · sorted by total logins</p>
+        <section class="dashboard-section" id="{section_id}">
+            <h2 class="section-title pacific">{title}</h2>
+            <p class="section-desc">All {school_count} {population} · {active_count} active · {silent_count} not yet active · sorted by total logins</p>
 
             <div class="lifetime-grid">
 {bars_html}
@@ -2444,6 +2522,8 @@ def build_daily_report(combined):
     else:
         add("        None this run — every match was exact.")
 
+    sponsored_rows = [(n, c) for n, c in dropped if resolve_to_sponsored(n) is not None]
+    dropped     = [(n, c) for n, c in dropped if resolve_to_sponsored(n) is None]
     investigate = [(n, c) for n, c in dropped if n.strip().lower() not in KNOWN_NON_PAYING]
     expected    = [(n, c) for n, c in dropped if n.strip().lower() in KNOWN_NON_PAYING]
 
@@ -2467,6 +2547,13 @@ def build_daily_report(combined):
         add(f"  Known non-paying (UK music services / pilots — correctly excluded), "
             f"{len(expected)}:")
         for name, n in expected:
+            add(f"        • {name:<40} ({n} login row(s))")
+
+    if sponsored_rows:
+        add("")
+        add(f"  Sponsored (AC Pipeline 10 — shown in the Sponsored Schools section), "
+            f"{len(sponsored_rows)}:")
+        for name, n in sponsored_rows:
             add(f"        • {name:<40} ({n} login row(s))")
 
     return "\n".join(lines), dropped
@@ -2507,6 +2594,10 @@ def main():
     # the legacy snapshot-only behaviour.
     global _ROSTER, _ROSTER_LOOKUP, _DISPLAY_NAME_FOR_DEAL, TOTAL_CUSTOMERS
     _ROSTER, _ROSTER_LOOKUP = load_paying_schools_roster()
+    global _SPONSORED, _SPONSORED_LOOKUP
+    _SPONSORED, _SPONSORED_LOOKUP = load_sponsored_roster()
+    if _SPONSORED:
+        print(f"🎗️  Sponsored roster loaded: {len(_SPONSORED)} schools (from {SPONSORED_FILE})")
     if _ROSTER:
         TOTAL_CUSTOMERS = len(_ROSTER)
         print(f"📋 AC roster loaded: {TOTAL_CUSTOMERS} paying schools "
@@ -2554,6 +2645,7 @@ def main():
     w_stats, last6 = calc_weekly_trends(combined)
     top10         = calc_top10(combined)
     lifetime_data = calc_lifetime_logins(combined)
+    sponsored_lifetime = calc_sponsored_lifetime_logins(combined)
     usage_patterns = calc_usage_patterns(combined)
     uk_pilots      = calc_uk_pilots(combined)
     b2c_data       = load_b2c_data()
@@ -2567,6 +2659,11 @@ def main():
     trends_html       = build_trends_html(w_stats, last6)
     top10_html        = build_top10_html(top10)
     lifetime_html     = build_lifetime_logins_html(lifetime_data)
+    sponsored_html    = build_lifetime_logins_html(
+        sponsored_lifetime,
+        title='🎗️ All Sponsored Schools — Lifetime Activity',
+        population='AC sponsored schools',
+        section_id='section-sponsored-lifetime')
     pt_block_html     = build_usage_patterns_html(usage_patterns)
     pt_data_js        = build_usage_patterns_js(usage_patterns)
     uk_block_html     = build_uk_pilots_html(uk_pilots)
@@ -2591,7 +2688,8 @@ def main():
         + patterns_html + '\n'
         + trends_html + '\n'
         + top10_html + '\n'
-        + lifetime_html
+        + lifetime_html + '\n'
+        + sponsored_html
     )
 
     html = re.sub(

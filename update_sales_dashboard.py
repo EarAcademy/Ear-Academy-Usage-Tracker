@@ -44,11 +44,21 @@ SCRIPT_DIR    = Path(__file__).parent
 JSON_FILE     = SCRIPT_DIR / "pipeline_data.json"
 ROSTER_FILE   = SCRIPT_DIR / "paying_schools.json"   # canonical paying-schools roster
 RENEWALS_FILE = SCRIPT_DIR / "renewals_data.json"    # confirmed-renewals list
+SPONSORED_FILE = SCRIPT_DIR / "sponsored_schools.json"  # sponsored-schools roster
 
 # Pipeline IDs (confirmed from memory)
 P_QUAL = "4"   # Sales Qualification
 P_CONV = "5"   # Sales Conversion
 P_CAM  = "6"   # Customer Account Management
+P_SPONSOR = "10"   # Sponsorships
+
+# Pipeline 10 stages that mean a school is currently sponsored. Excludes
+# New Application (67), Rejected (69) and Not Renewing / Declined (73).
+SPONSORED_STAGES = {
+    "68": "Approved – Onboarding",
+    "71": "Renewal Review",
+    "72": "Active – Sponsored",
+}
 
 LOST_REASON_FIELD_ID = "81"   # "Closed Lost Reason" custom field
 
@@ -525,6 +535,41 @@ def build_paying_schools_roster(cam_deals):
     return roster
 
 
+def build_sponsored_schools_roster():
+    """Sponsored schools from Pipeline 10 (Sponsorships): ZAR deals in a
+    SPONSORED_STAGES stage, not lost, no test deals. Same shape as the
+    paying roster so the usage dashboard can match it the same way."""
+    deals, _ = fetch_deals_for_pipeline(P_SPONSOR, status_filter=None)
+    matching = [d for d in deals
+                if (d.get("currency") or "").lower() == "zar"
+                and str(d.get("stage")) in SPONSORED_STAGES
+                and str(d.get("status")) != "2"
+                and not _is_test_deal(d.get("title"), d.get("account"), d.get("id"))]
+    matching = _one_deal_per_school(matching, keep="earliest")
+    account_names = fetch_account_names(
+        {str(d.get("account")) for d in matching if d.get("account")})
+
+    roster = []
+    for d in matching:
+        aid = str(d.get("account")) if d.get("account") else None
+        try:
+            value_zar = int(d.get("value", 0)) / 100
+        except (ValueError, TypeError):
+            value_zar = 0
+        stage_id = str(d.get("stage"))
+        roster.append({
+            "deal_id":      str(d.get("id", "")),
+            "title":        (d.get("title") or "").strip(),
+            "stage":        SPONSORED_STAGES[stage_id],
+            "stage_id":     stage_id,
+            "value_zar":    int(value_zar),
+            "account_id":   aid,
+            "account_name": (account_names.get(aid, "") if aid else "") or None,
+        })
+    roster.sort(key=lambda r: r["title"].lower())
+    return roster
+
+
 # Flipped back to False 2026-09-25 (Brandon's request) -- real renewals are
 # landing now, so the "ZZZ TEST..." / "Bob Test..." placeholder fixtures no
 # longer belong on the Renewals page. ZZZ-test deals never counted in the
@@ -742,6 +787,11 @@ def main(no_push=False):
     # (and investor.html's headline number) match the usage dashboard exactly.
     customers = len(roster)
 
+    print("\n🎗️  Building sponsored-schools roster "
+          f"(Pipeline {P_SPONSOR}, stages {'/'.join(SPONSORED_STAGES)}, ZAR, not lost)…")
+    sponsored = build_sponsored_schools_roster()
+    print(f"    → {len(sponsored)} sponsored schools")
+
     # ── 4c. Confirmed renewals (Renewed stage only) ──────────────────────────
     print("\n🔁  Building renewals list (Pipeline 6, stage 70 'Renewed' only)…")
     renewals = build_renewals_data(cam_all)
@@ -831,6 +881,22 @@ def main(no_push=False):
         json.dump(roster_data, f, indent=2, ensure_ascii=False)
     print(f"✅  paying_schools.json updated ({len(roster)} schools)")
 
+    sponsored_data = {
+        "generated_at":    now.isoformat(timespec="seconds"),
+        "generated_label": timestamp,
+        "filter": {
+            "pipeline": P_SPONSOR,
+            "stages":   [f"{k} ({v})" for k, v in SPONSORED_STAGES.items()],
+            "currency": "zar",
+            "exclude":  "lost deals; automation test deals",
+        },
+        "count":   len(sponsored),
+        "schools": sponsored,
+    }
+    with open(SPONSORED_FILE, "w", encoding="utf-8") as f:
+        json.dump(sponsored_data, f, indent=2, ensure_ascii=False)
+    print(f"✅  sponsored_schools.json updated ({len(sponsored)} schools)")
+
     # ── 6c. Write the confirmed-renewals list ────────────────────────────────
     renewals_data = {
         "generated_at":    now.isoformat(timespec="seconds"),
@@ -893,7 +959,7 @@ def main(no_push=False):
         try:
             subprocess.run(["git", "-C", str(SCRIPT_DIR), "add",
                             "pipeline_data.json", "paying_schools.json", "renewals_data.json",
-                            "investor.html", "renewals.html"], check=True)
+                            "sponsored_schools.json", "investor.html", "renewals.html"], check=True)
             subprocess.run(["git", "-C", str(SCRIPT_DIR), "commit", "-m",
                             f"Update sales dashboard — {timestamp}"], check=True)
             subprocess.run(["git", "-C", str(SCRIPT_DIR), "push", "origin", "main"], check=True)
