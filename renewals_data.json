@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-30T10:14:58",
-  "generated_label": "30 Oct 2026 at 10:14",
+  "generated_at": "2026-11-02T10:09:37",
+  "generated_label": "02 Nov 2026 at 10:09",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,9 +9,24 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": false,
-  "count": 29,
-  "total_value_zar": 272980,
+  "count": 30,
+  "total_value_zar": 280780,
   "renewals": [
+    {
+      "deal_id": "1943",
+      "title": "Hazyview Private Primary School - 2027 Renewal",
+      "account_id": "9936",
+      "account_name": "Hazyview Private Primary School",
+      "value_zar": 7800,
+      "is_test": false,
+      "renewal_date": "2027-10-01",
+      "access_end_date": "2027-12-31",
+      "next_cycle_deal": null,
+      "invoice_no": null,
+      "invoice_due_date": null,
+      "invoice_status": "No invoice",
+      "renewed_on": "2027-10-01"
+    },
     {
       "deal_id": "143",
       "title": "Brescia House - 2026",
