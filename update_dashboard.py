@@ -240,6 +240,7 @@ SCHOOL_NAME_ALIASES = {
     "Herzlia Weitzman Primary School":      "Herzlia Weizmann",
     "Holy Cross RC Primary":                "Holy Cross R C Primary",
     "Lebone II College":                    "Lebone II College (Primary)",
+    "Northlands Primary":                   "Northland School",
     "Princess Park College":                "Royal Schools Princess Park",
     "Queens Private School":                "Royal Schools Queens Private School",
     "Sky City Primary School":              "Royal Schools Sky City",
