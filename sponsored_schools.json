@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-02T10:09:37",
-  "generated_label": "02 Nov 2026 at 10:09",
+  "generated_at": "2026-11-03T09:22:54",
+  "generated_label": "03 Nov 2026 at 09:22",
   "filter": {
     "pipeline": "10",
     "stages": [
@@ -11,8 +11,17 @@
     "currency": "zar",
     "exclude": "lost deals; automation test deals"
   },
-  "count": 9,
+  "count": 11,
   "schools": [
+    {
+      "deal_id": "1937",
+      "title": "Chris Nissen Primary school",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": "11771",
+      "account_name": "Chris Nissen Primary school"
+    },
     {
       "deal_id": "255",
       "title": "Danie Ackermann Primary",
@@ -75,6 +84,15 @@
       "value_zar": 12000,
       "account_id": "11680",
       "account_name": "Kranskop Primary School"
+    },
+    {
+      "deal_id": "1934",
+      "title": "Laerskool George-Suid",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": null,
+      "account_name": null
     },
     {
       "deal_id": "1616",
