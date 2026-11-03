@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-03T09:22:54",
-  "generated_label": "03 Nov 2026 at 09:22",
+  "generated_at": "2026-11-03T19:07:34",
+  "generated_label": "03 Nov 2026 at 19:07",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 35,
+  "count": 36,
   "schools": [
     {
       "deal_id": "1586",
@@ -111,7 +111,7 @@
       "stage_id": "70",
       "value_zar": 4750,
       "account_id": "9570",
-      "account_name": "Curro Langebaan Primary School"
+      "account_name": "MOUTON EDUCATION FOUNDATION NPC T/A CURRO LANGEBAAN"
     },
     {
       "deal_id": "1537",
@@ -175,6 +175,15 @@
       "value_zar": 8050,
       "account_id": "9654",
       "account_name": "Kammaland Primary School"
+    },
+    {
+      "deal_id": "1944",
+      "title": "Kitsong School",
+      "stage": "Onboarding",
+      "stage_id": "50",
+      "value_zar": 12000,
+      "account_id": "11778",
+      "account_name": "Kitsong School"
     },
     {
       "deal_id": "513",

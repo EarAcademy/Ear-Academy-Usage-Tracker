@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-03T09:22:54",
-  "generated_label": "03 Nov 2026 at 09:22",
+  "generated_at": "2026-11-03T19:07:34",
+  "generated_label": "03 Nov 2026 at 19:07",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -376,7 +376,7 @@
       "deal_id": "1487",
       "title": "Curro Langebaan",
       "account_id": "9570",
-      "account_name": "Curro Langebaan Primary School",
+      "account_name": "MOUTON EDUCATION FOUNDATION NPC T/A CURRO LANGEBAAN",
       "value_zar": 4750,
       "is_test": false,
       "renewal_date": "2026-10-12",
@@ -469,9 +469,9 @@
     "total_value_zar": 170770,
     "schools": [
       {
-        "deal_id": "1647",
-        "title": "Herzlia Weizmann",
-        "account_name": "Herzlia Weizman Primary School",
+        "deal_id": "1561",
+        "title": "Plettenberg Bay Christian Primary School (PBC)",
+        "account_name": "Plettenberg Bay Christian Primary School",
         "value": 8050,
         "currency": "ZAR",
         "lost_on": "2026-10-27",
@@ -479,9 +479,9 @@
         "access_end_date": "2026-12-31"
       },
       {
-        "deal_id": "1561",
-        "title": "Plettenberg Bay Christian Primary School (PBC)",
-        "account_name": "Plettenberg Bay Christian Primary School",
+        "deal_id": "1647",
+        "title": "Herzlia Weizmann",
+        "account_name": "Herzlia Weizman Primary School",
         "value": 8050,
         "currency": "ZAR",
         "lost_on": "2026-10-27",
@@ -529,6 +529,16 @@
         "access_end_date": "2026-12-31"
       },
       {
+        "deal_id": "1626",
+        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-14",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
         "deal_id": "1562",
         "title": "Raff Home School - 2026",
         "account_name": "Raff Home School",
@@ -542,16 +552,6 @@
         "deal_id": "1595",
         "title": "Herzlia Highlands Primary School - 2026",
         "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
-        "value": 8050,
-        "currency": "ZAR",
-        "lost_on": "2026-10-14",
-        "lost_reason": null,
-        "access_end_date": "2026-12-31"
-      },
-      {
-        "deal_id": "1626",
-        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
         "value": 8050,
         "currency": "ZAR",
         "lost_on": "2026-10-14",
