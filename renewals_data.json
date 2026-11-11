@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-03T19:07:34",
-  "generated_label": "03 Nov 2026 at 19:07",
+  "generated_at": "2026-11-11T10:49:17",
+  "generated_label": "11 Nov 2026 at 10:49",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -9,24 +9,9 @@
     "note": "Does NOT include 'Upcoming Renewal' (52) -- that stage means the cycle is approaching, not that the renewal is confirmed."
   },
   "test_data_included": false,
-  "count": 29,
-  "total_value_zar": 272980,
+  "count": 27,
+  "total_value_zar": 256230,
   "renewals": [
-    {
-      "deal_id": "143",
-      "title": "Brescia House - 2026",
-      "account_id": "276",
-      "account_name": "Brescia House School",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1908",
-      "invoice_no": "INV-0361",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
     {
       "deal_id": "513",
       "title": "Koa Academy",
@@ -70,36 +55,6 @@
       "invoice_no": "INV-0335",
       "invoice_due_date": "2026-11-11",
       "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1222",
-      "title": "Royal Schools Starlight Academy - Core Education Group",
-      "account_id": "8782",
-      "account_name": "Royal Schools Starlight Academy",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1910",
-      "invoice_no": "INV-0363",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1223",
-      "title": "Acudeo College Protea Glen - Core Education Group",
-      "account_id": "8783",
-      "account_name": "Acudeo College Protea Glen",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1916",
-      "invoice_no": "INV-0364",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
     {
@@ -193,21 +148,6 @@
       "renewed_on": "2026-10-12"
     },
     {
-      "deal_id": "1587",
-      "title": "Acudeo Crystal Park - Core Education Group",
-      "account_id": "10330",
-      "account_name": "Acudeo Crystal Park",
-      "value_zar": 12000,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1900",
-      "invoice_no": "INV-0353",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Paid",
-      "renewed_on": "2026-10-12"
-    },
-    {
       "deal_id": "1588",
       "title": "Acudeo Thornview - Core Education Group",
       "account_id": "10331",
@@ -235,6 +175,51 @@
       "invoice_no": "INV-0351",
       "invoice_due_date": "2026-11-11",
       "invoice_status": "Invoiced",
+      "renewed_on": "2026-10-12"
+    },
+    {
+      "deal_id": "143",
+      "title": "Brescia House - 2026",
+      "account_id": "276",
+      "account_name": "Brescia House School",
+      "value_zar": 12000,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1908",
+      "invoice_no": "INV-0361",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Paid",
+      "renewed_on": "2026-10-12"
+    },
+    {
+      "deal_id": "1223",
+      "title": "Acudeo College Protea Glen - Core Education Group",
+      "account_id": "8783",
+      "account_name": "Acudeo College Protea Glen",
+      "value_zar": 12000,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1916",
+      "invoice_no": "INV-0364",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Paid",
+      "renewed_on": "2026-10-12"
+    },
+    {
+      "deal_id": "1587",
+      "title": "Acudeo Crystal Park - Core Education Group",
+      "account_id": "10330",
+      "account_name": "Acudeo Crystal Park",
+      "value_zar": 12000,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": "2026-12-31",
+      "next_cycle_deal": "1900",
+      "invoice_no": "INV-0353",
+      "invoice_due_date": "2026-11-11",
+      "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
     {
@@ -298,6 +283,21 @@
       "renewed_on": "2026-10-12"
     },
     {
+      "deal_id": "1559",
+      "title": "Hazyview Private Primary School",
+      "account_id": "9936",
+      "account_name": "Hazyview Private Primary School",
+      "value_zar": 8050,
+      "is_test": false,
+      "renewal_date": "2026-10-12",
+      "access_end_date": "2026-12-31",
+      "next_cycle_deal": null,
+      "invoice_no": "INV-0275",
+      "invoice_due_date": null,
+      "invoice_status": "Paid",
+      "renewed_on": "2026-10-12"
+    },
+    {
       "deal_id": "1555",
       "title": "Generation Schools Hermanus",
       "account_id": "2392",
@@ -324,21 +324,6 @@
       "next_cycle_deal": "1926",
       "invoice_no": "INV-0342",
       "invoice_due_date": "2026-11-11",
-      "invoice_status": "Paid",
-      "renewed_on": "2026-10-12"
-    },
-    {
-      "deal_id": "1559",
-      "title": "Hazyview Private Primary School",
-      "account_id": "9936",
-      "account_name": "Hazyview Private Primary School",
-      "value_zar": 8050,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": null,
-      "invoice_no": "INV-0275",
-      "invoice_due_date": null,
       "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
@@ -403,21 +388,6 @@
       "renewed_on": "2026-10-12"
     },
     {
-      "deal_id": "1535",
-      "title": "Welwitschia PS - C5",
-      "account_id": "9889",
-      "account_name": "Welwitschia - C5",
-      "value_zar": 4750,
-      "is_test": false,
-      "renewal_date": "2026-10-12",
-      "access_end_date": "2026-12-31",
-      "next_cycle_deal": "1928",
-      "invoice_no": "INV-0348",
-      "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
-      "renewed_on": "2026-10-12"
-    },
-    {
       "deal_id": "1536",
       "title": "Vergenoegd PS - C5",
       "account_id": "9888",
@@ -465,9 +435,29 @@
       "status": "Lost",
       "note": "All currencies; B2C and test deals excluded."
     },
-    "count": 14,
-    "total_value_zar": 170770,
+    "count": 16,
+    "total_value_zar": 187520,
     "schools": [
+      {
+        "deal_id": "1222",
+        "title": "Royal Schools Starlight Academy - Core Education Group",
+        "account_name": "Royal Schools Starlight Academy",
+        "value": 12000,
+        "currency": "ZAR",
+        "lost_on": "2026-11-10",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1535",
+        "title": "Welwitschia PS - C5",
+        "account_name": "Welwitschia - C5",
+        "value": 4750,
+        "currency": "ZAR",
+        "lost_on": "2026-11-10",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
       {
         "deal_id": "1561",
         "title": "Plettenberg Bay Christian Primary School (PBC)",

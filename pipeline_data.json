@@ -1,9 +1,9 @@
 {
   "pipeline": {
     "qualification": 93,
-    "demo": 21,
-    "negotiation": 26,
-    "customers": 36
+    "demo": 19,
+    "negotiation": 28,
+    "customers": 34
   },
   "monthly": {
     "jan": {
@@ -44,26 +44,26 @@
     }
   },
   "email": {
-    "sent": "1798",
-    "replied": "1529",
-    "rate": "85.0%",
-    "new_contacts": "1"
+    "sent": "2076",
+    "replied": "1600",
+    "rate": "77.1%",
+    "new_contacts": "25"
   },
   "arr_tiers": {
     "tier1": {
       "label": "R1\u20135k",
-      "count": 7,
-      "revenue": 32230.0
+      "count": 2,
+      "revenue": 8400.0
     },
     "tier2": {
       "label": "R5\u201310k",
-      "count": 10,
-      "revenue": 80000.0
+      "count": 5,
+      "revenue": 40000.0
     },
     "tier3": {
       "label": "R10\u201320k",
-      "count": 21,
-      "revenue": 252000.0
+      "count": 9,
+      "revenue": 108000.0
     },
     "tier4": {
       "label": "R20k+",
@@ -83,14 +83,14 @@
       "Lack of Interest": 1
     }
   },
-  "last_updated": "03 Nov 2026 at 19:07",
+  "last_updated": "11 Nov 2026 at 10:49",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
     "monthly_deals": "New ZAR deals entered into Pipeline 5 (Sales Conversion)",
     "product_demos": "Manually tracked \u2014 edit the Product Demos row in investor.html directly",
     "schools_list": "Manually maintained \u2014 edit the school pills in investor.html directly",
-    "customers": "Onboarding (2) + Activated (35) + Upcoming Renewal (0) + Renewed (29) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
+    "customers": "Onboarding (1) + Activated (34) + Upcoming Renewal (0) + Renewed (27) in Pipeline 6, minus B2C/test-deal exclusions (= paying-schools roster count)",
     "arr_tiers": "Won ZAR deals in Pipeline 6, bucketed by annual value (cents \u00f7 100), excludes automation test deals",
     "lost_deals": "Lost deals in Pipeline 5 (Sales Conversion) only \u2014 excludes Pipeline 4 qualification rejections"
   }

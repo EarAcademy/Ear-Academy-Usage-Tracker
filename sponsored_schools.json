@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-03T19:07:34",
-  "generated_label": "03 Nov 2026 at 19:07",
+  "generated_at": "2026-11-11T10:49:17",
+  "generated_label": "11 Nov 2026 at 10:49",
   "filter": {
     "pipeline": "10",
     "stages": [
@@ -11,7 +11,7 @@
     "currency": "zar",
     "exclude": "lost deals; automation test deals"
   },
-  "count": 11,
+  "count": 12,
   "schools": [
     {
       "deal_id": "1937",
@@ -104,10 +104,19 @@
       "account_name": "SUN VALLEY PRIMARY SCHOOL"
     },
     {
+      "deal_id": "1790",
+      "title": "Winston Park Primary",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": "10774",
+      "account_name": "Winston Park Primary School"
+    },
+    {
       "deal_id": "1775",
       "title": "York High George",
-      "stage": "Approved – Onboarding",
-      "stage_id": "68",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
       "value_zar": 12000,
       "account_id": "11615",
       "account_name": "York High George"

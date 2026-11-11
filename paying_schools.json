@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-03T19:07:34",
-  "generated_label": "03 Nov 2026 at 19:07",
+  "generated_at": "2026-11-11T10:49:17",
+  "generated_label": "11 Nov 2026 at 10:49",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 36,
+  "count": 34,
   "schools": [
     {
       "deal_id": "1586",
@@ -215,8 +215,8 @@
     {
       "deal_id": "1859",
       "title": "Northland School",
-      "stage": "Onboarding",
-      "stage_id": "50",
+      "stage": "Activated",
+      "stage_id": "51",
       "value_zar": 12000,
       "account_id": "11653",
       "account_name": "Northland School"
@@ -276,15 +276,6 @@
       "account_name": "Royal Schools Sky City"
     },
     {
-      "deal_id": "1222",
-      "title": "Royal Schools Starlight Academy - Core Education Group",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 12000,
-      "account_id": "8782",
-      "account_name": "Royal Schools Starlight Academy"
-    },
-    {
       "deal_id": "1220",
       "title": "Soofia International School",
       "stage": "Renewed",
@@ -328,15 +319,6 @@
       "value_zar": 4750,
       "account_id": "9888",
       "account_name": "Vergenoegd - C5"
-    },
-    {
-      "deal_id": "1535",
-      "title": "Welwitschia PS - C5",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 4750,
-      "account_id": "9889",
-      "account_name": "Welwitschia - C5"
     }
   ]
 }
