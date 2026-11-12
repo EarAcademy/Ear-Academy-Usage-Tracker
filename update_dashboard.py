@@ -238,6 +238,7 @@ SCHOOL_NAME_ALIASES = {
     "Herzlia High School":                  "United Herzlia Schools",
     "Herzlia Highlands":                    "Herzlia Highlands Primary School",
     "Herzlia Weitzman Primary School":      "Herzlia Weizmann",
+    "Curro Langebaan Primary School":       "Curro Langebaan",
     "Holy Cross RC Primary":                "Holy Cross R C Primary",
     "Lebone II College":                    "Lebone II College (Primary)",
     "Northlands Primary":                   "Northland School",
