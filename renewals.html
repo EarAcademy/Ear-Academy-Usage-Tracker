@@ -84,8 +84,9 @@
 
 <div class="hgrid">
   <div class="hcard amber"><div class="hlabel">Due For Renewal</div><div class="hval amber" id="h-due-count">—</div><div class="hsub2" id="h-due-value">—</div></div>
-  <div class="hcard green"><div class="hlabel">Confirmed Renewals</div><div class="hval green" id="h-count">—</div><div class="hsub2">"Renewed" stage, invoice paid</div></div>
-  <div class="hcard lapis"><div class="hlabel">Total Renewal Value</div><div class="hval" id="h-value">—</div><div class="hsub2">Annual ZAR, confirmed renewals only</div></div>
+  <div class="hcard green"><div class="hlabel">Confirmed Renewals</div><div class="hval green" id="h-count">—</div><div class="hsub2" id="h-count-value">—</div></div>
+  <div class="hcard green"><div class="hlabel">Renewal Rate</div><div class="hval green" id="h-rate">—</div><div class="hsub2" id="h-rate-sub">—</div></div>
+  <div class="hcard lapis"><div class="hlabel">Total Renewal Value</div><div class="hval" id="h-value">—</div><div class="hsub2" id="h-value-sub">—</div></div>
   <div class="hcard blue"><div class="hlabel">Renewed This Month</div><div class="hval" id="h-month">—</div><div class="hsub2" id="h-month-sub">—</div></div>
   <div class="hcard red"><div class="hlabel">Churned</div><div class="hval red" id="h-churn-count">—</div><div class="hsub2" id="h-churn-value">—</div></div>
 </div>
@@ -156,7 +157,16 @@ fetch('renewals_data.json?v=' + Date.now())
     const upcoming = (d.upcoming && d.upcoming.schools) || [];
 
     document.getElementById('h-count').textContent = d.count ?? renewals.length;
-    document.getElementById('h-value').textContent = zarRand(d.total_value_zar);
+    const cy = d.cycle || {};
+    document.getElementById('h-count-value').textContent = zarRand(d.total_value_zar) + ' annual ZAR won (invoice paid)';
+    document.getElementById('h-rate').textContent = cy.renewal_rate_pct != null ? Math.round(cy.renewal_rate_pct) + '%' : '—';
+    document.getElementById('h-rate-sub').textContent = cy.total_count
+      ? `${cy.confirmed_count} of ${cy.total_count} schools paid · ${Math.round(cy.renewal_rate_value_pct)}% by value`
+      : '—';
+    document.getElementById('h-value').textContent = zarRand(cy.total_value_zar);
+    document.getElementById('h-value-sub').textContent = cy.total_count
+      ? `${cy.total_count} schools due this cycle (confirmed + due + churned)`
+      : '—';
     document.getElementById('h-due-count').textContent = (d.upcoming && d.upcoming.count) ?? upcoming.length;
     document.getElementById('h-due-value').textContent = zarRand(d.upcoming && d.upcoming.total_value_zar) + ' annual ZAR at stake';
 

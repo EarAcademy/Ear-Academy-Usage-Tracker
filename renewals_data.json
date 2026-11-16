@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-16T10:10:16",
-  "generated_label": "16 Nov 2026 at 10:10",
+  "generated_at": "2026-11-16T10:17:46",
+  "generated_label": "16 Nov 2026 at 10:17",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only, invoice Paid or Sponsored",
@@ -133,6 +133,18 @@
       "renewed_on": "2026-10-12"
     }
   ],
+  "cycle": {
+    "note": "Schools that are/were due this cycle: confirmed + due + churned with a matching access end date.",
+    "total_count": 38,
+    "total_value_zar": 357280,
+    "confirmed_count": 8,
+    "confirmed_value_zar": 80200,
+    "due_count": 19,
+    "churned_count": 11,
+    "churned_value_zar": 101050,
+    "renewal_rate_pct": 21.1,
+    "renewal_rate_value_pct": 22.4
+  },
   "upcoming": {
     "filter": {
       "pipeline": "6",

@@ -821,6 +821,33 @@ def main(no_push=False):
     churned = build_churned_data()
     print(f"    → {len(churned)} churned")
 
+    # Current renewal cycle = every school that is/was due: confirmed (paid) +
+    # still due + churned at this cycle. A churned deal belongs to this cycle
+    # when its access end date matches one of the current cycle's dates.
+    cycle_end_dates = {r["access_end_date"] for r in renewals + upcoming_renewals
+                       if r.get("access_end_date")}
+    cycle_churned = [c for c in churned
+                     if c["currency"] == "ZAR" and c.get("access_end_date") in cycle_end_dates]
+    confirmed_value = sum(r["value_zar"] for r in renewals)
+    cycle_total = len(renewals) + len(upcoming_renewals) + len(cycle_churned)
+    cycle_value = (confirmed_value + sum(r["value_zar"] for r in upcoming_renewals)
+                   + sum(c["value"] for c in cycle_churned))
+    renewal_cycle = {
+        "note":                 "Schools that are/were due this cycle: confirmed + due + "
+                                "churned with a matching access end date.",
+        "total_count":          cycle_total,
+        "total_value_zar":      cycle_value,
+        "confirmed_count":      len(renewals),
+        "confirmed_value_zar":  confirmed_value,
+        "due_count":            len(upcoming_renewals),
+        "churned_count":        len(cycle_churned),
+        "churned_value_zar":    sum(c["value"] for c in cycle_churned),
+        "renewal_rate_pct":     round(100 * len(renewals) / cycle_total, 1) if cycle_total else None,
+        "renewal_rate_value_pct": round(100 * confirmed_value / cycle_value, 1) if cycle_value else None,
+    }
+    print(f"    → cycle: {cycle_total} schools due (R{cycle_value:,}), "
+          f"renewal rate {renewal_cycle['renewal_rate_pct']}%")
+
     # ── 5. Build JSON ────────────────────────────────────────────────────────
     timestamp = now.strftime("%d %b %Y at %H:%M")
     data = {
@@ -935,6 +962,7 @@ def main(no_push=False):
         "count":            len(renewals),
         "total_value_zar":  sum(r["value_zar"] for r in renewals),
         "renewals":         renewals,
+        "cycle":            renewal_cycle,
         "upcoming": {
             "filter": {
                 "pipeline": P_CAM,
