@@ -576,6 +576,11 @@ def build_sponsored_schools_roster():
 # roster/ARR/customer numbers regardless of this flag (see _is_test_deal()).
 RENEWALS_INCLUDE_TEST_DEALS = False
 
+# Invoice statuses that make a Renewed-stage deal a *confirmed* renewal on the
+# Renewals page (2026-11-16, Brandon's request). Anything else -- Invoiced,
+# No invoice, Overdue -- is listed under "Due For Renewal" until it's paid.
+CONFIRMED_INVOICE_STATUSES = {"Paid", "Sponsored"}
+
 
 def _build_stage_deal_list(cam_all, stage_id, date_field):
     """Shared filter/shape logic for a single Pipeline 6 stage's deal list.
@@ -801,6 +806,17 @@ def main(no_push=False):
     upcoming_renewals = build_upcoming_renewals_data(cam_all)
     print(f"    → {len(upcoming_renewals)} due for renewal")
 
+    # A renewal only counts as confirmed once the invoice is settled. Renewed-
+    # stage deals still awaiting payment (Invoiced / No invoice / Overdue) are
+    # shown under "Due For Renewal" alongside the Upcoming Renewal stage.
+    unpaid = [r for r in renewals if r["invoice_status"] not in CONFIRMED_INVOICE_STATUSES]
+    renewals = [r for r in renewals if r["invoice_status"] in CONFIRMED_INVOICE_STATUSES]
+    upcoming_renewals = sorted(upcoming_renewals + unpaid,
+                               key=lambda r: (r.get("invoice_due_date") or r.get("renewal_date") or "9999",
+                                              r["title"].lower()))
+    print(f"    → {len(unpaid)} renewed-but-unpaid moved to due for renewal "
+          f"({len(renewals)} confirmed, {len(upcoming_renewals)} due)")
+
     print("📉  Building churned list (Pipeline 6, Lost)…")
     churned = build_churned_data()
     print(f"    → {len(churned)} churned")
@@ -903,7 +919,8 @@ def main(no_push=False):
         "generated_label": timestamp,
         "filter": {
             "pipeline":  P_CAM,
-            "stage":     f"{S_RENEWED} (Renewed) only",
+            "stage":     f"{S_RENEWED} (Renewed) only, invoice "
+                         f"{' or '.join(sorted(CONFIRMED_INVOICE_STATUSES))}",
             "currency":  "zar",
             "exclude":   "B2C accounts (deal title or account name contains 'B2C')"
                          + (" -- automation test deals (title starts with 'ZZZ') currently"
@@ -921,10 +938,11 @@ def main(no_push=False):
         "upcoming": {
             "filter": {
                 "pipeline": P_CAM,
-                "stage":    f"{S_UPCOMING_RENEWAL} (Upcoming Renewal) only",
+                "stage":    f"{S_UPCOMING_RENEWAL} (Upcoming Renewal), plus {S_RENEWED} "
+                            f"(Renewed) deals whose invoice isn't paid yet",
                 "currency": "zar",
-                "note":     "Renewal cycle approaching but NOT yet confirmed -- "
-                            "these schools are still active paying customers.",
+                "note":     "Renewal not yet confirmed (cycle approaching, or invoiced "
+                            "but unpaid) -- these schools are still active paying customers.",
             },
             "count":           len(upcoming_renewals),
             "total_value_zar": sum(r["value_zar"] for r in upcoming_renewals),
