@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-11T10:49:17",
-  "generated_label": "11 Nov 2026 at 10:49",
+  "generated_at": "2026-11-16T10:01:54",
+  "generated_label": "16 Nov 2026 at 10:01",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only",
@@ -39,7 +39,7 @@
       "next_cycle_deal": "1909",
       "invoice_no": "INV-0362",
       "invoice_due_date": "2026-11-11",
-      "invoice_status": "Invoiced",
+      "invoice_status": "Paid",
       "renewed_on": "2026-10-12"
     },
     {

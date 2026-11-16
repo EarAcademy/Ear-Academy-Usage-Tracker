@@ -45,9 +45,9 @@
   },
   "email": {
     "sent": "2076",
-    "replied": "1600",
-    "rate": "77.1%",
-    "new_contacts": "25"
+    "replied": "1620",
+    "rate": "78.0%",
+    "new_contacts": "28"
   },
   "arr_tiers": {
     "tier1": {
@@ -62,8 +62,8 @@
     },
     "tier3": {
       "label": "R10\u201320k",
-      "count": 9,
-      "revenue": 108000.0
+      "count": 10,
+      "revenue": 120000.0
     },
     "tier4": {
       "label": "R20k+",
@@ -83,7 +83,7 @@
       "Lack of Interest": 1
     }
   },
-  "last_updated": "11 Nov 2026 at 10:49",
+  "last_updated": "16 Nov 2026 at 10:01",
   "notes": {
     "pipeline": "ZAR-only deals in active stages (Pipelines 4, 5, 6)",
     "monthly_leads": "New ZAR contacts entered into Pipeline 4 (Sales Qualification)",
