@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-11T10:49:17",
-  "generated_label": "11 Nov 2026 at 10:49",
+  "generated_at": "2026-11-17T14:41:35",
+  "generated_label": "17 Nov 2026 at 14:41",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 34,
+  "count": 35,
   "schools": [
     {
       "deal_id": "1586",
@@ -94,6 +94,15 @@
       "value_zar": 12000,
       "account_id": "11622",
       "account_name": "Cambridge Academy Ethiopia"
+    },
+    {
+      "deal_id": "1948",
+      "title": "Camps Bay Primary School — 2027",
+      "stage": "Activated",
+      "stage_id": "51",
+      "value_zar": 12000,
+      "account_id": "9719",
+      "account_name": "CAMPS BAY PRIMARY SCHOOL"
     },
     {
       "deal_id": "1506",

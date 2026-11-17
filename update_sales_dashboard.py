@@ -674,6 +674,7 @@ def build_churned_data():
     deals). All currencies -- UK schools are GBP. Newest first."""
     lost = [d for d in ac_get("deals", {"filters[pipeline]": P_CAM, "filters[status]": "2"})
             if "b2c" not in (d.get("title") or "").lower()
+            and "duplicate" not in (d.get("title") or "").lower()   # e.g. "DUPLICATE - DELETE - ..."
             and not _is_test_deal(d.get("title"), d.get("account"), d.get("id"))]
     account_names = fetch_account_names({str(d.get("account")) for d in lost if d.get("account")})
     fields = fetch_deal_custom_fields([str(d.get("id", "")) for d in lost])

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-11T10:49:17",
-  "generated_label": "11 Nov 2026 at 10:49",
+  "generated_at": "2026-11-17T14:41:35",
+  "generated_label": "17 Nov 2026 at 14:41",
   "filter": {
     "pipeline": "10",
     "stages": [
@@ -11,7 +11,7 @@
     "currency": "zar",
     "exclude": "lost deals; automation test deals"
   },
-  "count": 12,
+  "count": 17,
   "schools": [
     {
       "deal_id": "1937",
@@ -30,6 +30,15 @@
       "value_zar": 4750,
       "account_id": "422",
       "account_name": "Danie Ackermann Primary"
+    },
+    {
+      "deal_id": "1950",
+      "title": "Diazville Primary School (Thinkspace)",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": "1611",
+      "account_name": "DIAZVILLE PRIMARY SCHOOL"
     },
     {
       "deal_id": "824",
@@ -88,6 +97,42 @@
     {
       "deal_id": "1934",
       "title": "Laerskool George-Suid",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": null,
+      "account_name": null
+    },
+    {
+      "deal_id": "1930",
+      "title": "Linksfield Primary School",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": "11156",
+      "account_name": "LINKSFIELD PRIMARY SCHOOL - SA"
+    },
+    {
+      "deal_id": "1931",
+      "title": "Neuro-Matics",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": "11765",
+      "account_name": "Neuro-Matics"
+    },
+    {
+      "deal_id": "1949",
+      "title": "Saldanha Primary School (Thinkspace)",
+      "stage": "Active – Sponsored",
+      "stage_id": "72",
+      "value_zar": 12000,
+      "account_id": "10400",
+      "account_name": "SALDANHA LAERSKOOL"
+    },
+    {
+      "deal_id": "1939",
+      "title": "Sekampaneng Primary School",
       "stage": "Active – Sponsored",
       "stage_id": "72",
       "value_zar": 12000,
