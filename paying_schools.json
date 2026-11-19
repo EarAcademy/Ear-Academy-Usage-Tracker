@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-17T14:41:35",
-  "generated_label": "17 Nov 2026 at 14:41",
+  "generated_at": "2026-11-19T16:22:51",
+  "generated_label": "19 Nov 2026 at 16:22",
   "filter": {
     "pipeline": "6",
     "stages": [
@@ -12,7 +12,7 @@
     "currency": "zar",
     "exclude": "B2C accounts (deal title or account name contains 'B2C'); automation test deals (title starts with 'ZZZ')"
   },
-  "count": 35,
+  "count": 34,
   "schools": [
     {
       "deal_id": "1586",
@@ -274,15 +274,6 @@
       "value_zar": 12000,
       "account_id": "10328",
       "account_name": "Royal Schools Alberton"
-    },
-    {
-      "deal_id": "1584",
-      "title": "Royal Schools Sky City - Core Education Group",
-      "stage": "Renewed",
-      "stage_id": "70",
-      "value_zar": 12000,
-      "account_id": "9862",
-      "account_name": "Royal Schools Sky City"
     },
     {
       "deal_id": "1220",

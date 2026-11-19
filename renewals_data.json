@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-17T14:41:35",
-  "generated_label": "17 Nov 2026 at 14:41",
+  "generated_at": "2026-11-19T16:22:51",
+  "generated_label": "19 Nov 2026 at 16:22",
   "filter": {
     "pipeline": "6",
     "stage": "70 (Renewed) only, invoice Paid or Sponsored",
@@ -139,9 +139,9 @@
     "total_value_zar": 357280,
     "confirmed_count": 8,
     "confirmed_value_zar": 80200,
-    "due_count": 19,
-    "churned_count": 11,
-    "churned_value_zar": 101050,
+    "due_count": 18,
+    "churned_count": 12,
+    "churned_value_zar": 113050,
     "renewal_rate_pct": 21.1,
     "renewal_rate_value_pct": 22.4
   },
@@ -152,8 +152,8 @@
       "currency": "zar",
       "note": "Renewal not yet confirmed (cycle approaching, or invoiced but unpaid) -- these schools are still active paying customers."
     },
-    "count": 19,
-    "total_value_zar": 176030,
+    "count": 18,
+    "total_value_zar": 164030,
     "schools": [
       {
         "deal_id": "1586",
@@ -366,21 +366,6 @@
         "renewed_on": "2026-10-12"
       },
       {
-        "deal_id": "1584",
-        "title": "Royal Schools Sky City - Core Education Group",
-        "account_id": "9862",
-        "account_name": "Royal Schools Sky City",
-        "value_zar": 12000,
-        "is_test": false,
-        "renewal_date": "2026-10-12",
-        "access_end_date": "2026-12-31",
-        "next_cycle_deal": "1899",
-        "invoice_no": "INV-0356",
-        "invoice_due_date": "2026-11-11",
-        "invoice_status": "Invoiced",
-        "renewed_on": "2026-10-12"
-      },
-      {
         "deal_id": "1220",
         "title": "Soofia International School",
         "account_id": "8781",
@@ -448,9 +433,19 @@
       "status": "Lost",
       "note": "All currencies; B2C and test deals excluded."
     },
-    "count": 16,
-    "total_value_zar": 187520,
+    "count": 17,
+    "total_value_zar": 199520,
     "schools": [
+      {
+        "deal_id": "1584",
+        "title": "Royal Schools Sky City - Core Education Group",
+        "account_name": "Royal Schools Sky City",
+        "value": 12000,
+        "currency": "ZAR",
+        "lost_on": "2026-11-18",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
       {
         "deal_id": "1222",
         "title": "Royal Schools Starlight Academy - Core Education Group",
@@ -532,16 +527,6 @@
         "access_end_date": "2026-12-31"
       },
       {
-        "deal_id": "1626",
-        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
-        "value": 8050,
-        "currency": "ZAR",
-        "lost_on": "2026-10-14",
-        "lost_reason": null,
-        "access_end_date": "2026-12-31"
-      },
-      {
         "deal_id": "1595",
         "title": "Herzlia Highlands Primary School - 2026",
         "account_name": "HERZLIA HIGHLANDS PRIMARY SCHOOL",
@@ -555,6 +540,16 @@
         "deal_id": "1562",
         "title": "Raff Home School - 2026",
         "account_name": "Raff Home School",
+        "value": 8050,
+        "currency": "ZAR",
+        "lost_on": "2026-10-14",
+        "lost_reason": null,
+        "access_end_date": "2026-12-31"
+      },
+      {
+        "deal_id": "1626",
+        "title": "ST CATHERINE'S DOMINICAN CONVENT- SA",
+        "account_name": "ST CATHERINE'S DOMINICAN CONVENT- SA",
         "value": 8050,
         "currency": "ZAR",
         "lost_on": "2026-10-14",
